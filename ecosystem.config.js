@@ -18,7 +18,6 @@ module.exports = {
       ref  : "origin/master",
       repo : "git@github.com:FNCxPro/cyclone.git",
       path : "/home/node/cyclone/",
-      ssh_options: "StrictHostKeyChecking=no",
       "post-deploy" : "npm install && pm2 startOrRestart ecosystem.config.js --env production"
     }
   }
