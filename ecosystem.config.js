@@ -17,7 +17,7 @@ module.exports = {
       host : "192.168.7.248",
       ref  : "origin/master",
       repo : "git@github.com:FNCxPro/cyclone.git",
-      path : "/home/node/cyclone/",
+      path : "~/cyclone",
       "post-deploy" : "npm install && pm2 startOrRestart ecosystem.config.js --env production"
     }
   }
