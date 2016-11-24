@@ -3,8 +3,7 @@
   "version": "0.1.2-dev",
   "description": "Cyclone bot for Discord",
   "main": "index.js",
-  "private": pm2
-,
+  "private": true,
   "scripts": {
     "start": "node index.js"
   },
@@ -21,6 +20,7 @@
     "mongoose": "^4.7.0",
     "node-opus": "^0.2.4",
     "opusscript": "0.0.1",
+    "pm2-deploy": "^0.3.3",
     "requestify": "^0.2.5"
   }
 }
