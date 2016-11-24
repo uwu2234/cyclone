@@ -53,3 +53,62 @@ module.exports.error = function(msg){
 }
 
 
+module.exports.generateUserBanned = (guild, user) => {
+  let ret = {
+    embeds: [{
+      title: 'User Banned',
+      author: {
+        name: `${user.name}#${user.discriminator} (${user.id})`,
+        icon_url: user.avatarURL
+      },
+      footer: {
+        text: 'Logging courtesy of Cyclone.',
+        icon_url: 'https://cdn.discordapp.com/app-icons/194960506308526080/d315c2187aeeee0774037bdc419ae1ff.jpg'
+      },
+      description: `User has been banned from ${guild.name}`,
+      timestamp: `${new Date().toISOString()}`
+    }]
+  }
+  return ret
+}
+
+module.exports.generateUserUnbanned = (guild, user) => {
+  let ret = {
+    embeds: [{
+      title: 'User Unbanned',
+      author: {
+        name: `${user.name}#${user.discriminator} (${user.id})`,
+        icon_url: user.avatarURL
+      },
+      footer: {
+        text: 'Logging courtesy of Cyclone.',
+        icon_url: 'https://cdn.discordapp.com/app-icons/194960506308526080/d315c2187aeeee0774037bdc419ae1ff.jpg'
+      },
+      description: `User has been unbanned from ${guild.name}`,
+      timestamp: `${new Date().toISOString()}`
+    }]
+  }
+  return ret
+}
+
+module.exports.generateMessageDelete = (msg) => {
+  let ret = {
+    embeds: [{
+      title: 'Message Deleted',
+      author: {
+        name: `${msg.author.name}#${msg.author.discriminator} (${msg.author.id})`,
+        icon_url: msg.author.avatarURL
+      },
+      footer: {
+        text: 'Logging courtesy of Cyclone.',
+        icon_url: 'https://cdn.discordapp.com/app-icons/194960506308526080/d315c2187aeeee0774037bdc419ae1ff.jpg'
+      },
+      description: `${msg.cleanContent}`,
+      timestamp: `${new Date().toISOString()}`
+    }]
+  }
+  return ret
+}
+
+
+

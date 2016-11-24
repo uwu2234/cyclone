@@ -6,6 +6,7 @@
  */
 const Discord = require('discord.js')
 const mongoose = require('mongoose')
+const requestify = require('requestify')
 
 const config = require('./config.json')
 const commands = require('./commands')
@@ -16,7 +17,8 @@ const bot = new Discord.Client()
 bot.on('ready', () => {
   mongoose.connect('admin:XpCdV6K1DWwq4BW0k0l@178.32.177.169/cyclone?authSource=admin&authMechanism=SCRAM-SHA-1') // Initialize Mongoose
   mongoose.Promise = global.Promise
-  commands.init() // Initializes built in commands (!help)
+  commands.init() // Initializes built in commands (!help, !eval)
+
   commands.registerCommand('balance', 'Retrieve your balance', (msg,args,apx) => {
     if(typeof args[1] === 'string'){
       let target = args[1].replace('<@', '').replace('>', '')
@@ -113,6 +115,21 @@ bot.on('guildMemberAdd', (member) => {
 bot.on('guildMemberRemove', (member) => {
   if(member.guild.id !== '238424240032972801') return
   member.guild.defaultChannel.sendMessage(`Bye <@${member.id}>!`)
+})
+
+bot.on('messageDelete', (msg) => {
+  if(msg.guild.id !== '238424240032972801') return
+  requestify.post(config.webhook, logger.generateMessageDelete(msg))
+})
+
+bot.on('guildBanAdd', (guild,user) => {
+  if(guild.id !== '238424240032972801') return
+  requestify.post(config.webhook, logger.generateUserBanned(guild,user))
+})
+
+bot.on('guildBanRemove', (guild,user) => {
+  if(guild.id !== '238424240032972801') return
+  requestify.post(config.webhook, logger.generateUserUnbanned(guild,user))
 })
 
 bot.login(config.token)

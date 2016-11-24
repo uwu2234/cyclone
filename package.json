@@ -1,6 +1,6 @@
 {
   "name": "cyclone",
-  "version": "0.1.0-dev",
+  "version": "0.1.2-dev",
   "description": "Cyclone bot for Discord",
   "main": "index.js",
   "private": true,
@@ -19,6 +19,7 @@
     "moment": "^2.17.0",
     "mongoose": "^4.7.0",
     "node-opus": "^0.2.4",
-    "opusscript": "0.0.1"
+    "opusscript": "0.0.1",
+    "requestify": "^0.2.5"
   }
 }
