@@ -14,7 +14,10 @@
   "author": "Relative <relative@outlook.ie> (https://relatively.pw)",
   "license": "ISC",
   "dependencies": {
+    "chalk": "^1.1.3",
     "discord.js": "^10.0.1",
+    "moment": "^2.17.0",
+    "mongoose": "^4.7.0",
     "node-opus": "^0.2.4",
     "opusscript": "0.0.1"
   }
