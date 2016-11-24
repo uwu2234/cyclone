@@ -3,8 +3,13 @@
   "version": "0.1.0",
   "description": "Cyclone bot for Discord",
   "main": "index.js",
+  "private": true,
   "scripts": {
     "start": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/FNCxPro/cyclone.git"
   },
   "author": "Relative <relative@outlook.ie> (https://relatively.pw)",
   "license": "ISC"
