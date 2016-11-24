@@ -68,18 +68,35 @@ module.exports.handleCommand = (msg) => {
   return true // Handled and executed.
 }
 module.exports.init = () => {
-  module.exports.registerCommand('help', 'Shows help of every command', (msg, args) => {
+  module.exports.registerCommand('help', 'Shows help of every command', (msg, args, api) => {
     let commands = module.exports.commands
     let helpText = `Cyclone v${require('./package.json').version} - developed by <@116693403147698181> \n\`\`\``
     for(let _cmd in commands){
       if(!commands.hasOwnProperty(_cmd)) continue
       let cmd = commands[_cmd]
-      if(module.exports.hasPermission(msg, cmd.permission))
-      helpText += `${config.prefix}${cmd}: ${commands[cmd].help}`
+      if(cmd.permission){
+        if(module.exports.hasPermission(msg, cmd.permission)){
+          helpText += `${config.prefix}${_cmd}: ${cmd.help} [${cmd.permission}]\n`
+        }
+      }else{
+        helpText += `${config.prefix}${_cmd}: ${cmd.help}\n`
+      }
     }
     helpText += '```'
     msg.author.sendMessage(helpText)
     msg.channel.sendMessage(':mailbox_with_mail: Check your PMs!')
   })
+  module.exports.registerCommand('eval', 'Runs javascript code on the bot', (msg, args, api)=>{
+    try{
+      var code = msg.content.substr(5);
+      var resp = eval(code);
+      api.success('Your code successfully ran on the bot!')
+      msg.channel.sendMessage(`\`\`\`${resp}\`\`\``);
+    }catch(ex){
+      api.error('Your code failed to run on the bot. Stack trace is below.')
+      msg.channel.sendMessage(`\`\`\`${ex}\`\`\``);
+    }
+  }, 'botAdmin');
+
   return true
 }
