@@ -57,6 +57,7 @@ module.exports.generateUserBanned = (guild, user) => {
   let ret = {
     embeds: [{
       title: 'User Banned',
+      color: 16728374,
       author: {
         name: `${user.username}#${user.discriminator} (${user.id})`,
         icon_url: user.avatarURL
@@ -76,6 +77,7 @@ module.exports.generateUserUnbanned = (guild, user) => {
   let ret = {
     embeds: [{
       title: 'User Unbanned',
+      color: 3066944,
       author: {
         name: `${user.username}#${user.discriminator} (${user.id})`,
         icon_url: user.avatarURL
@@ -95,6 +97,7 @@ module.exports.generateMessageDelete = (msg) => {
   let ret = {
     embeds: [{
       title: 'Message Deleted',
+      color: 16728374,
       author: {
         name: `${msg.author.username}#${msg.author.discriminator} (${msg.author.id})`,
         icon_url: msg.author.avatarURL
