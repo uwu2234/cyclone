@@ -18,7 +18,8 @@ module.exports = {
       ref  : "origin/master",
       repo : "git@github.com:FNCxPro/cyclone.git",
       path : "~/cyclone",
-      "post-deploy" : "whoami && id && source ~/.bashrc && echo $PATH && npm install && pm2 startOrRestart ecosystem.config.js --env production"
+      "pre-deploy-local": "PATH=%PATH%;C:/Program Files/Git/usr/bin",
+      "post-deploy" : "chmod +x postDeploy.sh && ./postDeploy.sh"
     }
   }
 }
