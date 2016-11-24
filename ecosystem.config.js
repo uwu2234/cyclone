@@ -17,6 +17,8 @@ module.exports = {
       ref  : "origin/master",
       repo : "git@github.com:FNCxPro/cyclone.git",
       path : "/home/node/cyclone/",
+      ssh_options: ["StrictHostKeyChecking=no", "PasswordAuthentication=no","IdentityFile=C:\\Users\\Seth\\.ssh\\id_rsa"],
+      "pre-deploy-local": "PATH = %PATH%;C:\\yes\\",
       "post-deploy" : "npm install && pm2 startOrRestart ecosystem.config.js --env production"
     }
   }
