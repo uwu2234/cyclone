@@ -13,10 +13,11 @@ module.exports = {
   deploy : {
     production : {
       user : "node",
-      host : "chicago.atlanta.local",
+      host : "192.168.7.248",
       ref  : "origin/master",
       repo : "git@github.com:FNCxPro/cyclone.git",
       path : "/home/node/cyclone/",
+      ssh_options: "StrictHostKeyChecking=no",
       key  : "C:/Users/Seth/.ssh/id_rsa",
       "post-deploy" : "npm install && pm2 startOrRestart ecosystem.config.js --env production"
     }
