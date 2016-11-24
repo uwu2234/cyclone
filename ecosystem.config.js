@@ -18,7 +18,7 @@ module.exports = {
       ref  : "origin/master",
       repo : "git@github.com:FNCxPro/cyclone.git",
       path : "~/cyclone",
-      "post-deploy" : "npm install && pm2 startOrRestart ecosystem.config.js --env production"
+      "post-deploy" : "mkdir lol && npm install && pm2 startOrRestart ecosystem.config.js --env production"
     }
   }
 }
