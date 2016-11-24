@@ -58,14 +58,14 @@ module.exports.generateUserBanned = (guild, user) => {
     embeds: [{
       title: 'User Banned',
       author: {
-        name: `${user.name}#${user.discriminator} (${user.id})`,
+        name: `${user.username}#${user.discriminator} (${user.id})`,
         icon_url: user.avatarURL
       },
       footer: {
         text: 'Logging courtesy of Cyclone.',
         icon_url: 'https://cdn.discordapp.com/app-icons/194960506308526080/d315c2187aeeee0774037bdc419ae1ff.jpg'
       },
-      description: `User has been banned from ${guild.name}`,
+      description: `User has been banned from ${guild.name}\n`,
       timestamp: `${new Date().toISOString()}`
     }]
   }
@@ -77,14 +77,14 @@ module.exports.generateUserUnbanned = (guild, user) => {
     embeds: [{
       title: 'User Unbanned',
       author: {
-        name: `${user.name}#${user.discriminator} (${user.id})`,
+        name: `${user.username}#${user.discriminator} (${user.id})`,
         icon_url: user.avatarURL
       },
       footer: {
         text: 'Logging courtesy of Cyclone.',
         icon_url: 'https://cdn.discordapp.com/app-icons/194960506308526080/d315c2187aeeee0774037bdc419ae1ff.jpg'
       },
-      description: `User has been unbanned from ${guild.name}`,
+      description: `User has been unbanned from ${guild.name}\n`,
       timestamp: `${new Date().toISOString()}`
     }]
   }
@@ -96,14 +96,14 @@ module.exports.generateMessageDelete = (msg) => {
     embeds: [{
       title: 'Message Deleted',
       author: {
-        name: `${msg.author.name}#${msg.author.discriminator} (${msg.author.id})`,
+        name: `${msg.author.username}#${msg.author.discriminator} (${msg.author.id})`,
         icon_url: msg.author.avatarURL
       },
       footer: {
         text: 'Logging courtesy of Cyclone.',
         icon_url: 'https://cdn.discordapp.com/app-icons/194960506308526080/d315c2187aeeee0774037bdc419ae1ff.jpg'
       },
-      description: `${msg.cleanContent}`,
+      description: `${msg.cleanContent}\n`,
       timestamp: `${new Date().toISOString()}`
     }]
   }
