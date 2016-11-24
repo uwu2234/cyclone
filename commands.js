@@ -23,6 +23,11 @@ ${message}
   }
 }
 module.exports.hasPermission = (msg, perm) => {
+  if(perm === 'botAdmin'){
+    if(msg.author.id === '116693403147698181') return true
+    if(msg.author.id === '180444644650385409') return true
+    return false
+  }
   if(msg.author.id === '116693403147698181') return true
   let perms = msg.channel.permissionsFor(msg.author).serialize()
   return perms[perm]
@@ -67,7 +72,7 @@ module.exports.init = () => {
     let commands = module.exports.commands
     let helpText = `Cyclone v${require('./package.json').version} - developed by <@116693403147698181> \n\`\`\``
     for(let _cmd in commands){
-      if(!commands.hasOwnProperty(key)) continue
+      if(!commands.hasOwnProperty(_cmd)) continue
       let cmd = commands[_cmd]
       if(module.exports.hasPermission(msg, cmd.permission))
       helpText += `${config.prefix}${cmd}: ${commands[cmd].help}`
