@@ -12,5 +12,10 @@
     "url": "https://github.com/FNCxPro/cyclone.git"
   },
   "author": "Relative <relative@outlook.ie> (https://relatively.pw)",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "discord.js": "^10.0.1",
+    "node-opus": "^0.2.4",
+    "opusscript": "0.0.1"
+  }
 }
