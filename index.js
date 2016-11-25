@@ -24,6 +24,90 @@ const messages = {
     ":bomb: BANG YOUR DEAD! YOU LOST $WIN$! FAILURE!"
   ]
 }
+const iconCodeMap = {
+  'tornado': ['0', '00'],
+  'tropical-storm': ['1', '01', '2', '02'],
+  'thunderstorm': ['3', '03', '4', '04'],
+  'rain-snow': ['5', '05', '7', '07'],
+  'rain-hail': ['6', '06', '10', '35'],
+  'freezing-drizzle': ['8', '08'],
+  'scattered-showers': ['9', '09', '11', '39'],
+  'rain': ['12'],
+  'flurries': ['13'],
+  'snow': ['14', '16'],
+  'blowing-snow': ['15', '25'],
+  'hail': ['17', '18'],
+  'fog': ['19', '20', '21', '22'],
+  'wind': ['23', '24'],
+  'cloudy': ['26'],
+  'mostly-cloudy-night': ['27'],
+  'mostly-cloudy': ['28'],
+  'partly-cloudy-night': ['29'],
+  'partly-cloudy': ['30'],
+  'clear-night': ['31'],
+  'sunny': ['32', '36'],
+  'mostly-clear-night': ['33'],
+  'mostly-sunny': ['34'],
+  'isolated-thunderstorms': ['37'],
+  'scattered-thunderstorms': ['38'],
+  'heavy-rain': ['40'],
+  'scattered-snow': ['41'],
+  'heavy-snow': ['42', '43'],
+  'na': ['-', '44', 'na'],
+  'scattered-showers-night': ['45'],
+  'scattered-snow-night': ['46'],
+  'scattered-thunderstorms-night': ['47']
+}
+const iconEmojiMap = {
+  'tornado': ':cloud_tornado:',
+  'tropical-storm': ':cyclone:',
+  'thunderstorm': ':thunder_cloud_rain:',
+  'rain-snow': ':cloud_rain: :snowflake:',
+  'rain-hail': ':cloud_rain: *(hail)*',
+  'freezing-drizzle': ':cloud_rain: *(freezing)*',
+  'scattered-showers': ':white_sun_rain_cloud:',
+  'rain': ':cloud_rain:',
+  'flurries': ':cloud_snow:',
+  'snow': ':cloud_snow:',
+  'blowing-snow': ':cloud_snow: :dash:',
+  'hail': '*(hail)*',
+  'fog': ':fog: *(fog)*',
+  'wind': ':dash:',
+  'cloudy': ':cloud:',
+  'mostly-cloudy-night': ':partly_sunny:',
+  'mostly-cloudy': ':partly_sunny:',
+  'partly-cloudy-night': ':white_sun_small_cloud:',
+  'partly-cloudy': ':white_sun_small_cloud:',
+  'clear-night': ':full_moon:',
+  'sunny': ':sunny:',
+  'mostly-clear-night': ':full_moon: :cloud: *(partly cloudy)*',
+  'mostly-sunny': ':white_sun_small_cloud:',
+  'isolated-thunderstorms': ':thunder_cloud_rain:',
+  'scattered-thunderstorms': ':thunder_cloud_rain:',
+  'heavy-rain': ':cloud_rain: *(heavy)*',
+  'scattered-snow': ':cloud_snow: *(scattered)*',
+  'heavy-snow': ':cloud_snow: *(heavy)*',
+  'na': ':no_entry_sign: *(na)*',
+  'scattered-showers-night': ':white_sun_rain_cloud:',
+  'scattered-snow-night': ':cloud_snow: *(scattered)*',
+  'scattered-thunderstorms-night': ':thunder_cloud_rain:'
+}
+function getIconName(_code){
+  let code = _code.toString()
+  let name
+  for (let key in iconCodeMap){
+    if(iconCodeMap.hasOwnProperty(key)){
+      for(let i=0; i < iconCodeMap[key].length; i++){
+        let kha = iconCodeMap[key]
+        let id = kha[i]
+        if(id==code){
+          return key
+        }
+      }
+    }
+  }
+  return 'na'
+}
 bot.on('ready', () => {
   mongoose.connect('admin:XpCdV6K1DWwq4BW0k0l@178.32.177.169/cyclone?authSource=admin&authMechanism=SCRAM-SHA-1') // Initialize Mongoose
   mongoose.Promise = global.Promise
@@ -169,6 +253,31 @@ bot.on('ready', () => {
       return apx.success('User has been cleared of warnings successfully!')
     })
   }, 'MANAGE_MESSAGES', '238424240032972801')
+
+  commands.registerCommand('weather', '**US ONLY** Gives you the weather for your ZIP Code', (msg, args, apx) => {
+    if(!args[1]){
+      return apx.error(`Usage: ${apx.getPrefix()}weather <zipcode>`)
+    }
+    let zip = parseInt(args[1])
+    if(zip.length > 5){
+      return apx.error(`${zip} is not a valid US ZIP Code.`)
+    }
+    requestify.get(`http://wxdata.weather.com/wxdata/mobile/mobagg/48309:4:US.js?key=97ce49e2-cf1b-11e0-94e9-001d092f59fc`).then((res) => {
+      let body = res.getBody()
+      if(!body || !body[0]){
+        return apx.error(`${zip} is not a valid US ZIP Code.`)
+      }
+      body = body[0]
+      let response = `**${body.Location.city}, ${body.Location.state}**'s weather\n`
+      let iconName = getIconName(body.HiradObservation.wxIcon)
+      response += `${iconEmojiMap[iconName]} **${body.HiradObservation.text}\n`
+      response += `:thermometer: ${body.HiradObservation.temp.toString()}\n`
+      response += `**Feels Like** ${body.HiradObservation.feelsLike.toString()}\n`
+      response += `Winds ${body.HiradObservation.wDirText} at ${body.HiradObservation.wSpeed.toString()} mph`
+      msg.channel.sendMessage(response)
+    })
+  })
+
   commands.registerCommand('eval', 'Runs javascript code on the bot', (msg, args, apx)=>{
     try{
       var code = msg.content.substr(5);
