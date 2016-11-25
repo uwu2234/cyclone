@@ -18,6 +18,7 @@ app.get('/auth', (req,res,next) => {
   if(!req.query || !req.query.code){
     return res.redirect(`https://discordapp.com/oauth2/authorize?client_id=${config.client_id}&scope=identify%20email%20guilds&response_type=code&redirect_uri=http://cyclonebot.com/auth`)
   }
+  let toSend = {}
   requestify.request('https://discordapp.com/api/oauth2/token', {
     method: 'POST',
     params: {
@@ -30,7 +31,14 @@ app.get('/auth', (req,res,next) => {
     }
   }).then((response) => {
     let body = response.getBody()
-    res.json(body)
+    requestify.get('https://discordapp.com/api/users/@me', {
+      headers: {
+        'Authorization': `Bearer ${body.access_token}`
+      }
+    }).then((response) => {
+      let _body = response.getBody()
+      res.json(_body)
+    })
   })
 })
 
