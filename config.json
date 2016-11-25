@@ -5,6 +5,7 @@
   "client_id": "194960506308526080",
   "client_secret": "i1pVFpmfBpvnjJB9TAFgIq36IhKUOIGf",
   "server_port": 6843,
+  "production": true,
   "servers": {
     "250758716108963840": {
       "//": "NSKA",

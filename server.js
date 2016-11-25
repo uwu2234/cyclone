@@ -7,12 +7,20 @@
 
 const express = require('express')
 const requestify = require('requestify')
+const path = require('path')
 const logger = require('./log')
 const config = require('./config.json')
 
 const app = express()
-app.disable('x-powered-by')
+const authArray = [
 
+]
+
+app.disable('x-powered-by')
+app.set('views', path.join(__dirname, 'views'))
+app.set('view engine', 'ejs')
+
+app.use(express.static(path.join(__dirname, 'public')))
 
 app.get('/auth', (req,res,next) => {
   if(!req.query || !req.query.code){
@@ -42,6 +50,26 @@ app.get('/auth', (req,res,next) => {
   })
 })
 
+app.get('/', (req,res,next) => {
+  res.sendFile('index.html', {
+    root: path.join(__dirname, 'public'),
+    dotfiles: 'deny'
+  })
+})
+
+app.use((req,res,next) => {
+  let err = new Error('Not Found')
+  err.status = 404
+  next(err)
+})
+
+app.use((err,req,res,next) => {
+  res.locals.message = err.message
+  res.locals.status = err.status
+  res.locals.error = config.production ? {} : err
+  res.status(err.status || 500)
+  res.render('error')
+})
 
 app.listen(config.server_port, () => {
   logger.log(`Webserver listening on port ${config.server_port}`)
