@@ -74,7 +74,17 @@ bot.on('ready', () => {
       return apx.success('User has been warned successfully!')
     })
   }, 'MANAGE_MESSAGES', '238424240032972801')
-
+  module.exports.registerCommand('eval', 'Runs javascript code on the bot', (msg, args, api)=>{
+    try{
+      var code = msg.content.substr(5);
+      var resp = eval(code);
+      api.success('Your code successfully ran on the bot!')
+      msg.channel.sendMessage(`\`\`\`${resp}\`\`\``);
+    }catch(ex){
+      api.error('Your code failed to run on the bot. Stack trace is below.')
+      msg.channel.sendMessage(`\`\`\`${ex}\`\`\``);
+    }
+  }, 'botAdmin');
   api.init(bot, (err) => { // Initialize API (create non-existent users in database)
     if(err){
       console.log(err)

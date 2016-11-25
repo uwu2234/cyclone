@@ -101,17 +101,6 @@ module.exports.init = () => {
     msg.author.sendMessage(helpText)
     msg.channel.sendMessage(':mailbox_with_mail: Check your PMs!')
   })
-  module.exports.registerCommand('eval', 'Runs javascript code on the bot', (msg, args, api)=>{
-    try{
-      var code = msg.content.substr(5);
-      var resp = eval(code);
-      api.success('Your code successfully ran on the bot!')
-      msg.channel.sendMessage(`\`\`\`${resp}\`\`\``);
-    }catch(ex){
-      api.error('Your code failed to run on the bot. Stack trace is below.')
-      msg.channel.sendMessage(`\`\`\`${ex}\`\`\``);
-    }
-  }, 'botAdmin');
 
   return true
 }
