@@ -63,20 +63,21 @@ module.exports.handleCommand = (msg) => {
 
   let originalContent = msg.content
   let originalCleanContent = msg.cleanContent
-  msg.content = msg.content.replaceAll('"', '')
-  msg.cleanContent = msg.cleanContent.replaceAll('"', '')
-  let args = msg.content.substr(config.prefix.length,msg.content.length)
+  let args = msg.content.substr(prefix.length,msg.content.length)
   args = args.match(/\w+|"[^"]+"/g)
+  for(let arg in args){
+    args[arg] = args[arg].replaceAll('"', '')
+  }
   let api = module.exports.generateApi(msg)
   let commands = module.exports.commands
   if(!commands[args[0]]){
     if(config.servers[msg.guild.id]){
       let srv = config.servers[msg.guild.id]
       if(srv.unknownMessage){
-        api.error(`That command doesn't exist! Execute '${config.prefix}help' for all commands.`)
+        api.error(`That command doesn't exist! Execute '${prefix}help' for all commands.`)
       }
     }else{
-      api.error(`That command doesn't exist! Execute '${config.prefix}help' for all commands.`)
+      api.error(`That command doesn't exist! Execute '${prefix}help' for all commands.`)
     }
 
     return false // Not handled. Returns false for handling.
