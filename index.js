@@ -15,7 +15,7 @@ const api = require('./api')
 
 const bot = new Discord.Client()
 const app = require('./server')
-
+app.set('bot', bot)
 const messages = {
   win: [
     ":white_check_mark: You won $WIN$! Congratulations!"

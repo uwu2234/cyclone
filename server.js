@@ -50,10 +50,21 @@ app.get('/auth', (req,res,next) => {
   })
 })
 
+app.get('/discord', (req,res,next) => {
+  res.redirect('https://discord.gg/yy83Dz4')
+})
+
+app.get('/joinserver', (req,res,next) => {
+  res.redirect('https://discordapp.com/oauth2/authorize?client_id=194960506308526080&scope=bot&permissions=0')
+})
+
 app.get('/', (req,res,next) => {
-  res.sendFile('index.html', {
-    root: path.join(__dirname, 'public'),
-    dotfiles: 'deny'
+  let bot = app.get('bot')
+
+  res.render('index', {
+    servers: bot.guilds.array().length,
+    channels: bot.channels.array().length,
+    users: bot.users.array().length
   })
 })
 
