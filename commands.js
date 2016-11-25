@@ -51,7 +51,10 @@ String.prototype.replaceAll = function(target, replacement) {
   return this.split(target).join(replacement);
 }
 module.exports.handleCommand = (msg) => {
-  if(!(msg.content.startsWith(config.prefix))) return false
+  let prefix = config.prefix
+  if(config.servers[msg.guild.id]) prefix = config.servers[msg.guild.id].prefix
+  if(!(msg.content.startsWith(prefix))) return false
+
   let originalContent = msg.content
   let originalCleanContent = msg.cleanContent
   msg.content = msg.content.replaceAll('"', '')

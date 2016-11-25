@@ -1,5 +1,11 @@
 {
   "token": "MTk0OTYwNTk5ODE2NDcwNTI5.CxfbHA.tZ5vsYcnN_9K6F1aIPm352MYDbE",
   "prefix": "!",
-  "webhook": "https://canary.discordapp.com/api/webhooks/251370623593349121/IDHEhapNno-6pEJRJed0bjEILx8aDxoSZZnJ4KBL3CQkWATRAfEgTSKDtSO_mcVaYTiA"
+  "webhook": "https://canary.discordapp.com/api/webhooks/251370623593349121/IDHEhapNno-6pEJRJed0bjEILx8aDxoSZZnJ4KBL3CQkWATRAfEgTSKDtSO_mcVaYTiA",
+  "servers": {
+    "250758716108963840": {
+      "//": "NSKA",
+      "prefix": "*"
+    }
+  }
 }
