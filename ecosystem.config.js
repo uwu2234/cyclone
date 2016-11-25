@@ -11,10 +11,20 @@ module.exports = {
     }
   ],
   deploy : {
-    production : {
+    dev : {
       key  : "C:/Users/Seth/.ssh/id_rsa",
       user : "node",
       host : "192.168.7.248",
+      ref  : "origin/master",
+      repo : "git@github.com:FNCxPro/cyclone.git",
+      path : "~/cyclone",
+      "pre-deploy-local": "PATH=%PATH%;C:/Program Files/Git/usr/bin",
+      "post-deploy" : "chmod +x postDeploy.sh && ./postDeploy.sh"
+    },
+    production : {
+      key  : "C:/Users/Seth/.ssh/id_rsa",
+      user : "node",
+      host : "69.195.152.138",
       ref  : "origin/master",
       repo : "git@github.com:FNCxPro/cyclone.git",
       path : "~/cyclone",
