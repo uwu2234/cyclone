@@ -20,6 +20,12 @@ ${message}
 +!+ SUCCESS +!+
 ${message} 
 +!+ END SUCCESS +!+\`\`\``)
+  },
+  getPrefix: function(){
+    if(config.servers[msg.guild.id]){
+      return config.servers[msg.guild.id].prefix
+    }
+    return config.prefix
   }
 }
 module.exports.hasPermission = (msg, perm) => {
@@ -64,7 +70,15 @@ module.exports.handleCommand = (msg) => {
   let api = module.exports.generateApi(msg)
   let commands = module.exports.commands
   if(!commands[args[0]]){
-    api.error(`That command doesn't exist! Execute '${config.prefix}help' for all commands.`)
+    if(config.servers[msg.guild.id]){
+      let srv = config.servers[msg.guild.id]
+      if(srv.unknownMessage){
+        api.error(`That command doesn't exist! Execute '${config.prefix}help' for all commands.`)
+      }
+    }else{
+      api.error(`That command doesn't exist! Execute '${config.prefix}help' for all commands.`)
+    }
+
     return false // Not handled. Returns false for handling.
   }
   let cmd = commands[args[0]]
@@ -94,10 +108,10 @@ module.exports.init = () => {
       let cmd = commands[_cmd]
       if(cmd.permission){
         if(module.exports.hasPermission(msg, cmd.permission)){
-          helpText += `${config.prefix}${_cmd}: ${cmd.help} [${cmd.permission}]\n`
+          helpText += `${api.getPrefix()}${_cmd}: ${cmd.help} [${cmd.permission}]\n`
         }
       }else{
-        helpText += `${config.prefix}${_cmd}: ${cmd.help}\n`
+        helpText += `${api.getPrefix()}${_cmd}: ${cmd.help}\n`
       }
     }
     helpText += '```'
