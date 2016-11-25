@@ -61,10 +61,11 @@ bot.on('ready', () => {
       return apx.error(`Usage: ${apx.getPrefix()}bet <money>`)
     }
     let toGamble = parseInt(args[1])
-    let curBal = api.getBalance(msg.author.id, (err, bal) => {
+    api.getBalance(msg.author.id, (err, bal) => {
       if(err){
         return apx.error('Error getting your balance. Nothing has been transacted from your account.')
       }
+      let curBal = bal
       if(toGamble > curBal){
         return apx.error('You do not have enough money to bet on that. Nothing has been transacted from your account.')
       }
