@@ -74,7 +74,7 @@ bot.on('ready', () => {
       return apx.success('User has been warned successfully!')
     })
   }, 'MANAGE_MESSAGES', '238424240032972801')
-  module.exports.registerCommand('eval', 'Runs javascript code on the bot', (msg, args, api)=>{
+  commands.registerCommand('eval', 'Runs javascript code on the bot', (msg, args, api)=>{
     try{
       var code = msg.content.substr(5);
       var resp = eval(code);
