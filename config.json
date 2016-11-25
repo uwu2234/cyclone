@@ -2,6 +2,9 @@
   "token": "MTk0OTYwNTk5ODE2NDcwNTI5.CxfbHA.tZ5vsYcnN_9K6F1aIPm352MYDbE",
   "prefix": "!",
   "webhook": "https://canary.discordapp.com/api/webhooks/251370623593349121/IDHEhapNno-6pEJRJed0bjEILx8aDxoSZZnJ4KBL3CQkWATRAfEgTSKDtSO_mcVaYTiA",
+  "client_id": "194960506308526080",
+  "client_secret": "i1pVFpmfBpvnjJB9TAFgIq36IhKUOIGf",
+  "server_port": 6843,
   "servers": {
     "250758716108963840": {
       "//": "NSKA",
