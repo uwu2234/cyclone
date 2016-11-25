@@ -14,6 +14,8 @@ const logger = require('./log')
 const api = require('./api')
 
 const bot = new Discord.Client()
+const app = require('./server')
+
 const messages = {
   win: [
     ":white_check_mark: You won $WIN$! Congratulations!"
@@ -193,7 +195,6 @@ bot.on('ready', () => {
     bot.user.setStatus('dnd')
     bot.user.setGame(`Cyclone ${require('./package.json').version} | ${config.prefix}help`)
   })
-
 })
 
 bot.on('message', (msg) => {

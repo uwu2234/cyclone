@@ -25,3 +25,5 @@ app.get('/auth', (req,res,next) => {
 app.listen(config.server_port, () => {
   logger.log(`Webserver listening on port ${config.server_port}`)
 })
+
+module.exports = app
