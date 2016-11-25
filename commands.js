@@ -22,8 +22,8 @@ ${message}
 +!+ END SUCCESS +!+\`\`\``)
   },
   getPrefix: function(){
-    if(config.servers[msg.guild.id]){
-      return config.servers[msg.guild.id].prefix
+    if(config.servers[this.msg.guild.id]){
+      return config.servers[this.msg.guild.id].prefix
     }
     return config.prefix
   }
