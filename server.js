@@ -14,17 +14,17 @@ const app = express()
 app.disable('x-powered-by')
 
 
-app.get('/auth_begin', (req,res,next) => {
-  res.redirect(`https://discordapp.com/oauth2/authorize?client_id=${config.client_id}&scope=identify%20email%20guilds&redirect_uri=http://cyclonebot.com/discord/auth&response_type=code`)
-})
-app.get('/discord/auth', (req,res,next) => {
+app.get('/auth', (req,res,next) => {
+  if(!req.query || !req.query.code){
+    return res.redirect(`https://discordapp.com/oauth2/authorize?client_id=${config.client_id}&scope=identify%20email%20guilds&response_type=code&redirect_uri=http://cyclonebot.com/auth`)
+  }
   requestify.post('https://discordapp.com/api/oauth2/token', {
     client_id: config.client_id,
     client_secret: config.client_secret,
     grant_type: 'authorization_code',
     scope: 'identify email guilds',
     code: req.query.code,
-    redirect_uri: 'http://cyclonebot.com/discord/auth'
+    redirect_uri: 'http://cyclonebot.com/auth'
   }).then((response) => {
     let body = response.getBody()
     res.json(body)
