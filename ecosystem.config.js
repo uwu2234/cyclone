@@ -23,7 +23,7 @@ module.exports = {
     },
     production : {
       key  : "C:/Users/Seth/.ssh/id_rsa",
-      user : "node",
+      user : "ubuntu",
       host : "69.195.152.138",
       ref  : "origin/master",
       repo : "git@github.com:FNCxPro/cyclone.git",
