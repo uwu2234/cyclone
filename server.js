@@ -65,7 +65,7 @@ app.use((req,res,next) => {
 
 app.use((err,req,res,next) => {
   res.locals.message = err.message
-  res.locals.status = err.status
+  res.locals.status = err.status || 500
   res.locals.error = config.production ? {} : err
   res.status(err.status || 500)
   res.render('error')
