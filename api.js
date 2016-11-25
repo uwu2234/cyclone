@@ -121,7 +121,7 @@ module.exports.addWarning = (id, warner, reason, callback) => {
 }
 
 module.exports.clearWarnings = (id, callback) => {
-  Users.update({id: id}, {warnings: []}, (err,raw) => {
+  Users.update({id: id}, {warnings: [{}]}, (err,raw) => {
     if(err){
       return callback(err)
     }
