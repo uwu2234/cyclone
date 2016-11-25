@@ -29,7 +29,7 @@ module.exports = {
       repo : "git@github.com:FNCxPro/cyclone.git",
       path : "~/cyclone",
       "pre-deploy-local": "PATH=%PATH%;C:/Program Files/Git/usr/bin",
-      "post-deploy" : "chmod +x postDeploy.sh && ./postDeploy.sh"
+      "post-deploy" : "chmod +x postDeployProd.sh && ./postDeployProd.sh"
     }
   }
 }
