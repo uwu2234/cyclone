@@ -143,7 +143,7 @@ bot.on('ready', () => {
       let idx = 1
       warnings.forEach((warning) => {
         if(typeof warning === 'undefined' || !warning) return
-        warns += api.digitsToEmoji(idx.toString()) + `${warning.reason} _punished by <@${warning.warner}>_`
+        warns += api.digitsToEmoji(idx.toString()) + `${warning.reason} *by <@${warning.warner}>*\n`
         idx++
       })
       msg.channel.sendMessage(warns)
@@ -156,6 +156,15 @@ bot.on('ready', () => {
         return apx.error('That command failed to execute. Please try again later!')
       }
       return apx.success('User has been warned successfully!')
+    })
+  }, 'MANAGE_MESSAGES', '238424240032972801')
+  commands.registerCommand('clearwarnings', 'Removes all warnings from user', (msg,args,apx) => {
+    let target = args[1].replace('<@', '').replace('>', '')
+    api.clearWarnings(msg.author.id, (err) => {
+      if(err){
+        return apx.error('That command failed to execute. Please try again later!')
+      }
+      return apx.success('User has been cleared of warnings successfully!')
     })
   }, 'MANAGE_MESSAGES', '238424240032972801')
   commands.registerCommand('eval', 'Runs javascript code on the bot', (msg, args, apx)=>{
