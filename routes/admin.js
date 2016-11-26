@@ -126,10 +126,11 @@ router.route('/server/:id')
               return res.render('admin-server', body)
             }
           }
+          let error = new Error('Unauthorized - You are not the owner of that guild!')
+          error.status = 401
+          return next(error)
         })
-        let error = new Error('Unauthorized - You are not the owner of that guild!')
-        error.status = 401
-        return next(error)
+
       })
     }catch(ex){
       let error = new Error('Unauthorized - token invalid')
