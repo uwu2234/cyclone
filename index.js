@@ -273,7 +273,7 @@ bot.on('ready', () => {
       body = body[0]
       let response = `**${body.Location.city}, ${body.Location.state}**'s weather\n`
       let iconName = getIconName(body.HiradObservation.wxIcon)
-      response += `${iconEmojiMap[iconName]} **${body.HiradObservation.text}\n`
+      response += `${iconEmojiMap[iconName]} **${body.HiradObservation.text}**\n`
       response += `:thermometer: ${body.HiradObservation.temp.toString()}\n`
       response += ` **Feels Like** ${body.HiradObservation.feelsLike.toString()}\n`
       response += `Winds ${body.HiradObservation.wDirText} at ${body.HiradObservation.wSpeed.toString()} mph`
@@ -281,10 +281,17 @@ bot.on('ready', () => {
     })
   })
 
+  commands.registerCommand('about', 'About the bot and its author', (msg,args,apx) => {
+    let channel = msg.channel
+    channel.sendMessage(`Cyclone v${require('./package.json').version} - developed by @Relative#1027
+For help (on this server) type: ${apx.getPrefix()}help
+Official website: http://cyclonebot.com`)
+  })
+
   commands.registerCommand('eval', 'Runs javascript code on the bot', (msg, args, apx)=>{
     try{
-      var code = msg.content.substr(5);
-      var resp = eval(code);
+      let code = msg.content.substr(5);
+      let resp = eval(code);
       apx.success('Your code successfully ran on the bot!')
       msg.channel.sendMessage(`\`\`\`${resp}\`\`\``);
     }catch(ex){
