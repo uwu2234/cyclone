@@ -61,7 +61,11 @@ module.exports.isUserAdmin = (guildId, userId, callback) => {
 module.exports.setUserAdmin = (guildId, userId, admin) => {
   module.exports.getGuildAdmins(guildId, (err, admins) => {
     admins[userId] = admin
-    Guilds.update({id: guildId}, {admins: admins}, (err,raw) => {})
+    Guilds.update({id: guildId}, {admins: admins}, (err,raw) => {
+      if(err){
+        console.log(err)
+      }
+    })
   })
 }
 
