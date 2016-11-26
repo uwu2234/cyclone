@@ -137,7 +137,10 @@
           let query = "<%= query %>"
           let guildId = "<%= guildId %>"
           $.get('/admin/server/'+guildId+'/api/isadmin/'+id+query, function(data){
-            let isAdmin = new Boolean(data)
+            let isAdmin = false
+            if(data == "true"){
+              isAdmin = true
+            }
             let check = ""
             if(isAdmin){
               check = ' checked="checked"'

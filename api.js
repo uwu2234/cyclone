@@ -46,7 +46,7 @@ module.exports.init = (bot, callback) => {
             prefix: '!',
             unknownCommand: true
           },
-          admins: [{}]
+          admins: {}
         }).save((err) => {
           if(err){
             return callback(err)
