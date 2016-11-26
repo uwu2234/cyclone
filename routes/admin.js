@@ -82,12 +82,31 @@ router.route('/server/:id')
         }
       }).then((response) => {
         let guilds = response.getBody()
+        body.originalGuilds = response.getBody()
         for(let guild in guilds){
           let g = guilds[guild]
+          if(g.owner){
+            body.guilds.push(g)
+          }
+        }
+        body.guildCount = body.guilds.length
+        for(let guild in guilds){
+          let g = guilds[guild]
+          if(g.owner){
+            body.guilds.push(g)
+          }
           if(g.id == req.params.id){
             if(g.owner){
               body.guild = g
-              return res.render('admin-server', body)
+              requestify.get('https://discordapp.com/api/users/@me', {
+                headers: {
+                  Authorization: decoded.combined_token
+                }
+              }).then((response) => {
+                body.user = response.getBody()
+                return res.render('admin-server', body)
+              })
+
             }else{
               let error = new Error('Unauthorized - You are not the owner of that guild!')
               error.status = 401
