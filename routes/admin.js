@@ -75,8 +75,10 @@ router.route('/server/:id')
       originalGuilds: [],
       guildCount: 0,
       user: {},
-      query: `?session=${req.query.session}`
+      query: `?session=${req.query.session}`,
+      bot: req.app.get('bot')
     }
+    let bot = req.app.get('bot')
     try{
       let decoded = jwt.verify(req.query.session, config.jwt_key)
       requestify.get('https://discordapp.com/api/users/@me', {
@@ -106,8 +108,15 @@ router.route('/server/:id')
           let guild = guilds[_guild]
           if(guild.id == req.params.id){
             if(guild.owner == true){
-              body.guild = guild
-              return res.render('admin-server', body)
+              if(bot.guilds.exists('id', req.params.id)){
+                body.guild = guild
+                return res.render('admin-server', body)
+              }else{
+                let error = new Error('That server is not occupied by Cyclone!')
+                error.status = 400
+                return next(error)
+              }
+
             }else{
               let error = new Error('Unauthorized - You are not the owner of that guild!')
               error.status = 401
@@ -116,7 +125,7 @@ router.route('/server/:id')
           }
         }
         let error = new Error('Unauthorized - You are not the owner of that guild!')
-        error.status = 400
+        error.status = 401
         return next(error)
       })
     }catch(ex){
