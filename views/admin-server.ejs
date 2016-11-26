@@ -97,11 +97,11 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <% for(let member in bot.users.array()) { %>
+                  <% for(let member in botGuild) { %>
                   <tr>
-                    <td><%= bot.users.array()[member].id %></td>
-                    <td><%= bot.users.array()[member].username %></td>
-                    <td><%= bot.users.array()[member].discriminator %></td>
+                    <td><%= botGuild[member].id %></td>
+                    <td><%= botGuild[member].username %></td>
+                    <td><%= botGuild[member].discriminator %></td>
                   </tr>
                   <% } %>
                 </tbody>

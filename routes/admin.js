@@ -75,6 +75,7 @@ router.route('/server/:id')
       originalGuilds: [],
       guildCount: 0,
       user: {},
+      botGuild: null,
       query: `?session=${req.query.session}`,
       bot: req.app.get('bot')
     }
@@ -110,6 +111,7 @@ router.route('/server/:id')
             if(guild.owner == true){
               if(bot.guilds.exists('id', req.params.id)){
                 body.guild = guild
+                body.botGuild = bot.guilds.find('id', req.params.id).members.array()
                 return res.render('admin-server', body)
               }else{
                 let error = new Error('That server is not occupied by Cyclone!')
