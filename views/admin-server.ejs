@@ -134,7 +134,7 @@
           let id = id.children()[0].textContent
           let username = id.children()[1].textContent
           let discriminator = id.children()[2].textContent
-          let query = <%= query %>
+          let query = "<%= query %>"
             bootbox.dialog({
               title: "Edit member "+username+"#"+discriminator,
               message: "Content to edit member will be here :D",
