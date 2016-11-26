@@ -131,9 +131,9 @@
       init.push(function(){
         $(".editMember").on("click", function() {
           let tr = $(this).closest('tr')
-          let id = id.children()[0].textContent
-          let username = id.children()[1].textContent
-          let discriminator = id.children()[2].textContent
+          let id = tr.children()[0].textContent
+          let username = tr.children()[1].textContent
+          let discriminator = tr.children()[2].textContent
           let query = "<%= query %>"
             bootbox.dialog({
               title: "Edit member "+username+"#"+discriminator,
