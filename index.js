@@ -147,7 +147,6 @@ bot.on('ready', () => {
       return apx.error(`Usage: ${apx.getPrefix()}bet <money>`)
     }
     let toGamble = parseInt(args[1])
-    msg.reply(toGamble)
     if(0 > toGamble){
       return apx.error(`${toGamble} is less than 0. Aborting bet.`)
     }
