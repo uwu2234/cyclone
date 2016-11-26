@@ -7,11 +7,13 @@
 const express = require('express')
 const requestify = require('requestify')
 const config = require('../config.json')
+const api = require('../adminApi')
 const jwt = require('jsonwebtoken')
 const router = express.Router()
 
 router.route('/')
   .get((req,res,next) => {
+    api.init(req.app.get('bot'))
     if(!req.query || !req.query.session){
       let error = new Error('Unauthorized - token invalid')
       error.status = 401
@@ -32,17 +34,16 @@ router.route('/')
         }
       }).then((response) => {
         body.user = response.getBody()
-        requestify.get('https://discordapp.com/api/users/@me/guilds', {
-          headers: {
-            Authorization: decoded.combined_token
-          }
-        }).then((response) => {
-          body.originalGuilds = response.getBody()
-          let g = response.getBody()
-          for(let guild in g){
-            if(g[guild].owner){
-              body.guilds.push(g[guild])
+        api.getGuildsUserAdmins(body.user.id, (err, admins) => {
+          for (let _guild in admins) {
+            if (!admins.hasOwnProperty(_guild)) continue
+            let guild = bot.guilds.find('id', _guild)
+            let gRe = {
+              id: _guild,
+              name: guild.name,
+              icon: guild.icon
             }
+            body.guilds.push(gRe)
           }
           body.guildCount = body.guilds.length
           res.render('admin', body)
@@ -58,6 +59,7 @@ router.route('/')
 
 router.route('/server/:id')
   .get((req,res,next) => {
+    api.init(req.app.get('bot'))
     if(!req.query || !req.query.session){
       let error = new Error('Unauthorized - token invalid')
       error.status = 401
@@ -88,44 +90,38 @@ router.route('/server/:id')
         }
       }).then((response) => {
         body.user = response.getBody()
-      })
-      requestify.get(`https://discordapp.com/api/users/@me/guilds`, {
-        headers: {
-          Authorization: decoded.combined_token
+        if(!bot.guilds.exists('id', req.params.id)){
+          let error = new Error('That server is not occupied by Cyclone!')
+          error.status = 400
+          return next(error)
         }
-      }).then((response) => {
-        let guilds = response.getBody()
-        body.originalGuilds = guilds
-        for(let guild in guilds){
-          if(!guilds.hasOwnProperty(guild)) continue
-          let g = guilds[guild]
-          if(g.owner){
-            body.guilds.push(g)
+        api.getGuildsUserAdmins(body.user.id, (err, admins) => {
+          for(let _guild in admins){
+            if(!admins.hasOwnProperty(_guild)) continue
+            let guild = bot.guilds.find('id', _guild)
+            let gRe = {
+              id: _guild,
+              name: guild.name,
+              icon: guild.icon
+            }
+            body.guilds.push(gRe)
           }
-        }
-        body.guildCount = body.guilds.length
-        for(let _guild in guilds){
-          if(!guilds.hasOwnProperty(_guild)) continue
-          let guild = guilds[_guild]
-          if(guild.id == req.params.id){
-            if(guild.owner == true){
-              if(bot.guilds.exists('id', req.params.id)){
-                body.guild = guild
-                body.botGuild = bot.guilds.find('id', req.params.id).members.array()
-                return res.render('admin-server', body)
-              }else{
-                let error = new Error('That server is not occupied by Cyclone!')
-                error.status = 400
-                return next(error)
+          body.guildCount = body.guilds.length
+          for(let _guild in admins){
+            if(!admins.hasOwnProperty(_guild)) continue
+            let guild = bot.guilds.find('id', _guild)
+            if(_guild == req.params.id){
+              let gRe = {
+                id: _guild,
+                name: guild.name,
+                icon: guild.icon
               }
-
-            }else{
-              let error = new Error('Unauthorized - You are not the owner of that guild!')
-              error.status = 401
-              return next(error)
+              body.guild = gRe
+              body.botGuild = guild.members.array()
+              return res.render('admin-server', body)
             }
           }
-        }
+        })
         let error = new Error('Unauthorized - You are not the owner of that guild!')
         error.status = 401
         return next(error)
@@ -136,5 +132,7 @@ router.route('/server/:id')
       return next(error)
     }
   })
+
+
 
 module.exports = router

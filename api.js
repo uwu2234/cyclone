@@ -5,7 +5,7 @@
  * Created on.........: 11/24/2016
  */
 const Users = require('./models/user-schema')
-
+const Guilds = require('./models/guild-schema')
 module.exports.init = (bot, callback) => {
   let users = bot.users
   for(let _usr in users.array()){ // Create non-existent users.
@@ -21,6 +21,32 @@ module.exports.init = (bot, callback) => {
           id: user.id,
           balance: 1000,
           warnings: [{}]
+        }).save((err) => {
+          if(err){
+            return callback(err)
+          }
+        })
+      }
+    })
+  }
+
+  let guilds = bot.guilds
+  for(let _srv in guilds.array()){ // Create non-existent users.
+    let server = guilds.array()[_srv]
+    Guilds.find({
+      id: server.id
+    }).exec((err, keys) => {
+      if(err){
+        return callback(err)
+      }
+      if(!keys[0]){
+        new Guilds({
+          id: server.id,
+          config: {
+            prefix: '!',
+            unknownCommand: true
+          },
+          admins: [{}]
         }).save((err) => {
           if(err){
             return callback(err)

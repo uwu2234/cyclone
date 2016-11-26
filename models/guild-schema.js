@@ -11,21 +11,19 @@ const guildSchema = mongoose.Schema({
     type: String,
     required: true
   },
-  prefix: {
-    type: String,
+  config: {
+    type: Object,
     required: true,
-    default: '!'
-  },
-  unknownCommand: {
-    type: Boolean,
-    required: true,
-    default: true
+    default: {
+      prefix: '!',
+      unknownCommand: true
+    }
   },
   admins: {
-    type: Array,
+    type: Object,
     required: true,
-    default: []
+    default: {}
   }
 })
 
-module.exports = mongoose.model('users', userSchema)
+module.exports = mongoose.model('guilds', guildSchema)
