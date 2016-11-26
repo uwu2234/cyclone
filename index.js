@@ -147,6 +147,9 @@ bot.on('ready', () => {
       return apx.error(`Usage: ${apx.getPrefix()}bet <money>`)
     }
     let toGamble = parseInt(args[1])
+    if(toGamble < 0){
+      return apx.error(`${toGamble} is less than 0. Aborting bet.`)
+    }
     api.getBalance(msg.author.id, (err, bal) => {
       if(err){
         return apx.error('Error getting your balance. Nothing has been transacted from your account.')
@@ -262,7 +265,7 @@ bot.on('ready', () => {
     if(zip.length > 5){
       return apx.error(`${zip} is not a valid US ZIP Code.`)
     }
-    requestify.get(`http://wxdata.weather.com/wxdata/mobile/mobagg/48309:4:US.js?key=97ce49e2-cf1b-11e0-94e9-001d092f59fc`).then((res) => {
+    requestify.get(`http://wxdata.weather.com/wxdata/mobile/mobagg/${zip}:4:US.js?key=97ce49e2-cf1b-11e0-94e9-001d092f59fc`).then((res) => {
       let body = res.getBody()
       if(!body || !body[0]){
         return apx.error(`${zip} is not a valid US ZIP Code.`)

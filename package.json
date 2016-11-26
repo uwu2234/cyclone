@@ -1,6 +1,6 @@
 {
   "name": "cyclone",
-  "version": "0.1.7",
+  "version": "0.1.8",
   "description": "Cyclone bot for Discord",
   "main": "index.js",
   "private": true,
