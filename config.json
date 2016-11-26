@@ -4,6 +4,7 @@
   "webhook": "https://canary.discordapp.com/api/webhooks/251370623593349121/IDHEhapNno-6pEJRJed0bjEILx8aDxoSZZnJ4KBL3CQkWATRAfEgTSKDtSO_mcVaYTiA",
   "client_id": "194960506308526080",
   "client_secret": "i1pVFpmfBpvnjJB9TAFgIq36IhKUOIGf",
+  "jwt_key": "wdOa460O353S193zfn2MIik1PO0qaVq5e4kuEUx0Evz7ITvH32U36cZye5ms6WAi",
   "server_port": 6843,
   "production": true,
   "servers": {

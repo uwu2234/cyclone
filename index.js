@@ -284,7 +284,7 @@ bot.on('ready', () => {
   commands.registerCommand('about', 'About the bot and its author', (msg,args,apx) => {
     let channel = msg.channel
     channel.sendMessage(`Cyclone v${require('./package.json').version} - developed by @Relative#1027
-For help (on this server) type: ${apx.getPrefix()}help
+For help (on this server) type: \`\`${apx.getPrefix()}help\`\`
 Official website: http://cyclonebot.com`)
   })
 

@@ -7,14 +7,13 @@
 
 const express = require('express')
 const requestify = require('requestify')
+const jwt = require('jsonwebtoken')
 const path = require('path')
 const logger = require('./log')
 const config = require('./config.json')
 
 const app = express()
-const authArray = [
-
-]
+const authArray = []
 
 app.disable('x-powered-by')
 app.set('views', path.join(__dirname, 'views'))
@@ -39,14 +38,7 @@ app.get('/auth', (req,res,next) => {
     }
   }).then((response) => {
     let body = response.getBody()
-    requestify.get('https://discordapp.com/api/users/@me', {
-      headers: {
-        'Authorization': `Bearer ${body.access_token}`
-      }
-    }).then((response) => {
-      let _body = response.getBody()
-      res.json(_body)
-    })
+    res.json(body)
   })
 })
 
