@@ -142,6 +142,7 @@
             if(isAdmin){
               check = ' checked="checked"'
             }
+            console.log(data)
             bootbox.dialog({
               title: "Edit member "+username+"#"+discriminator,
               message: '<strong>Admin Status:</strong> <input type="checkbox" id="isAdmin"'+check+'>',
@@ -155,7 +156,8 @@
                   label: "Save Changes",
                   className: "btn-success",
                   callback: function(){
-                    $.get('/admin/server/'+guildId+'/api/setadmin/'+id+'/'+$("#isAdmin")[0].checked.toString()+query, function(){
+                    $.get('/admin/server/'+guildId+'/api/setadmin/'+id+'/'+$("#isAdmin")[0].checked.toString()+query, function(data){
+                      console.log(data)
                       $.growl.notice({ title: 'Changes Saved', message: 'The user '+username+'#'+discriminator+' has been updated successfully!'})
                     })
                   }
