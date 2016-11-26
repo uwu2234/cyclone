@@ -39,6 +39,7 @@ router.route('/')
         api.getGuildsUserAdmins(body.user.id, (err, admins) => {
           for (let _guild in admins) {
             if (!admins.hasOwnProperty(_guild)) continue
+            console.log(_guild)
             let guild = bot.guilds.find('id', _guild)
             let gRe = {
               id: _guild,
