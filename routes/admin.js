@@ -70,6 +70,7 @@ router.route('/server/:id')
     }
     try{
       let decoded = jwt.verify(req.query.session, config.jwt_key)
+      console.log(decoded)
       requestify.get(`https://discordapp.com/api/guilds/${req.params.id}`, {
         headers: {
           Authorization: decoded.combined_token
