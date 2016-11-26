@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<!--[if IE 8]>         <html class="ie8"> <![endif]-->
+<!--[if IE 9]>         <html class="ie9 gt-ie8"> <![endif]-->
+<!--[if gt IE 9]><!--> <html class="gt-ie8 gt-ie9 not-ie"> <!--<![endif]-->
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Cyclone Dashboard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+
+    <link href="http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,400,600,700,300&subset=latin" rel="stylesheet" type="text/css">
+
+    <link href="assets/stylesheets/bootstrap.min.css" rel="stylesheet" type="text/css">
+    <link href="assets/stylesheets/pixel-admin.min.css" rel="stylesheet" type="text/css">
+    <link href="assets/stylesheets/widgets.min.css" rel="stylesheet" type="text/css">
+    <link href="assets/stylesheets/rtl.min.css" rel="stylesheet" type="text/css">
+    <link href="assets/stylesheets/themes.min.css" rel="stylesheet" type="text/css">
+
+    <!--[if lt IE 9]>
+    <script src="assets/javascripts/ie.min.js"></script>
+    <![endif]-->
+  </head>
+  <body class="theme-default main-menu-animated">
+    <div id="main-wrapper">
+      <div id="main-navbar" class="navbar navbar-inverse" role="navigation">
+        <button type="button" id="main-menu-toggle"><i class="navbar-icon fa fa-bars icon"></i><span class="hide-menu-text">HIDE MENU</span></button>
+        <div class="navbar-inner">
+          <div class="navbar-header">
+            <a href="index.html" class="navbar-brand">Cyclone</a>
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#main-navbar-collapse"><i class="navbar-icon fa fa-bars"></i></button>
+          </div>
+          <div id="main-navbar-collapse" class="collapse navbar-collapse main-navbar-collapse">
+            <div>
+              <ul class="nav navbar-nav">
+                <li><a href="#">Home</a></li>
+              </ul>
+              <div class="right clearfix">
+                <ul class="nav navbar-nav pull-right right-navbar-nav">
+                  <li class="dropdown">
+                    <a href="#" class="dropdown-toggle user-menu" data-toggle="dropdown">
+                      <img src="https://cdn.discordapp.com/avatars/<%= user.id%>/<%= user.avatar %>.jpg" alt="">
+                      <span><%= user.username%>#<%= user.discriminator%></span>
+                    </a>
+                    <ul class="dropdown-menu">
+                      <li><a href="/admin/logout"><i class="dropdown-icon fa fa-power-off"></i>&nbsp;&nbsp;Log Out</a></li>
+                    </ul>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id="main-menu" role="navigation">
+        <div id="main-menu-inner">
+          <ul class="navigation">
+            <li>
+              <a href="index.html"><i class="menu-icon fa fa-dashboard"></i><span class="mm-text">Dashboard</span></a></li>
+            <li class="mm-dropdown">
+              <a href="#"><i class="menu-icon fa fa-server"></i><span class="mm-text">Servers</span><span class="label label-warning"><%= guildCount %></span></a>
+              <ul>
+                <% for(let guild in guilds) { %>
+                <li>
+                  <a href="/admin/server/<%= guilds[guild].id%><%= query %>"><span class="mm-text"><%= guilds[guild].name%></span></a>
+                </li>
+                <% } %>
+              </ul>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div id="content-wrapper">
+        <ul class="breadcrumb breadcrumb-page">
+          <div class="breadcrumb-label text-light-gray">You are here: </div>
+          <li><a href="#">Home</a></li>
+          <li class="active"><a href="#">Dashboard</a></li>
+        </ul>
+        <div class="page-header">
+          <div class="row">
+            <h1 class="col-xs-12 col-sm-4 text-center text-left-sm"><i class="fa fa-dashboard page-header-icon"></i>&nbsp;&nbsp;Dashboard</h1>
+          </div>
+        </div>
+
+        <hr class="no-grid-gutter-h grid-gutter-margin-b no-margin-t">
+      </div>
+      <div id="main-menu-bg"></div>
+    </div>
+
+    <!--[if !IE]> -->
+    <script type="text/javascript"> window.jQuery || document.write('<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js">'+"<"+"/script>"); </script>
+    <!-- <![endif]-->
+
+    <!--[if lte IE 9]>
+    <script type="text/javascript"> window.jQuery || document.write('<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js">'+"<"+"/script>"); </script>
+    <![endif]-->
+
+    <script src="assets/javascripts/bootstrap.min.js"></script>
+    <script src="assets/javascripts/pixel-admin.min.js"></script>
+    <script>
+      let init = [];
+      window.PixelAdmin.start(init);
+    </script>
+  </body>
+</html>

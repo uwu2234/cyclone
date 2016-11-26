@@ -48,47 +48,7 @@ app.get('/auth', (req,res,next) => {
 })
 
 app.get('/admin', (req,res,next) => {
-  if(!req.query || !req.query.session){
-    let error = new Error('Unauthorized - token invalid')
-    error.status = 401
-    return next(error)
-  }
-  let body = {
-    user: {},
-    guilds: [],
-    originalGuilds: [],
-    guildCount: 0,
-    query: `?session=${req.query.session}`
-  }
-  try{
-    let decoded = jwt.verify(req.query.session, config.jwt_key)
-    requestify.get('https://discordapp.com/api/users/@me', {
-      headers: {
-        Authorization: decoded.combined_token
-      }
-    }).then((response) => {
-      body.user = response.getBody()
-      requestify.get('https://discordapp.com/api/users/@me/guilds', {
-        headers: {
-          Authorization: decoded.combined_token
-        }
-      }).then((response) => {
-        body.originalGuilds = response.getBody()
-        let g = response.getBody()
-        for(let guild in g){
-          if(g[guild].owner){
-            body.guilds.push(g[guild])
-          }
-        }
-        body.guildCount = body.guilds.length
-        res.render('admin', body)
-      })
-    })
-  }catch(ex){
-    let error = new Error('Unauthorized - token invalid')
-    error.status = 401
-    return next(error)
-  }
+
 })
 
 app.get('/discord', (req,res,next) => {
