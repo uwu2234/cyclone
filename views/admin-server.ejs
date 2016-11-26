@@ -135,27 +135,48 @@
           let username = tr.children()[1].textContent
           let discriminator = tr.children()[2].textContent
           let query = "<%= query %>"
+          let guildId = "<%= guildId %>"
+          $.get('/admin/server/'+guildId+'/api/isadmin/'+id, function(data){
+            let tr = $(this).closest('tr')
+            let id = tr.children()[0].textContent
+            let username = tr.children()[1].textContent
+            let discriminator = tr.children()[2].textContent
+            let query = "<%= query %>"
+            let guildId = "<%= guildId %>"
+            let isAdmin = new Boolean(data)
+            let check = ""
+            if(isAdmin){
+              check = ' checked="checked"'
+            }
             bootbox.dialog({
               title: "Edit member "+username+"#"+discriminator,
-              message: "Content to edit member will be here :D",
+              message: '<strong>Admin Status:</strong> <input type="checkbox" id="isAdmin"'+check+'>',
               buttons: {
                 cancel: {
                   label: "Cancel",
                   className: "btn-danger",
-                  callback: function(){
-                    // don't save
-                  }
+                  callback: function(){}
                 },
                 save: {
                   label: "Save Changes",
                   className: "btn-success",
                   callback: function(){
-                    // save
+                    $.get('/admin/server/'+guildId+'/api/setadmin/'+id+'/'+$("#isAdmin")[0].checked.toString(), function(){
+                      $.growl.notice({ title: 'Changes Saved', message: 'The user '+username+'#'+discriminator+' has been updated successfully!'})
+                    })
                   }
                 }
               },
               className: "bootbox-sm"
+            }).on("shown.bs.modal", function(e){
+              $("#isAdmin").switcher({
+                theme: 'square',
+                on_state_content: '<span class="fa fa-check"></span>',
+                off_state_content: '<span class="fa fa-times"></span>'
+              })
             })
+          })
+
         })
       });
       init.push(function() {

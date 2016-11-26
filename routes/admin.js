@@ -82,7 +82,8 @@ router.route('/server/:id')
       user: {},
       botGuild: null,
       query: `?session=${req.query.session}`,
-      bot: req.app.get('bot')
+      bot: req.app.get('bot'),
+      api: api
     }
     let bot = req.app.get('bot')
     try{
@@ -139,6 +140,65 @@ router.route('/server/:id')
     }
   })
 
+router.route('/server/:id/api/isadmin/:userId')
+  .get((req,res,next) => {
+    if(!req.query || !req.query.session){
+      let error = new Error('Unauthorized - token invalid')
+      error.status = 401
+      return next(error)
+    }
+    if(!req.params || !req.params.id || !req.params.userId){
+      let error = new Error('Missing params in request')
+      error.status = 400
+      return next(error)
+    }
+    try{
+      let decoded = jwt.verify(req.query.session, config.jwt_key)
+      api.isUserAdmin(req.params.id, req.params.userId, (err, admin) => {
+        res.send(admin.toString())
+      })
+    }catch(ex){
+      let error = new Error('Unauthorized - token invalid')
+      error.status = 401
+      return next(error)
+    }
+  })
+router.route('/server/:id/api/setadmin/:userId/:admin')
+  .get((req,res,next) => {
+    if(!req.query || !req.query.session){
+      let error = new Error('Unauthorized - token invalid')
+      error.status = 401
+      return next(error)
+    }
+    if(!req.params || !req.params.id || !req.params.userId || !req.params.admin){
+      let error = new Error('Missing params in request')
+      error.status = 400
+      return next(error)
+    }
+    try{
+      let decoded = jwt.verify(req.query.session, config.jwt_key)
+      requestify.get('https://discordapp.com/api/users/@me', {
+        headers: {
+          Authorization: decoded.combined_token
+        }
+      }).then((response) => {
+        let body = response.getBody()
+        api.isUserAdmin(req.params.id, body.id, (err, admin) => {
+          if(!admin){
+            let error = new Error('Unauthorized - You are not admin of that guild!')
+            error.status = 401
+            return next(error)
+          }
+          api.setUserAdmin(req.params.id, req.params.userId, req.params.admin)
+          return res.send('success')
+        })
+      })
+    }catch(ex){
+      let error = new Error('Unauthorized - token invalid')
+      error.status = 401
+      return next(error)
+    }
+  })
 
 
 module.exports = router
