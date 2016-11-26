@@ -292,6 +292,38 @@ bot.on('ready', () => {
       msg.channel.sendMessage(`\`\`\`${ex}\`\`\``);
     }
   }, 'botAdmin')
+  commands.registerCommand('shutdown', 'Shutsdown bot', (msg, args, apx) => {
+    bot.destroy((err) => {
+      if(err){
+        return apx.error(`FATAL!! Bot failed to shutdown because ${err}!`)
+      }
+      require('child_process').exec('pm2 stop Cyclone')
+    })
+  }, 'botAdmin')
+  commands.registerCommand('restart', 'Restarts bot', (msg, args, apx) => {
+    bot.destroy((err) => {
+      if(err){
+        return apx.error(`FATAL!! Bot failed to restart because ${err}!`)
+      }
+      require('child_process').exec('pm2 restart Cyclone')
+    })
+  }, 'botAdmin')
+
+  commands.registerCommand('update', 'Updates bot', (msg, args, apx) => {
+    bot.destroy((err) => {
+      if(err){
+        return apx.error(`FATAL!! Bot failed to destroy because ${err}!`)
+      }
+      require('child_process').exec('cd ~/cyclone/source && git pull', (err, stdout, stderr) => {
+        if(err){
+          return require('child_process').exec('pm2 restart Cyclone')
+        }
+        require('child_process').exec('pm2 restart Cyclone')
+      })
+
+    })
+  }, 'botAdmin')
+
   api.init(bot, (err) => { // Initialize API (create non-existent users in database)
     if(err){
       console.log(err)
