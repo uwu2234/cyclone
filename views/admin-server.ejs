@@ -84,7 +84,7 @@
         <hr class="no-grid-gutter-h grid-gutter-margin-b no-margin-t">
         <div class="panel colourable">
           <div class="panel-heading">
-            <span class="panel-title"><i class="panel-title-icon fa fa-question-circle"></i>Help</span>
+            <span class="panel-title"><i class="panel-title-icon fa fa-server"></i>Server</span>
           </div>
           <div class="panel-body">
             <div class="table-primary">
@@ -94,6 +94,7 @@
                     <th>ID</th>
                     <th>Username</th>
                     <th>Discriminator</th>
+                    <th>Edit</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -102,6 +103,7 @@
                     <td><%= botGuild[member].user.id %></td>
                     <td><%= botGuild[member].user.username %></td>
                     <td><%= botGuild[member].user.discriminator %></td>
+                    <td><button type="button" class="btn btn-primary editMember" id="edit-<%= botGuild[member].user.id %>"><i class="fa fa-pencil"></i> Edit</button></td>
                   </tr>
                   <% } %>
                 </tbody>
@@ -126,11 +128,42 @@
     <script src="/assets/javascripts/pixel-admin.min.js"></script>
     <script>
       let init = [];
+      init.push(function(){
+        $(".editMember").on("click", function() {
+          let tr = $(this).closest('tr')
+          let id = id.children()[0].textContent
+          let username = id.children()[1].textContent
+          let discriminator = id.children()[2].textContent
+          let query = <%= query %>
+            bootbox.dialog({
+              title: "Edit member "+username+"#"+discriminator,
+              message: "Content to edit member will be here :D",
+              buttons: {
+                cancel: {
+                  label: "Cancel",
+                  className: "btn-danger",
+                  callback: function(){
+                    // don't save
+                  }
+                },
+                save: {
+                  label: "Save Changes",
+                  className: "btn-success",
+                  callback: function(){
+                    // save
+                  }
+                }
+              },
+              className: "bootbox-sm"
+            })
+        })
+      });
       init.push(function() {
         $("#bot-members").dataTable();
         $("#bot-members_wrapper .table-caption").text('Server Members');
         $("#bot-members_wrapper .dataTables_filter input").attr("placeholder", "Search...");
-      })
+      });
+
       window.PixelAdmin.start(init);
     </script>
   </body>
