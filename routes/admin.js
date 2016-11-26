@@ -63,6 +63,11 @@ router.route('/server/:id')
       error.status = 401
       return next(error)
     }
+    if(!req.params || !req.params.id){
+      let error = new Error('Missing Guild ID')
+      error.status = 400
+      return next(error)
+    }
     let body = {
       guildId: req.params.id,
       guild: {},
@@ -71,15 +76,28 @@ router.route('/server/:id')
     try{
       let decoded = jwt.verify(req.query.session, config.jwt_key)
       console.log(decoded)
-      requestify.get(`https://discordapp.com/api/guilds/${req.params.id}`, {
+      requestify.get(`https://discordapp.com/api/users/@me/guilds`, {
         headers: {
           Authorization: decoded.combined_token
         }
       }).then((response) => {
-        let b = response.getBody()
-        body.guild = b
-        res.json(body)
-        //res.render('admin-server', body)
+        let guilds = response.getBody()
+        for(let guild in guilds){
+          let g = guilds[guild]
+          if(g.id == req.params.id){
+            if(g.owner){
+              body.guild = g
+              return res.render('admin-server', body)
+            }else{
+              let error = new Error('Unauthorized - You are not the owner of that guild!')
+              error.status = 401
+              return next(error)
+            }
+          }
+        }
+        let error = new Error('Unauthorized - You are not the owner of that guild!')
+        error.status = 400
+        return next(error)
       })
     }catch(ex){
       let error = new Error('Unauthorized - token invalid')
