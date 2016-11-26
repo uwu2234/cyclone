@@ -21,34 +21,25 @@
     <![endif]-->
   </head>
   <body class="theme-default main-menu-animated">
-
-    <script>var init = [];</script>
     <div id="main-wrapper">
       <div id="main-navbar" class="navbar navbar-inverse" role="navigation">
         <button type="button" id="main-menu-toggle"><i class="navbar-icon fa fa-bars icon"></i><span class="hide-menu-text">HIDE MENU</span></button>
         <div class="navbar-inner">
           <div class="navbar-header">
-            <a href="index.html" class="navbar-brand">
-              Cyclone
-            </a>
+            <a href="index.html" class="navbar-brand">Cyclone</a>
             <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#main-navbar-collapse"><i class="navbar-icon fa fa-bars"></i></button>
-
-          </div> <!-- / .navbar-header -->
-
+          </div>
           <div id="main-navbar-collapse" class="collapse navbar-collapse main-navbar-collapse">
             <div>
               <ul class="nav navbar-nav">
-                <li>
-                  <a href="#">Home</a>
-                </li>
-              </ul> <!-- / .navbar-nav -->
-
+                <li><a href="#">Home</a></li>
+              </ul>
               <div class="right clearfix">
                 <ul class="nav navbar-nav pull-right right-navbar-nav">
                   <li class="dropdown">
                     <a href="#" class="dropdown-toggle user-menu" data-toggle="dropdown">
-                      <img src="https://cdndiscordapp.com/" alt="">
-                      <span>John Doe</span>
+                      <img src="https://cdn.discordapp.com/avatars/<%= user.id%>/<%= user.avatar %>.jpg" alt="">
+                      <span><%= user.username%>#<%= user.discriminator%></span>
                     </a>
                     <ul class="dropdown-menu">
                       <li><a href="#"><span class="label label-warning pull-right">New</span>Profile</a></li>
@@ -58,38 +49,12 @@
                       <li><a href="pages-signin.html"><i class="dropdown-icon fa fa-power-off"></i>&nbsp;&nbsp;Log Out</a></li>
                     </ul>
                   </li>
-                </ul> <!-- / .navbar-nav -->
-              </div> <!-- / .right -->
-            </div>
-          </div> <!-- / #main-navbar-collapse -->
-        </div> <!-- / .navbar-inner -->
-      </div> <!-- / #main-navbar -->
-      <!-- /2. $END_MAIN_NAVIGATION -->
-
-
-      <!-- 4. $MAIN_MENU =================================================================================
-
-          Main menu
-
-          Notes:
-          * to make the menu item active, add a class 'active' to the <li>
-            example: <li class="active">...</li>
-          * multilevel submenu example:
-            <li class="mm-dropdown">
-              <a href="#"><span class="mm-text">Submenu item text 1</span></a>
-              <ul>
-              <li>...</li>
-              <li class="mm-dropdown">
-                <a href="#"><span class="mm-text">Submenu item text 2</span></a>
-                <ul>
-                <li>...</li>
-                ...
                 </ul>
-              </li>
-              ...
-              </ul>
-            </li>
-      -->
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
       <div id="main-menu" role="navigation">
         <div id="main-menu-inner">
           <div class="menu-content top" id="menu-content-demo">
@@ -341,44 +306,6 @@
 
         <div class="row">
           <div class="col-md-8">
-
-            <!-- 5. $UPLOADS_CHART =============================================================================
-
-                    Uploads chart
-            -->
-            <!-- Javascript -->
-            <script>
-              init.push(function () {
-                var uploads_data = [
-                  { day: '2014-03-10', v: 20 },
-                  { day: '2014-03-11', v: 10 },
-                  { day: '2014-03-12', v: 15 },
-                  { day: '2014-03-13', v: 12 },
-                  { day: '2014-03-14', v: 5  },
-                  { day: '2014-03-15', v: 5  },
-                  { day: '2014-03-16', v: 20 }
-                ];
-                Morris.Line({
-                  element: 'hero-graph',
-                  data: uploads_data,
-                  xkey: 'day',
-                  ykeys: ['v'],
-                  labels: ['Value'],
-                  lineColors: ['#fff'],
-                  lineWidth: 2,
-                  pointSize: 4,
-                  gridLineColor: 'rgba(255,255,255,.5)',
-                  resize: true,
-                  gridTextColor: '#fff',
-                  xLabels: "day",
-                  xLabelFormat: function(d) {
-                    return ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov', 'Dec'][d.getMonth()] + ' ' + d.getDate();
-                  },
-                });
-              });
-            </script>
-            <!-- / Javascript -->
-
             <div class="stat-panel">
               <div class="stat-row">
                 <!-- Small horizontal padding, bordered, without right border, top aligned text -->

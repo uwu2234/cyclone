@@ -53,6 +53,10 @@ app.get('/admin', (req,res,next) => {
     error.status = 401
     return next(error)
   }
+  let body = {
+    user: {},
+    guilds: {}
+  }
   try{
     let decoded = jwt.verify(req.query.session, config.jwt_key)
     requestify.get('https://discordapp.com/api/users/@me', {
@@ -60,7 +64,15 @@ app.get('/admin', (req,res,next) => {
         Authorization: decoded.combined_token
       }
     }).then((response) => {
-      res.json(response.getBody())
+      body.user = response.getBody()
+      requestify.get('https://discordapp.com/api/users/@me/guilds', {
+        headers: {
+          Authorization: decoded.combined_token
+        }
+      }).then((response) => {
+        body.guilds = response.getBody()
+        res.render('admin', body)
+      })
     })
   }catch(ex){
     let error = new Error('Unauthorized - token invalid')
