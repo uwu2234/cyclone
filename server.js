@@ -12,6 +12,8 @@ const path = require('path')
 const logger = require('./log')
 const config = require('./config.json')
 
+const admin = require('./routes/admin')
+
 const app = express()
 const authArray = []
 
@@ -20,7 +22,7 @@ app.set('views', path.join(__dirname, 'views'))
 app.set('view engine', 'ejs')
 
 app.use(express.static(path.join(__dirname, 'public')))
-
+app.use('/admin', admin)
 app.get('/auth', (req,res,next) => {
   if(!req.query || !req.query.code){
     return res.redirect(`https://discordapp.com/oauth2/authorize?client_id=${config.client_id}&scope=identify%20email%20guilds&response_type=code&redirect_uri=http://cyclonebot.com/auth`)
@@ -45,10 +47,6 @@ app.get('/auth', (req,res,next) => {
     let payload = jwt.sign(payloadRaw, config.jwt_key, { expiresIn: '15m' })
     res.redirect(`/admin?session=${payload}`)
   })
-})
-
-app.get('/admin', (req,res,next) => {
-
 })
 
 app.get('/discord', (req,res,next) => {
