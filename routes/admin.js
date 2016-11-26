@@ -50,6 +50,7 @@ router.route('/')
     }catch(ex){
       let error = new Error('Unauthorized - token invalid')
       error.status = 401
+      console.log(ex)
       return next(error)
     }
   })
