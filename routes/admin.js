@@ -6,6 +6,7 @@
  */
 const express = require('express')
 const requestify = require('requestify')
+const config = require('../config.json')
 const jwt = require('jsonwebtoken')
 const router = express.Router()
 
