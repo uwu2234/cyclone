@@ -24,8 +24,10 @@ router.route('/')
       guilds: [],
       originalGuilds: [],
       guildCount: 0,
-      query: `?session=${req.query.session}`
+      query: `?session=${req.query.session}`,
+      bot: req.app.get('bot')
     }
+    let bot = req.app.get('bot')
     try{
       let decoded = jwt.verify(req.query.session, config.jwt_key)
       requestify.get('https://discordapp.com/api/users/@me', {
