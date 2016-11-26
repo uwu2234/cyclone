@@ -57,11 +57,13 @@
             <li>
               <a href="index.html"><i class="menu-icon fa fa-dashboard"></i><span class="mm-text">Dashboard</span></a></li>
             <li class="mm-dropdown">
-              <a href="#"><i class="menu-icon fa fa-server"></i><span class="mm-text">Servers</span><span class="label label-warning">count</span></a>
+              <a href="#"><i class="menu-icon fa fa-server"></i><span class="mm-text">Servers</span><span class="label label-warning"><%= guildCount %></span></a>
               <ul>
+                <% for(let guild in guilds) { %>
                 <li>
-                  <a tabindex="-1" href="/admin/id"><span class="mm-text">Server name</span></a>
+                  <a href="/admin/server/<%= guilds[guild].id%><%= query %>"><span class="mm-text"><%= guilds[guild].name%></span></a>
                 </li>
+                <% } %>
               </ul>
             </li>
           </ul>
@@ -93,6 +95,5 @@
     <![endif]-->
 
     <script src="assets/javascripts/bootstrap.min.js"></script>
-    <script src="assets/javascripts/pixel-admin.min.js"></script>
   </body>
 </html>

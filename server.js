@@ -55,7 +55,10 @@ app.get('/admin', (req,res,next) => {
   }
   let body = {
     user: {},
-    guilds: {}
+    guilds: [],
+    originalGuilds: [],
+    guildCount: 0,
+    query: `?session=${req.query.session}`
   }
   try{
     let decoded = jwt.verify(req.query.session, config.jwt_key)
@@ -70,7 +73,14 @@ app.get('/admin', (req,res,next) => {
           Authorization: decoded.combined_token
         }
       }).then((response) => {
-        body.guilds = response.getBody()
+        body.originalGuilds = response.getBody()
+        let g = response.getBody()
+        for(let guild in g){
+          if(g[guild].owner){
+            body.guilds.push(g[guild])
+          }
+        }
+        body.guildCount = body.guilds.length
         res.render('admin', body)
       })
     })
