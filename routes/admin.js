@@ -101,7 +101,7 @@ router.route('/server/:id')
         api.getGuildsUserAdmins(body.user.id, (err, admins) => {
           for(let __guild in admins){
             if(!admins.hasOwnProperty(__guild)) continue
-            let _guild = admins[_guild]
+            let _guild = admins[__guild]
             let guild = bot.guilds.find('id', _guild)
             let gRe = {
               id: _guild,
@@ -111,8 +111,9 @@ router.route('/server/:id')
             body.guilds.push(gRe)
           }
           body.guildCount = body.guilds.length
-          for(let _guild in admins){
-            if(!admins.hasOwnProperty(_guild)) continue
+          for(let __guild in admins){
+            if(!admins.hasOwnProperty(__guild)) continue
+            let _guild = admins[__guild]
             let guild = bot.guilds.find('id', _guild)
             if(_guild == req.params.id){
               let gRe = {
