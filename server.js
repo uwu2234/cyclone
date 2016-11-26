@@ -38,8 +38,35 @@ app.get('/auth', (req,res,next) => {
     }
   }).then((response) => {
     let body = response.getBody()
-    res.json(body)
+    let payloadRaw = {
+      token: body.access_token,
+      combined_token: 'Bearer '+body.access_token
+    }
+    let payload = jwt.sign(payloadRaw, config.jwt_key, { expiresIn: '15m' })
+    res.redirect(`/admin?session=${payload}`)
   })
+})
+
+app.get('/admin', (req,res,next) => {
+  if(!req.query || !req.query.session){
+    let error = new Error('Unauthorized - token invalid')
+    error.status = 401
+    return next(error)
+  }
+  try{
+    let decoded = jwt.verify(req.query.session, config.jwt_key)
+    requestify.get('https://discordapp.com/api/users/@me', {
+      headers: {
+        Authorization: decoded.combined_token
+      }
+    }).then((response) => {
+      res.json(response.getBody())
+    })
+  }catch(ex){
+    let error = new Error('Unauthorized - token invalid')
+    error.status = 401
+    return next(error)
+  }
 })
 
 app.get('/discord', (req,res,next) => {
