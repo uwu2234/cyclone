@@ -99,9 +99,9 @@
                 <tbody>
                   <% for(let member in botGuild) { %>
                   <tr>
-                    <td><%= botGuild[member].id %></td>
-                    <td><%= botGuild[member].username %></td>
-                    <td><%= botGuild[member].discriminator %></td>
+                    <td><%= botGuild[member].user.id %></td>
+                    <td><%= botGuild[member].user.username %></td>
+                    <td><%= botGuild[member].user.discriminator %></td>
                   </tr>
                   <% } %>
                 </tbody>
