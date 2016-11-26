@@ -136,7 +136,7 @@
           let discriminator = tr.children()[2].textContent
           let query = "<%= query %>"
           let guildId = "<%= guildId %>"
-          $.get('/admin/server/'+guildId+'/api/isadmin/'+id, function(data){
+          $.get('/admin/server/'+guildId+'/api/isadmin/'+id+query, function(data){
             let tr = $(this).closest('tr')
             let id = tr.children()[0].textContent
             let username = tr.children()[1].textContent
@@ -161,7 +161,7 @@
                   label: "Save Changes",
                   className: "btn-success",
                   callback: function(){
-                    $.get('/admin/server/'+guildId+'/api/setadmin/'+id+'/'+$("#isAdmin")[0].checked.toString(), function(){
+                    $.get('/admin/server/'+guildId+'/api/setadmin/'+id+'/'+$("#isAdmin")[0].checked.toString()+query, function(){
                       $.growl.notice({ title: 'Changes Saved', message: 'The user '+username+'#'+discriminator+' has been updated successfully!'})
                     })
                   }
