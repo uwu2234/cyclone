@@ -147,7 +147,7 @@ bot.on('ready', () => {
       return apx.error(`Usage: ${apx.getPrefix()}bet <money>`)
     }
     let toGamble = parseInt(args[1])
-    if(toGamble < 0){
+    if(0 > toGamble){
       return apx.error(`${toGamble} is less than 0. Aborting bet.`)
     }
     api.getBalance(msg.author.id, (err, bal) => {
@@ -275,7 +275,7 @@ bot.on('ready', () => {
       let iconName = getIconName(body.HiradObservation.wxIcon)
       response += `${iconEmojiMap[iconName]} **${body.HiradObservation.text}\n`
       response += `:thermometer: ${body.HiradObservation.temp.toString()}\n`
-      response += `**Feels Like** ${body.HiradObservation.feelsLike.toString()}\n`
+      response += ` **Feels Like** ${body.HiradObservation.feelsLike.toString()}\n`
       response += `Winds ${body.HiradObservation.wDirText} at ${body.HiradObservation.wSpeed.toString()} mph`
       msg.channel.sendMessage(response)
     })
@@ -285,13 +285,13 @@ bot.on('ready', () => {
     try{
       var code = msg.content.substr(5);
       var resp = eval(code);
-      api.success('Your code successfully ran on the bot!')
+      apx.success('Your code successfully ran on the bot!')
       msg.channel.sendMessage(`\`\`\`${resp}\`\`\``);
     }catch(ex){
-      api.error('Your code failed to run on the bot. Stack trace is below.')
+      apx.error('Your code failed to run on the bot. Stack trace is below.')
       msg.channel.sendMessage(`\`\`\`${ex}\`\`\``);
     }
-  }, 'botAdmin');
+  }, 'botAdmin')
   api.init(bot, (err) => { // Initialize API (create non-existent users in database)
     if(err){
       console.log(err)
