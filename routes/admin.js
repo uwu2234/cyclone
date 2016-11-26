@@ -71,64 +71,55 @@ router.route('/server/:id')
     let body = {
       guildId: req.params.id,
       guild: {},
+      guilds: [],
+      originalGuilds: [],
+      guildCount: 0,
+      user: {},
       query: `?session=${req.query.session}`
     }
-    console.log('before try')
     try{
-      console.log('in try')
       let decoded = jwt.verify(req.query.session, config.jwt_key)
-      console.log(decoded)
+      requestify.get('https://discordapp.com/api/users/@me', {
+        headers: {
+          Authorization: decoded.combined_token
+        }
+      }).then((response) => {
+        body.user = response.getBody()
+      })
       requestify.get(`https://discordapp.com/api/users/@me/guilds`, {
         headers: {
           Authorization: decoded.combined_token
         }
       }).then((response) => {
-        console.log('users/@me/guilds response ')
         let guilds = response.getBody()
-        body.originalGuilds = response.getBody()
+        body.originalGuilds = guilds
         for(let guild in guilds){
           if(!guilds.hasOwnProperty(guild)) continue
-          console.log('inside 1st guild loop')
           let g = guilds[guild]
           if(g.owner){
             body.guilds.push(g)
           }
         }
-        console.log('out of 1st guild loop')
         body.guildCount = body.guilds.length
-        for(let guild in guilds){
-          if(!guilds.hasOwnProperty(guild)) continue
-          console.log('inside 2nd guild loop')
-          let g = guilds[guild]
-          if(g.id == req.params.id){
-            console.log('guild id == request id')
-            if(g.owner){
-              console.log('user is owner of guild')
-              body.guild = g
-              requestify.get('https://discordapp.com/api/users/@me', {
-                headers: {
-                  Authorization: decoded.combined_token
-                }
-              }).then((response) => {
-                console.log('users/@me response')
-                body.user = response.getBody()
-                return res.render('admin-server', body)
-              })
+        for(let _guild in guilds){
+          if(!guilds.hasOwnProperty(_guild)) continue
+          let guild = guilds[_guild]
+          if(guild.id == req.params.id){
+            if(guild.owner == true){
+              body.guild = guild
+              return res.render('admin-server', body)
             }else{
-              console.log('not owner of guild rip')
               let error = new Error('Unauthorized - You are not the owner of that guild!')
               error.status = 401
               return next(error)
             }
           }
         }
-        console.log('outside 2nd guild loop')
         let error = new Error('Unauthorized - You are not the owner of that guild!')
         error.status = 400
         return next(error)
       })
     }catch(ex){
-      console.log('catch')
       let error = new Error('Unauthorized - token invalid')
       error.status = 401
       return next(error)
