@@ -55,7 +55,7 @@ app.get('/admin', (req,res,next) => {
   }
   try{
     let decoded = jwt.verify(req.query.session, config.jwt_key)
-    requestify.get('https://discordapp.com/api/users/@me/guilds', {
+    requestify.get('https://discordapp.com/api/users/@me', {
       headers: {
         Authorization: decoded.combined_token
       }
