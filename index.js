@@ -476,18 +476,18 @@ bot.on('guildMemberRemove', (member) => {
 
 bot.on('messageDelete', (msg) => {
   if(msg.guild.id !== '238424240032972801') return
-  logger.sendEmbed(bot.channels.find('id', '251370243484680203'), logger.generateMessageDelete(msg))
+  logger.sendEmbed(bot.channels.get('251370243484680203'), logger.generateMessageDelete(msg))
 })
 
 bot.on('guildBanAdd', (guild,user) => {
   if(guild.id !== '238424240032972801') return
-  logger.sendEmbed(bot.channels.find('id', '251370243484680203'), logger.generateUserBanned(guild,user))
+  logger.sendEmbed(bot.channels.get('251370243484680203'), logger.generateUserBanned(guild,user))
 
 })
 
 bot.on('guildBanRemove', (guild,user) => {
   if(guild.id !== '238424240032972801') return
-  logger.sendEmbed(bot.channels.find('id', '251370243484680203'), logger.generateUserUnbanned(guild,user))
+  logger.sendEmbed(bot.channels.get('251370243484680203'), logger.generateUserUnbanned(guild,user))
 })
 
 bot.login(config.token)
