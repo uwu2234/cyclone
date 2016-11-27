@@ -111,7 +111,7 @@ function getIconName(_code){
 bot.on('ready', () => {
   mongoose.connect('admin:XpCdV6K1DWwq4BW0k0l@178.32.177.169/cyclone?authSource=admin&authMechanism=SCRAM-SHA-1') // Initialize Mongoose
   mongoose.Promise = global.Promise
-  commands.init() // Initializes built in commands (!help, !eval)
+  commands.init(bot) // Initializes built in commands (!help, !eval)
 
   commands.registerCommand('balance', 'Retrieve your balance', (msg,args,apx) => {
     if(typeof args[1] === 'string'){
