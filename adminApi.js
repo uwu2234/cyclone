@@ -6,6 +6,8 @@
  */
 const Users = require('./models/user-schema')
 const Guilds = require('./models/guild-schema')
+
+
 module.exports.bot = null
 module.exports.init = (bot) => {
   this.bot = bot
@@ -46,14 +48,18 @@ module.exports.getGuildAdmins = (guildId, callback) => {
   })
 }
 
-module.exports.getGuildCfg = (guildId, key) => {
+module.exports.getGuildCfg = (guildId, key, callback) => {
+  let sync = true
+  let data = null
   module.exports.findGuildById(guildId, (err, guild) => {
     if(err){
       return console.log(err)
     }
-    let config = guild.config
-    return callback(null, config[key])
+    data = config[key]
+    sync = false
   })
+  while(sync){ require('deasync').sleep(100) }
+  return data
 }
 
 module.exports.setGuildCfg = (guildId, key, value) => {
