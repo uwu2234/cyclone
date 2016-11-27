@@ -323,6 +323,110 @@ Official website: http://cyclonebot.com`)
   commands.registerCommand('admin', 'Sends link to authenticate to access admin panel', (msg, args, apx) => {
     msg.channel.sendMessage('http://cyclonebot.com/auth')
   })
+  commands.registerCommand('staff', 'Shows staff on server', (msg, args, apx) => {
+    let guild = msg.guild
+    let statusOnline = '<:statusOnline:252280901864521728>'
+    let statusIdle = '<:statusIdle:252280947213336576>'
+    let statusDnd = '<:statusDnd:252280963629842434>'
+    let statusOffline = '<:statusOffline:252280926522966037>'
+    let ownerRole = '238424390331662336'
+    let srAdminRole = '238426963448954880'
+    let adminRole = '238427061402861569'
+    let modRole = '238427678980440065'
+    let helperRole = '238427643429519360'
+    let response = '**OWNERS**\n'
+
+    for(let _staff in guild.roles.find('id', ownerRole).members){
+      let staff = guild.roles.find('id', ownerRole)[_staff]
+      let user = staff.user
+      let presence = user.presence
+      let status = statusOnline
+      if(presence.status == "online"){
+        status = statusOnline
+      }else if(presence.status == "offline"){
+        status = statusOffline
+      }else if(presence.status == "idle"){
+        status = statusIdle
+      }else if(presence.status == "dnd"){
+        status = statusDnd
+      }
+      let usdis = `${status} ${user.username}#${user.discriminator}\n`
+      response += usdis
+    }
+    response += "**SR ADMINS**\n"
+    for(let _staff in guild.roles.find('id', srAdminRole).members){
+      let staff = guild.roles.find('id', srAdminRole)[_staff]
+      let user = staff.user
+      let presence = user.presence
+      let status = statusOnline
+      if(presence.status == "online"){
+        status = statusOnline
+      }else if(presence.status == "offline"){
+        status = statusOffline
+      }else if(presence.status == "idle"){
+        status = statusIdle
+      }else if(presence.status == "dnd"){
+        status = statusDnd
+      }
+      let usdis = `${status} ${user.username}#${user.discriminator}\n`
+      response += usdis
+    }
+    response += "**ADMINS**\n"
+    for(let _staff in guild.roles.find('id', adminRole).members){
+      let staff = guild.roles.find('id', adminRole)[_staff]
+      let user = staff.user
+      let presence = user.presence
+      let status = statusOnline
+      if(presence.status == "online"){
+        status = statusOnline
+      }else if(presence.status == "offline"){
+        status = statusOffline
+      }else if(presence.status == "idle"){
+        status = statusIdle
+      }else if(presence.status == "dnd"){
+        status = statusDnd
+      }
+      let usdis = `${status} ${user.username}#${user.discriminator}\n`
+      response += usdis
+    }
+    response += "**MODS**\n"
+    for(let _staff in guild.roles.find('id', modRole).members){
+      let staff = guild.roles.find('id', modRole)[_staff]
+      let user = staff.user
+      let presence = user.presence
+      let status = statusOnline
+      if(presence.status == "online"){
+        status = statusOnline
+      }else if(presence.status == "offline"){
+        status = statusOffline
+      }else if(presence.status == "idle"){
+        status = statusIdle
+      }else if(presence.status == "dnd"){
+        status = statusDnd
+      }
+      let usdis = `${status} ${user.username}#${user.discriminator}\n`
+      response += usdis
+    }
+    response += "**HELPERS**\n"
+    for(let _staff in guild.roles.find('id', helperRole).members){
+      let staff = guild.roles.find('id', helperRole)[_staff]
+      let user = staff.user
+      let presence = user.presence
+      let status = statusOnline
+      if(presence.status == "online"){
+        status = statusOnline
+      }else if(presence.status == "offline"){
+        status = statusOffline
+      }else if(presence.status == "idle"){
+        status = statusIdle
+      }else if(presence.status == "dnd"){
+        status = statusDnd
+      }
+      let usdis = `${status} ${user.username}#${user.discriminator}\n`
+      response += usdis
+    }
+    logger.newEmbed(msg.channel, "Staff", response, "#0074D9")
+  }, 'SEND_MESSAGES', '238424240032972801')
   api.init(bot, (err) => { // Initialize API (create non-existent users in database)
     if(err){
       console.log(err)
@@ -366,17 +470,18 @@ bot.on('guildMemberRemove', (member) => {
 
 bot.on('messageDelete', (msg) => {
   if(msg.guild.id !== '238424240032972801') return
-  requestify.post(config.webhook, logger.generateMessageDelete(msg))
+  logger.sendEmbed(bot.channels.find('id', '251370243484680203'), logger.generateMessageDelete(msg))
 })
 
 bot.on('guildBanAdd', (guild,user) => {
   if(guild.id !== '238424240032972801') return
-  requestify.post(config.webhook, logger.generateUserBanned(guild,user))
+  logger.sendEmbed(bot.channels.find('id', '251370243484680203'), logger.generateUserBanned(guild,user))
+
 })
 
 bot.on('guildBanRemove', (guild,user) => {
   if(guild.id !== '238424240032972801') return
-  requestify.post(config.webhook, logger.generateUserUnbanned(guild,user))
+  logger.sendEmbed(bot.channels.find('id', '251370243484680203'), logger.generateUserUnbanned(guild,user))
 })
 
 bot.login(config.token)

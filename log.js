@@ -53,9 +53,24 @@ module.exports.error = function(msg){
 }
 
 
+module.exports.sendEmbed = (channel, embed) => {
+  channel.sendMessage('', {
+    embed: embed
+  })
+}
+module.exports.newEmbed = (channel, title, description, color) => {
+  let msgOpts = {
+    embed: {
+      title: title,
+      color: parseInt(color.replace('#', ''), 16),
+      description: description
+    }
+  }
+  channel.sendMessage('', msgOpts)
+}
 module.exports.generateUserBanned = (guild, user) => {
   let ret = {
-    embeds: [{
+    embed: {
       title: 'User Banned',
       color: 16728374,
       author: {
@@ -68,14 +83,14 @@ module.exports.generateUserBanned = (guild, user) => {
       },
       description: `User has been banned from ${guild.name}\n`,
       timestamp: `${new Date().toISOString()}`
-    }]
+    }
   }
-  return ret
+  return ret.embed
 }
 
 module.exports.generateUserUnbanned = (guild, user) => {
   let ret = {
-    embeds: [{
+    embed: {
       title: 'User Unbanned',
       color: 3066944,
       author: {
@@ -88,14 +103,14 @@ module.exports.generateUserUnbanned = (guild, user) => {
       },
       description: `User has been unbanned from ${guild.name}\n`,
       timestamp: `${new Date().toISOString()}`
-    }]
+    }
   }
-  return ret
+  return ret.embed
 }
 
 module.exports.generateMessageDelete = (msg) => {
   let ret = {
-    embeds: [{
+    embed: {
       title: 'Message Deleted',
       color: 16728374,
       author: {
@@ -108,9 +123,9 @@ module.exports.generateMessageDelete = (msg) => {
       },
       description: `${msg.cleanContent}\n`,
       timestamp: `${new Date().toISOString()}`
-    }]
+    }
   }
-  return ret
+  return ret.embed
 }
 
 
