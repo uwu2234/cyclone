@@ -7,21 +7,16 @@
 
 const config = require('./config.json')
 const adminApi = require('./adminApi')
+const logger = require('./log')
 
 module.exports.commands = {}
 module.exports._api = {
   msg: null,
   error: function(message){
-    return this.msg.channel.sendMessage(`:x: \`\`\`diff
--!- ERROR -!-
-${message} 
--!- END ERROR -!-\`\`\``)
+    return logger.newEmbed(this.msg.channel, '🚫 Error', message, '#FF4136')
   },
   success: function(message){
-    return this.msg.channel.sendMessage(`:white_check_mark: \`\`\`diff
-+!+ SUCCESS +!+
-${message} 
-+!+ END SUCCESS +!+\`\`\``)
+    return logger.newEmbed(this.msg.channel, '✅ Success', message, '#2ECC40')
   },
   getPrefix: function(){
     return adminApi.getGuildCfg(this.msg.guild.id, 'prefix')

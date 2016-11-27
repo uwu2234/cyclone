@@ -337,7 +337,7 @@ Official website: http://cyclonebot.com`)
     let response = '**OWNERS**\n'
 
     for(let _staff in guild.roles.get(ownerRole).members){
-      let staff = guild.roles.get(ownerRole)[_staff]
+      let staff = guild.roles.get(ownerRole).members[_staff]
       let user = staff.user
       let presence = user.presence
       let status = statusOnline
@@ -355,7 +355,7 @@ Official website: http://cyclonebot.com`)
     }
     response += "**SR ADMINS**\n"
     for(let _staff in guild.roles.get(srAdminRole).members){
-      let staff = guild.roles.get(srAdminRole)[_staff]
+      let staff = guild.roles.get(srAdminRole).members[_staff]
       let user = staff.user
       let presence = user.presence
       let status = statusOnline
@@ -373,7 +373,7 @@ Official website: http://cyclonebot.com`)
     }
     response += "**ADMINS**\n"
     for(let _staff in guild.roles.get(adminRole).members){
-      let staff = guild.roles.get(adminRole)[_staff]
+      let staff = guild.roles.get(adminRole).members[_staff]
       let user = staff.user
       let presence = user.presence
       let status = statusOnline
@@ -391,7 +391,7 @@ Official website: http://cyclonebot.com`)
     }
     response += "**MODS**\n"
     for(let _staff in guild.roles.get(modRole).members){
-      let staff = guild.roles.get(modRole)[_staff]
+      let staff = guild.roles.get(modRole).members[_staff]
       let user = staff.user
       let presence = user.presence
       let status = statusOnline
@@ -409,7 +409,7 @@ Official website: http://cyclonebot.com`)
     }
     response += "**HELPERS**\n"
     for(let _staff in guild.roles.get(helperRole).members){
-      let staff = guild.roles.get(helperRole)[_staff]
+      let staff = guild.roles.get(helperRole).members[_staff]
       let user = staff.user
       let presence = user.presence
       let status = statusOnline

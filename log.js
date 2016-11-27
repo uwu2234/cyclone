@@ -63,7 +63,8 @@ module.exports.newEmbed = (channel, title, description, color) => {
     embed: {
       title: title,
       color: parseInt(color.replace('#', ''), 16),
-      description: description
+      description: description,
+      timestamp: `${new Date().toISOString()}`
     }
   }
   channel.sendMessage('', msgOpts)
