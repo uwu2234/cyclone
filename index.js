@@ -15,6 +15,7 @@ const api = require('./api')
 
 const bot = new Discord.Client()
 const app = require('./server')
+const db =  mongoose.createConnection('admin:XpCdV6K1DWwq4BW0k0l@178.32.177.169/cyclone?authSource=admin&authMechanism=SCRAM-SHA-1')
 app.set('bot', bot)
 const messages = {
   win: [

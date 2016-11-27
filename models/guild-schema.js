@@ -5,7 +5,8 @@
  * Created on.........: 11/26/2016
  */
 
-const mongoose = require('mongoose')
+const _mongoose = require('mongoose')
+const mongoose =  _mongoose.createConnection('admin:XpCdV6K1DWwq4BW0k0l@178.32.177.169/cyclone?authSource=admin&authMechanism=SCRAM-SHA-1')
 const guildSchema = mongoose.Schema({
   id: {
     type: String,
