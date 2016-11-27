@@ -187,11 +187,13 @@
           let guildId = "<%= guildId %>"
           let check = ""
           let prefix = "!"
-          $.get('/admin/server/'+guildId+'/api/get/unknownCommand'+query, function(data) {
+          $.get('/admin/server/'+guildId+'/api/get/unknownCommand' + query, function(data) {
+            console.log(data)
             if (data == "true") {
               check = " checked"
             }
             $.get('/admin/server/' + guildId + '/api/get/prefix' + query, function (data) {
+              console.log(data)
               prefix = data
               bootbox.dialog({
                 title: "Edit server",
