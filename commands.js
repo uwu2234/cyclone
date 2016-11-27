@@ -23,10 +23,7 @@ ${message}
 +!+ END SUCCESS +!+\`\`\``)
   },
   getPrefix: function(){
-    if(config.servers[this.msg.guild.id]){
-      return config.servers[this.msg.guild.id].prefix
-    }
-    return config.prefix
+    return adminApi.getGuildCfg(this.msg.guild.id, 'prefix')
   }
 }
 module.exports.hasPermission = (msg, perm) => {
@@ -68,10 +65,8 @@ String.prototype.replaceAll = function(target, replacement) {
   return this.split(target).join(replacement);
 }
 module.exports.handleCommand = (msg) => {
-  let prefix = config.prefix
-  if(config.servers[msg.guild.id]) prefix = config.servers[msg.guild.id].prefix
+  let prefix = adminApi.getGuildCfg(msg.guild.id, 'prefix')
   if(!(msg.content.startsWith(prefix))) return false
-
   let originalContent = msg.content
   let originalCleanContent = msg.cleanContent
   let args = msg.content.substr(prefix.length,msg.content.length)
@@ -82,15 +77,9 @@ module.exports.handleCommand = (msg) => {
   let api = module.exports.generateApi(msg)
   let commands = module.exports.commands
   if(!commands[args[0]]){
-    if(config.servers[msg.guild.id]){
-      let srv = config.servers[msg.guild.id]
-      if(srv.unknownMessage){
-        api.error(`That command doesn't exist! Execute '${prefix}help' for all commands.`)
-      }
-    }else{
+    if(adminApi.getGuildCfg(msg.guild.id, 'unknownMessage')){
       api.error(`That command doesn't exist! Execute '${prefix}help' for all commands.`)
     }
-
     return false // Not handled. Returns false for handling.
   }
   let cmd = commands[args[0]]

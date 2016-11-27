@@ -46,6 +46,16 @@ module.exports.getGuildAdmins = (guildId, callback) => {
   })
 }
 
+module.exports.getGuildCfg = (guildId, key) => {
+  module.exports.findGuildById(guildId, (err, guild) => {
+    if(err){
+      return console.log(err)
+    }
+    let config = guild.config
+    return callback(null, config[key])
+  })
+}
+
 module.exports.setGuildCfg = (guildId, key, value) => {
   module.exports.findGuildById(guildId, (err, guild) => {
     if(err){
