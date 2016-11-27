@@ -121,7 +121,7 @@ bot.on('ready', () => {
         if(err){
           return apx.error('Failed to get target\'s balance! Please try again later.')
         }
-        msg.reply(`${bot.users.find('id', target).username}'s balance is **${balance}**!`)
+        msg.reply(`${bot.users.get(target).username}'s balance is **${balance}**!`)
       })
     }else{
       api.getBalance(msg.author.id, (err, balance) => {
@@ -229,7 +229,7 @@ bot.on('ready', () => {
       if(typeof warnings[1] == 'undefined'){
         return apx.success('Target has no warnings on record!')
       }
-      let warns = `**Warning record for ${bot.users.find('id', target).username}**\n`
+      let warns = `**Warning record for ${bot.users.get(target).username}**\n`
       let idx = 1
       warnings.forEach((warning) => {
         if(typeof warning === 'undefined' || !warning) return

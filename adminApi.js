@@ -83,7 +83,7 @@ module.exports.isUserAdmin = (guildId, userId, callback) => {
       return callback(err)
     }
     let admins = guild.admins
-    let _guild = module.exports.bot.guilds.find('id', guildId)
+    let _guild = module.exports.bot.guilds.get(guildId)
     if(_guild.ownerID == userId) return callback(null, true)
     if(admins[userId]) return callback(null, true)
     return callback(null, false)
@@ -109,7 +109,7 @@ module.exports.getGuildsUserAdmins = (userId, callback) => {
     }
     for(let _key in keys){
       let guild = keys[_key]
-      if(module.exports.bot.guilds.find('id', guild.id).ownerID == userId){
+      if(module.exports.bot.guilds.get(guild.id).ownerID == userId){
         guildsUserAdmins.push(guild.id)
         continue
       }
