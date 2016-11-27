@@ -433,6 +433,21 @@ Official website: http://cyclonebot.com`)
     }
     logger.newEmbed(msg.channel, "Staff", response, "#0074D9")
   }, 'SEND_MESSAGES', '238424240032972801')
+  commands.registerCommand('ping', 'Ping bot', (msg,args,apx) => {
+    let version = require('./package.json').version
+    msg.channnel.sendMessage(`Cyclone v${version} developed by @Relative#1027
+Production: ${config.production.toString()}`)
+  })
+  commands.registerCommand('serverinfo', 'Server information', (msg,args,apx) => {
+    let guild = msg.guild
+    logger.newEmbed(msg.channel, 'Server Info', `**Name** ${guild.name}
+**ID** ${guild.id}
+**Channel Count** ${guild.channels.array().length}
+**Icon** ${guild.iconURL}
+**Owner** ${guild.owner.user.username}#${guild.owner.user.discriminator}
+**Region** ${guild.region}
+**Features** ${JSON.stringify(guild.features)}`, '#39CCCC')
+  })
   api.init(bot, (err) => { // Initialize API (create non-existent users in database)
     if(err){
       console.log(err)
