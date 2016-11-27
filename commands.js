@@ -61,6 +61,7 @@ String.prototype.replaceAll = function(target, replacement) {
   return this.split(target).join(replacement);
 }
 module.exports.handleCommand = (msg) => {
+  if(msg.channel.type === 'dm') return
   let prefix = adminApi.getGuildCfg(msg.guild.id, 'prefix')
   if(!(msg.content.startsWith(prefix))) return false
   let originalContent = msg.content
