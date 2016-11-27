@@ -329,15 +329,15 @@ Official website: http://cyclonebot.com`)
     let statusIdle = '<:statusIdle:252280947213336576>'
     let statusDnd = '<:statusDnd:252280963629842434>'
     let statusOffline = '<:statusOffline:252280926522966037>'
-    let ownerRole = '238424390331662336'
-    let srAdminRole = '238426963448954880'
-    let adminRole = '238427061402861569'
-    let modRole = '238427678980440065'
-    let helperRole = '238427643429519360'
+    let ownerRole = guild.roles.get('238424390331662336')
+    let srAdminRole = guild.roles.get('238426963448954880')
+    let adminRole = guild.roles.get('238427061402861569')
+    let modRole = guild.roles.get('238427678980440065')
+    let helperRole = guild.roles.get('238427643429519360')
     let response = '**OWNERS**\n'
 
-    for(let _staff in guild.roles.get(ownerRole).members){
-      let staff = guild.roles.get(ownerRole).members[_staff]
+    for(let _staff in ownerRole.members){
+      let staff = ownerRole.members[_staff]
       let user = staff.user
       let presence = user.presence
       let status = statusOnline
@@ -354,8 +354,8 @@ Official website: http://cyclonebot.com`)
       response += usdis
     }
     response += "**SR ADMINS**\n"
-    for(let _staff in guild.roles.get(srAdminRole).members){
-      let staff = guild.roles.get(srAdminRole).members[_staff]
+    for(let _staff in srAdminRole.members){
+      let staff = srAdminRole.members[_staff]
       let user = staff.user
       let presence = user.presence
       let status = statusOnline
@@ -372,8 +372,8 @@ Official website: http://cyclonebot.com`)
       response += usdis
     }
     response += "**ADMINS**\n"
-    for(let _staff in guild.roles.get(adminRole).members){
-      let staff = guild.roles.get(adminRole).members[_staff]
+    for(let _staff in adminRole.members){
+      let staff = adminRole.members[_staff]
       let user = staff.user
       let presence = user.presence
       let status = statusOnline
@@ -390,8 +390,8 @@ Official website: http://cyclonebot.com`)
       response += usdis
     }
     response += "**MODS**\n"
-    for(let _staff in guild.roles.get(modRole).members){
-      let staff = guild.roles.get(modRole).members[_staff]
+    for(let _staff in modRole.members){
+      let staff = modRole.members[_staff]
       let user = staff.user
       let presence = user.presence
       let status = statusOnline
@@ -408,8 +408,8 @@ Official website: http://cyclonebot.com`)
       response += usdis
     }
     response += "**HELPERS**\n"
-    for(let _staff in guild.roles.get(helperRole).members){
-      let staff = guild.roles.get(helperRole).members[_staff]
+    for(let _staff in helperRole.members){
+      let staff = helperRole.members[_staff]
       let user = staff.user
       let presence = user.presence
       let status = statusOnline
