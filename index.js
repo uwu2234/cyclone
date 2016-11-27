@@ -320,7 +320,9 @@ Official website: http://cyclonebot.com`)
       })
     })
   }, 'botAdmin')
-
+  commands.registerCommand('admin', 'Sends link to authenticate to access admin panel', (msg, args, apx) => {
+    msg.channel.sendMessage('http://cyclonebot.com/auth')
+  })
   api.init(bot, (err) => { // Initialize API (create non-existent users in database)
     if(err){
       console.log(err)
