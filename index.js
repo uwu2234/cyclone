@@ -462,8 +462,9 @@ Production: ${config.production.toString()}`)
     let game = "*nothing*"
     let status = statusOnline
     let nick = "*none*"
-    if(target.presence.game){
-      game = target.presence.game
+    let presence = target.presence
+    if(presence.game){
+      game = presence.game
     }
     if(guildTarget.nickname){
       nick = guildTarget.nickname
