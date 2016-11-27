@@ -19,6 +19,7 @@
     <!--[if lt IE 9]>
     <script src="/assets/javascripts/ie.min.js"></script>
     <![endif]-->
+    <!-- credits to smnedelko for theme -->
   </head>
   <body class="theme-frost main-menu-animated">
     <div id="main-wrapper">
@@ -78,13 +79,16 @@
         </ul>
         <div class="page-header">
           <div class="row">
-            <h1 class="col-xs-12 col-sm-4 text-center text-left-sm"><i class="fa fa-dashboard page-header-icon"></i>&nbsp;&nbsp;Dashboard</h1>
+            <h1 class="col-xs-12 col-sm-4 text-center text-left-sm"><i class="fa fa-server page-header-icon"></i>&nbsp;&nbsp;<%= guild.name %></h1>
           </div>
         </div>
         <hr class="no-grid-gutter-h grid-gutter-margin-b no-margin-t">
         <div class="panel colourable">
           <div class="panel-heading">
             <span class="panel-title"><i class="panel-title-icon fa fa-server"></i>Server</span>
+            <div class="panel-heading-controls">
+              <button class="btn btn-xs btn-info" id="editServer"><i class="fa fa-pencil"></i></button>
+            </div>
           </div>
           <div class="panel-body">
             <div class="table-primary">
@@ -175,9 +179,54 @@
               })
             })
           })
-
         })
       });
+      init.push(function(){
+        $("#editServer").on('click', function(){
+          let query = "<%= query %>"
+          let guildId = "<%= guildId %>"
+          let check = ""
+          let prefix = "!"
+          $.get('/admin/server/'+guildId+'/api/get/unknownCommand'+query, function(data) {
+            if (data == "true") {
+              check = " checked"
+            }
+            $.get('/admin/server/' + guildId + '/api/get/prefix' + query, function (data) {
+              prefix = data
+              bootbox.dialog({
+                title: "Edit server",
+                message: '<strong>Unknown Command Messages:</strong> <input type="checkbox" id="unknownCmdMsg"'+check+'><br>' +
+                '<strong>Prefix:</strong> <input type="text" maxlength="1" id="serverPrefix" value="'+prefix+'"class="form-control">',
+                buttons: {
+                  cancel: {
+                    label: "Cancel",
+                    className: "btn-danger",
+                    callback: function(){}
+                  },
+                  save: {
+                    label: "Save Changes",
+                    className: "btn-success",
+                    callback: function(){
+                      $.get('/admin/server/'+guildId+'/api/set/unknownCommand/'+$("#unknownCmdMsg")[0].checked.toString()+query, function(data){
+                        $.get('/admin/server/'+guildId+'/api/set/prefix/'+$("#serverPrefix")[0].value+query, function(data) {
+                          $.growl.notice({ title: 'Changes Saved', message: 'The server config has been updated successfully!'})
+                        })
+                      })
+                    }
+                  }
+                },
+                className: "bootbox-sm"
+              }).on("shown.bs.modal", function(e){
+                $("#unknownCmdMsg").switcher({
+                  theme: 'square',
+                  on_state_content: '<span class="fa fa-check"></span>',
+                  off_state_content: '<span class="fa fa-times"></span>'
+                })
+              })
+            })
+          })
+        })
+      })
       init.push(function() {
         $("#bot-members").dataTable();
         $("#bot-members_wrapper .table-caption").text('Server Members');

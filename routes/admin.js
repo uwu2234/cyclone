@@ -140,6 +140,85 @@ router.route('/server/:id')
     }
   })
 
+router.route('/server/:id/api/get/:cfg')
+  .get((req,res,next) => {
+    if(!req.query || !req.query.session){
+      let error = new Error('Unauthorized - token invalid')
+      error.status = 401
+      return next(error)
+    }
+    if(!req.params || !req.params.id || !req.params.cfg){
+      let error = new Error('Missing params in request')
+      error.status = 400
+      return next(error)
+    }
+    try{
+      let decoded = jwt.verify(req.query.session, config.jwt_key)
+      requestify.get('https://discordapp.com/api/users/@me', {
+        headers: {
+          Authorization: decoded.combined_token
+        }
+      }).then((response) => {
+        let body = response.getBody()
+        api.isUserAdmin(req.params.id, body.id, (err, admin) => {
+          if(!admin){
+            let error = new Error('Unauthorized - You are not an admin of that guild!')
+            error.status = 401
+            return next(error)
+          }
+          api.findGuildById(req.params.id, (err, guild) => {
+            if(err){
+              err.status = 500
+              return next(err)
+            }
+            return res.send(guild.config[req.params.cfg])
+          })
+        })
+      })
+    }catch(ex){
+      let error = new Error('Unauthorized - token invalid')
+      error.status = 401
+      return next(error)
+    }
+  })
+
+router.route('/server/:id/api/set/:cfg/:val')
+  .get((req,res,next) => {
+    if(!req.query || !req.query.session){
+      let error = new Error('Unauthorized - token invalid')
+      error.status = 401
+      return next(error)
+    }
+    if(!req.params || !req.params.id || !req.params.cfg || !req.params.val){
+      let error = new Error('Missing params in request')
+      error.status = 400
+      return next(error)
+    }
+    try{
+      let decoded = jwt.verify(req.query.session, config.jwt_key)
+      requestify.get('https://discordapp.com/api/users/@me', {
+        headers: {
+          Authorization: decoded.combined_token
+        }
+      }).then((response) => {
+        let body = response.getBody()
+        api.isUserAdmin(req.params.id, body.id, (err, admin) => {
+          if(!admin){
+            let error = new Error('Unauthorized - You are not an admin of that guild!')
+            error.status = 401
+            return next(error)
+          }
+          api.setGuildCfg(req.params.id, req.params.cfg, req.params.val)
+          return res.send('success')
+        })
+      })
+    }catch(ex){
+      let error = new Error('Unauthorized - token invalid')
+      error.status = 401
+      return next(error)
+    }
+  })
+
 router.route('/server/:id/api/isadmin/:userId')
   .get((req,res,next) => {
     if(!req.query || !req.query.session){

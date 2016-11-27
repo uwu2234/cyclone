@@ -6,6 +6,7 @@
  */
 
 const config = require('./config.json')
+const adminApi = require('./adminApi')
 module.exports.commands = {}
 module.exports._api = {
   msg: null,
@@ -35,8 +36,18 @@ module.exports.hasPermission = (msg, perm) => {
     return false
   }
   if(msg.author.id === '116693403147698181') return true // change id - all permissions
-  let perms = msg.channel.permissionsFor(msg.author).serialize()
-  return perms[perm]
+  adminApi.isUserAdmin(msg.guild.id, msg.author.id, (err, admin) => {
+    if(err){
+      let perms = msg.channel.permissionsFor(msg.author).serialize()
+      return perms[perm]
+    }
+    if(admin){
+      return true
+    }else{
+      let perms = msg.channel.permissionsFor(msg.author).serialize()
+      return perms[perm]
+    }
+  })
 }
 
 module.exports.registerCommand = (name, help, callback, permission, serverBlock) => {
@@ -100,7 +111,8 @@ module.exports.handleCommand = (msg) => {
 
   return true // Handled and executed.
 }
-module.exports.init = () => {
+module.exports.init = (bot) => {
+  adminApi.init(bot)
   module.exports.registerCommand('help', 'Shows help of every command', (msg, args, api) => {
     let commands = module.exports.commands
     let helpText = `Cyclone v${require('./package.json').version} - developed by <@116693403147698181> \n\`\`\``
