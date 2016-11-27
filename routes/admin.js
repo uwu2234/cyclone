@@ -208,7 +208,10 @@ router.route('/server/:id/api/set/:cfg/:val')
             error.status = 401
             return next(error)
           }
-          api.setGuildCfg(req.params.id, req.params.cfg, req.params.val)
+          let val = req.params.val
+          if(val == "true") val = true
+          if(val == "false") val = false
+          api.setGuildCfg(req.params.id, req.params.cfg, val)
           return res.send('success')
         })
       })

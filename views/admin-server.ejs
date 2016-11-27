@@ -189,7 +189,7 @@
           let prefix = "!"
           $.get('/admin/server/'+guildId+'/api/get/unknownCommand' + query, function(data) {
             console.log(data)
-            if (data == "true") {
+            if (data == true) {
               check = " checked"
             }
             $.get('/admin/server/' + guildId + '/api/get/prefix' + query, function (data) {
