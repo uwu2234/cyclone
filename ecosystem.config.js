@@ -22,7 +22,7 @@ module.exports = {
       "post-deploy" : "chmod +x postDeploy.sh && ./postDeploy.sh"
     },
     production : {
-      key  : "C:/Users/Seth/.ssh/id_rsa",
+      key  : "~/.ssh/id_rsa",
       user : "ubuntu",
       host : "69.195.152.138",
       ref  : "origin/master",
