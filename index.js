@@ -448,6 +448,52 @@ Production: ${config.production.toString()}`)
 **Region** ${guild.region}
 **Features** ${JSON.stringify(guild.features)}`, '#39CCCC')
   })
+  commands.registerCommand('userinfo', 'User information', (msg,args,apx) => {
+    let target = msg.author
+    let guildTarget = msg.guild.members.get(msg.author.id)
+    let statusOnline = '<:statusOnline:252280901864521728> Online'
+    let statusIdle = '<:statusIdle:252280947213336576> Away'
+    let statusDnd = '<:statusDnd:252280963629842434> Do Not Disturb'
+    let statusOffline = '<:statusOffline:252280926522966037> Offline'
+    if(args[1]){
+      target = bot.users.get(args[1].replace('<@', '').replace('>', ''))
+      guildTarget = msg.guild.members.get(args[1].replace('<@', '').replace('>', ''))
+    }
+    let game = "*nothing*"
+    let status = statusOnline
+    let nick = "*none*"
+    if(target.presence.game){
+      game = target.presence.game
+    }
+    if(guildTarget.nickname){
+      nick = guildTarget.nickname
+    }
+    if(presence.status == "online"){
+      status = statusOnline
+    }else if(presence.status == "offline"){
+      status = statusOffline
+    }else if(presence.status == "idle"){
+      status = statusIdle
+    }else if(presence.status == "dnd"){
+      status = statusDnd
+    }
+    logger.newEmbed(msg.channel, 'User Info', `**Name** ${target.username}
+**Discriminator** ${target.discriminator}
+**Avatar** ${target.avatarURL}
+**Nickname** ${nick}
+**ID** ${target.id}
+**Joined At** ${guildTarget.joinedAt.toUTCString()}
+**Presence**
+ **- Game** ${game}
+ **- Status** ${status}
+**Voice**
+ **- Client Deaf** ${guildTarget.selfDeaf}
+ **- Client Mute** ${guildTarget.selfMute}
+ **- Server Deaf** ${guildTarget.serverDeaf}
+ **- Server Mute** ${guildTarget.serverMute}
+**Permissions**
+${JSON.stringify(guildTarget.permissions.serialize())}`, '#39CCCC')
+  })
   api.init(bot, (err) => { // Initialize API (create non-existent users in database)
     if(err){
       console.log(err)
