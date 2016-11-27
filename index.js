@@ -464,7 +464,7 @@ Production: ${config.production.toString()}`)
     let nick = "*none*"
     let presence = target.presence
     if(presence.game){
-      game = presence.game
+      game = presence.game.name
     }
     if(guildTarget.nickname){
       nick = guildTarget.nickname
@@ -493,7 +493,7 @@ Production: ${config.production.toString()}`)
  **- Server Deaf** ${guildTarget.serverDeaf}
  **- Server Mute** ${guildTarget.serverMute}
 **Permissions**
-${JSON.stringify(guildTarget.permissions.serialize())}`, '#39CCCC')
+${JSON.stringify(guildTarget.permissions.serialize(), null, 2)}`, '#39CCCC')
   })
   api.init(bot, (err) => { // Initialize API (create non-existent users in database)
     if(err){
