@@ -18,7 +18,7 @@ module.exports = {
       ref  : "origin/master",
       repo : "git@github.com:FNCxPro/cyclone.git",
       path : "~/cyclone",
-      "pre-deploy-local": "PATH=%PATH%;C:/Program Files/Git/usr/bin",
+      //"pre-deploy-local": "PATH=%PATH%;C:/Program Files/Git/usr/bin",
       "post-deploy" : "chmod +x postDeploy.sh && ./postDeploy.sh"
     },
     production : {
@@ -28,7 +28,7 @@ module.exports = {
       ref  : "origin/master",
       repo : "git@github.com:FNCxPro/cyclone.git",
       path : "~/cyclone",
-      "pre-deploy-local": "PATH=%PATH%;C:/Program Files/Git/usr/bin",
+      //"pre-deploy-local": "PATH=%PATH%;C:/Program Files/Git/usr/bin",
       "post-deploy" : "chmod +x postDeployProd.sh && ./postDeployProd.sh"
     }
   }
