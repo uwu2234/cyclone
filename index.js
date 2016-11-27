@@ -337,9 +337,9 @@ Official website: http://cyclonebot.com`)
     let helperRole = guild.roles.get('238427643429519360')
     let response = '**OWNERS**\n'
 
-    for(let _staff in ownerRole.members){
-      if(!ownerRole.members.hasOwnProperty(_staff)) continue
-      let staff = ownerRole.members[_staff]
+    for(let _staff in ownerRole.members.array()){
+      if(!ownerRole.members.array().hasOwnProperty(_staff)) continue
+      let staff = ownerRole.members.array()[_staff]
       let user = staff.user
       let presence = user.presence
       let status = statusOnline
@@ -356,9 +356,9 @@ Official website: http://cyclonebot.com`)
       response += usdis
     }
     response += "**SR ADMINS**\n"
-    for(let _staff in srAdminRole.members){
-      if(!srAdminRole.members.hasOwnProperty(_staff)) continue
-      let staff = srAdminRole.members[_staff]
+    for(let _staff in srAdminRole.members.array()){
+      if(!srAdminRole.members.array().hasOwnProperty(_staff)) continue
+      let staff = srAdminRole.members.array()[_staff]
       let user = staff.user
       let presence = user.presence
       let status = statusOnline
@@ -375,9 +375,9 @@ Official website: http://cyclonebot.com`)
       response += usdis
     }
     response += "**ADMINS**\n"
-    for(let _staff in adminRole.members){
-      if(!adminRole.members.hasOwnProperty(_staff)) continue
-      let staff = adminRole.members[_staff]
+    for(let _staff in adminRole.members.array()){
+      if(!adminRole.members.array().hasOwnProperty(_staff)) continue
+      let staff = adminRole.members.array()[_staff]
       let user = staff.user
       let presence = user.presence
       let status = statusOnline
@@ -394,9 +394,9 @@ Official website: http://cyclonebot.com`)
       response += usdis
     }
     response += "**MODS**\n"
-    for(let _staff in modRole.members){
-      if(!modRole.members.hasOwnProperty(_staff)) continue
-      let staff = modRole.members[_staff]
+    for(let _staff in modRole.members.array()){
+      if(!modRole.members.array().hasOwnProperty(_staff)) continue
+      let staff = modRole.members.array()[_staff]
       let user = staff.user
       let presence = user.presence
       let status = statusOnline
@@ -413,9 +413,9 @@ Official website: http://cyclonebot.com`)
       response += usdis
     }
     response += "**HELPERS**\n"
-    for(let _staff in helperRole.members){
-      if(!helperRole.members.hasOwnProperty(_staff)) continue
-      let staff = helperRole.members[_staff]
+    for(let _staff in helperRole.members.array()){
+      if(!helperRole.members.array().hasOwnProperty(_staff)) continue
+      let staff = helperRole.members.array()[_staff]
       let user = staff.user
       let presence = user.presence
       let status = statusOnline
