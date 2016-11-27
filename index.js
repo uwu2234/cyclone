@@ -336,8 +336,8 @@ Official website: http://cyclonebot.com`)
     let helperRole = '238427643429519360'
     let response = '**OWNERS**\n'
 
-    for(let _staff in guild.roles.find('id', ownerRole).members){
-      let staff = guild.roles.find('id', ownerRole)[_staff]
+    for(let _staff in guild.roles.get(ownerRole).members){
+      let staff = guild.roles.get(ownerRole)[_staff]
       let user = staff.user
       let presence = user.presence
       let status = statusOnline
@@ -354,8 +354,8 @@ Official website: http://cyclonebot.com`)
       response += usdis
     }
     response += "**SR ADMINS**\n"
-    for(let _staff in guild.roles.find('id', srAdminRole).members){
-      let staff = guild.roles.find('id', srAdminRole)[_staff]
+    for(let _staff in guild.roles.get(srAdminRole).members){
+      let staff = guild.roles.get(srAdminRole)[_staff]
       let user = staff.user
       let presence = user.presence
       let status = statusOnline
@@ -372,8 +372,8 @@ Official website: http://cyclonebot.com`)
       response += usdis
     }
     response += "**ADMINS**\n"
-    for(let _staff in guild.roles.find('id', adminRole).members){
-      let staff = guild.roles.find('id', adminRole)[_staff]
+    for(let _staff in guild.roles.get(adminRole).members){
+      let staff = guild.roles.get(adminRole)[_staff]
       let user = staff.user
       let presence = user.presence
       let status = statusOnline
@@ -390,8 +390,8 @@ Official website: http://cyclonebot.com`)
       response += usdis
     }
     response += "**MODS**\n"
-    for(let _staff in guild.roles.find('id', modRole).members){
-      let staff = guild.roles.find('id', modRole)[_staff]
+    for(let _staff in guild.roles.get(modRole).members){
+      let staff = guild.roles.get(modRole)[_staff]
       let user = staff.user
       let presence = user.presence
       let status = statusOnline
@@ -408,8 +408,8 @@ Official website: http://cyclonebot.com`)
       response += usdis
     }
     response += "**HELPERS**\n"
-    for(let _staff in guild.roles.find('id', helperRole).members){
-      let staff = guild.roles.find('id', helperRole)[_staff]
+    for(let _staff in guild.roles.get(helperRole).members){
+      let staff = guild.roles.get(helperRole)[_staff]
       let user = staff.user
       let presence = user.presence
       let status = statusOnline
