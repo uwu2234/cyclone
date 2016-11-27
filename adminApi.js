@@ -58,7 +58,7 @@ module.exports.getGuildCfg = (guildId, key, callback) => {
     data = guild.config[key]
     sync = false
   })
-  while(sync){ require('deasync').sleep(100) }
+  while(sync){ require('deasync').sleep(10) }
   return data
 }
 
