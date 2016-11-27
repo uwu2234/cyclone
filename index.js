@@ -337,6 +337,7 @@ Official website: http://cyclonebot.com`)
     let response = '**OWNERS**\n'
 
     for(let _staff in ownerRole.members){
+      if(!ownerRole.members.hasOwnProperty(_staff)) continue
       let staff = ownerRole.members[_staff]
       let user = staff.user
       let presence = user.presence
@@ -355,6 +356,7 @@ Official website: http://cyclonebot.com`)
     }
     response += "**SR ADMINS**\n"
     for(let _staff in srAdminRole.members){
+      if(!srAdminRole.members.hasOwnProperty(_staff)) continue
       let staff = srAdminRole.members[_staff]
       let user = staff.user
       let presence = user.presence
@@ -373,6 +375,7 @@ Official website: http://cyclonebot.com`)
     }
     response += "**ADMINS**\n"
     for(let _staff in adminRole.members){
+      if(!adminRole.members.hasOwnProperty(_staff)) continue
       let staff = adminRole.members[_staff]
       let user = staff.user
       let presence = user.presence
@@ -391,6 +394,7 @@ Official website: http://cyclonebot.com`)
     }
     response += "**MODS**\n"
     for(let _staff in modRole.members){
+      if(!modRole.members.hasOwnProperty(_staff)) continue
       let staff = modRole.members[_staff]
       let user = staff.user
       let presence = user.presence
@@ -409,6 +413,7 @@ Official website: http://cyclonebot.com`)
     }
     response += "**HELPERS**\n"
     for(let _staff in helperRole.members){
+      if(!helperRole.members.hasOwnProperty(_staff)) continue
       let staff = helperRole.members[_staff]
       let user = staff.user
       let presence = user.presence
