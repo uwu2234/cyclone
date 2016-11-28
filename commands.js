@@ -29,18 +29,28 @@ module.exports.hasPermission = (msg, perm) => {
     return false
   }
   if(msg.author.id === '116693403147698181') return true // change id - all permissions
+  let hasPerm = false
+  let sync = true
   adminApi.isUserAdmin(msg.guild.id, msg.author.id, (err, admin) => {
     if(err){
       let perms = msg.channel.permissionsFor(msg.author).serialize()
+      hasPerm = perms[perm]
+      sync = false
       return perms[perm]
     }
     if(admin){
+      hasPerm = true
+      sync = false
       return true
     }else{
       let perms = msg.channel.permissionsFor(msg.author).serialize()
+      hasPerm = perms[perm]
+      sync = false
       return perms[perm]
     }
   })
+  while(sync){ require('deasync').sleep(10) }
+  return hasPerm
 }
 
 module.exports.registerCommand = (name, help, callback, permission, serverBlock) => {

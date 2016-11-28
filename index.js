@@ -288,6 +288,11 @@ bot.on('ready', () => {
 For help (on this server) type: \`\`${apx.getPrefix()}help\`\`
 Official website: http://cyclonebot.com`)
   })
+  commands.registerCommand('ping', 'Ping bot', (msg, args, apx) => {
+    msg.channel.sendMessage(`**PONG**
+Cyclone v${require('./package.json').version} - developed by @Relative#1027
+`)
+  })
 
   commands.registerCommand('eval', 'Runs javascript code on the bot', (msg, args, apx)=>{
     try{
