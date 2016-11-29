@@ -264,7 +264,7 @@ module.exports.registerCommand('staff', 'Shows staff on server', (msg, args, apx
     }
     logger.newEmbed(msg.channel, "Staff", response, "#0074D9")
   }, 'SEND_MESSAGES', '238424240032972801')
-  commands.registerCommand('ping', 'Ping bot', (msg,args,apx) => {
+  module.exports.registerCommand('ping', 'Ping bot', (msg,args,apx) => {
     let version = require('./package.json').version
     msg.channel.sendMessage(`Cyclone v${version} developed by @Relative#1027
 Production: ${config.production.toString()}`)
