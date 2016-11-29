@@ -17,14 +17,6 @@ const bot = new Discord.Client()
 const app = require('./server')
 const db =  mongoose.createConnection('admin:XpCdV6K1DWwq4BW0k0l@178.32.177.169/cyclone?authSource=admin&authMechanism=SCRAM-SHA-1')
 app.set('bot', bot)
-const messages = {
-  win: [
-    ":white_check_mark: You won $WIN$! Congratulations!"
-  ],
-  lose: [
-    ":bomb: BANG YOUR DEAD! YOU LOST $WIN$! FAILURE!"
-  ]
-}
 const iconCodeMap = {
   'tornado': ['0', '00'],
   'tropical-storm': ['1', '01', '2', '02'],
@@ -109,11 +101,8 @@ function getIconName(_code){
   }
   return 'na'
 }
-bot.on('ready', () => {
-  mongoose.connect('admin:XpCdV6K1DWwq4BW0k0l@178.32.177.169/cyclone?authSource=admin&authMechanism=SCRAM-SHA-1') // Initialize Mongoose
-  mongoose.Promise = global.Promise
-  commands.init(bot) // Initializes built in commands (!help, !eval)
 
+function createCommands(){
   commands.registerCommand('balance', 'Retrieve your balance', (msg,args,apx) => {
     if(typeof args[1] === 'string'){
       let target = args[1].replace('<@', '').replace('>', '')
@@ -282,29 +271,6 @@ bot.on('ready', () => {
     })
   })
 
-  commands.registerCommand('about', 'About the bot and its author', (msg,args,apx) => {
-    let channel = msg.channel
-    channel.sendMessage(`Cyclone v${require('./package.json').version} - developed by @Relative#1027
-For help (on this server) type: \`\`${apx.getPrefix()}help\`\`
-Official website: http://cyclonebot.com`)
-  })
-  commands.registerCommand('ping', 'Ping bot', (msg, args, apx) => {
-    msg.channel.sendMessage(`**PONG**
-Cyclone v${require('./package.json').version} - developed by @Relative#1027
-`)
-  })
-
-  commands.registerCommand('eval', 'Runs javascript code on the bot', (msg, args, apx)=>{
-    try{
-      let code = msg.content.substr(5);
-      let resp = eval(code);
-      apx.success('Your code successfully ran on the bot!')
-      msg.channel.sendMessage(`\`\`\`${resp}\`\`\``);
-    }catch(ex){
-      apx.error('Your code failed to run on the bot. Stack trace is below.')
-      msg.channel.sendMessage(`\`\`\`${ex}\`\`\``);
-    }
-  }, 'botAdmin')
   commands.registerCommand('shutdown', 'Shutsdown bot', (msg, args, apx) => {
     bot.destroy().then(() => {
       require('child_process').exec('pm2 stop Cyclone')
@@ -329,177 +295,13 @@ Cyclone v${require('./package.json').version} - developed by @Relative#1027
   commands.registerCommand('admin', 'Sends link to authenticate to access admin panel', (msg, args, apx) => {
     msg.channel.sendMessage('http://cyclonebot.com/auth')
   })
-  commands.registerCommand('staff', 'Shows staff on server', (msg, args, apx) => {
-    let guild = msg.guild
-    let statusOnline = '<:statusOnline:252280901864521728>'
-    let statusIdle = '<:statusIdle:252280947213336576>'
-    let statusDnd = '<:statusDnd:252280963629842434>'
-    let statusOffline = '<:statusOffline:252280926522966037>'
-    let ownerRole = guild.roles.get('238424390331662336')
-    let srAdminRole = guild.roles.get('238426963448954880')
-    let adminRole = guild.roles.get('238427061402861569')
-    let modRole = guild.roles.get('238427678980440065')
-    let helperRole = guild.roles.get('238427643429519360')
-    let response = '**OWNERS**\n'
-
-    for(let _staff in ownerRole.members.array()){
-      if(!ownerRole.members.array().hasOwnProperty(_staff)) continue
-      let staff = ownerRole.members.array()[_staff]
-      let user = staff.user
-      let presence = user.presence
-      let status = statusOnline
-      if(presence.status == "online"){
-        status = statusOnline
-      }else if(presence.status == "offline"){
-        status = statusOffline
-      }else if(presence.status == "idle"){
-        status = statusIdle
-      }else if(presence.status == "dnd"){
-        status = statusDnd
-      }
-      let usdis = `${status} ${user.username}#${user.discriminator}\n`
-      response += usdis
-    }
-    response += "**SR ADMINS**\n"
-    for(let _staff in srAdminRole.members.array()){
-      if(!srAdminRole.members.array().hasOwnProperty(_staff)) continue
-      let staff = srAdminRole.members.array()[_staff]
-      let user = staff.user
-      let presence = user.presence
-      let status = statusOnline
-      if(presence.status == "online"){
-        status = statusOnline
-      }else if(presence.status == "offline"){
-        status = statusOffline
-      }else if(presence.status == "idle"){
-        status = statusIdle
-      }else if(presence.status == "dnd"){
-        status = statusDnd
-      }
-      let usdis = `${status} ${user.username}#${user.discriminator}\n`
-      response += usdis
-    }
-    response += "**ADMINS**\n"
-    for(let _staff in adminRole.members.array()){
-      if(!adminRole.members.array().hasOwnProperty(_staff)) continue
-      let staff = adminRole.members.array()[_staff]
-      let user = staff.user
-      let presence = user.presence
-      let status = statusOnline
-      if(presence.status == "online"){
-        status = statusOnline
-      }else if(presence.status == "offline"){
-        status = statusOffline
-      }else if(presence.status == "idle"){
-        status = statusIdle
-      }else if(presence.status == "dnd"){
-        status = statusDnd
-      }
-      let usdis = `${status} ${user.username}#${user.discriminator}\n`
-      response += usdis
-    }
-    response += "**MODS**\n"
-    for(let _staff in modRole.members.array()){
-      if(!modRole.members.array().hasOwnProperty(_staff)) continue
-      let staff = modRole.members.array()[_staff]
-      let user = staff.user
-      let presence = user.presence
-      let status = statusOnline
-      if(presence.status == "online"){
-        status = statusOnline
-      }else if(presence.status == "offline"){
-        status = statusOffline
-      }else if(presence.status == "idle"){
-        status = statusIdle
-      }else if(presence.status == "dnd"){
-        status = statusDnd
-      }
-      let usdis = `${status} ${user.username}#${user.discriminator}\n`
-      response += usdis
-    }
-    response += "**HELPERS**\n"
-    for(let _staff in helperRole.members.array()){
-      if(!helperRole.members.array().hasOwnProperty(_staff)) continue
-      let staff = helperRole.members.array()[_staff]
-      let user = staff.user
-      let presence = user.presence
-      let status = statusOnline
-      if(presence.status == "online"){
-        status = statusOnline
-      }else if(presence.status == "offline"){
-        status = statusOffline
-      }else if(presence.status == "idle"){
-        status = statusIdle
-      }else if(presence.status == "dnd"){
-        status = statusDnd
-      }
-      let usdis = `${status} ${user.username}#${user.discriminator}\n`
-      response += usdis
-    }
-    logger.newEmbed(msg.channel, "Staff", response, "#0074D9")
-  }, 'SEND_MESSAGES', '238424240032972801')
-  commands.registerCommand('ping', 'Ping bot', (msg,args,apx) => {
-    let version = require('./package.json').version
-    msg.channel.sendMessage(`Cyclone v${version} developed by @Relative#1027
-Production: ${config.production.toString()}`)
-  })
-  commands.registerCommand('serverinfo', 'Server information', (msg,args,apx) => {
-    let guild = msg.guild
-    logger.newEmbed(msg.channel, 'Server Info', `**Name** ${guild.name}
-**ID** ${guild.id}
-**Channel Count** ${guild.channels.array().length}
-**Icon** ${guild.iconURL}
-**Owner** ${guild.owner.user.username}#${guild.owner.user.discriminator}
-**Region** ${guild.region}
-**Features** ${JSON.stringify(guild.features)}`, '#39CCCC')
-  })
-  commands.registerCommand('userinfo', 'User information', (msg,args,apx) => {
-    let target = msg.author
-    let guildTarget = msg.guild.members.get(msg.author.id)
-    let statusOnline = '<:statusOnline:252280901864521728> Online'
-    let statusIdle = '<:statusIdle:252280947213336576> Away'
-    let statusDnd = '<:statusDnd:252280963629842434> Do Not Disturb'
-    let statusOffline = '<:statusOffline:252280926522966037> Offline'
-    if(args[1]){
-      target = bot.users.get(args[1].replace('<@', '').replace('>', ''))
-      guildTarget = msg.guild.members.get(args[1].replace('<@', '').replace('>', ''))
-    }
-    let game = "*nothing*"
-    let status = statusOnline
-    let nick = "*none*"
-    let presence = target.presence
-    if(presence.game){
-      game = presence.game.name
-    }
-    if(guildTarget.nickname){
-      nick = guildTarget.nickname
-    }
-    if(presence.status == "online"){
-      status = statusOnline
-    }else if(presence.status == "offline"){
-      status = statusOffline
-    }else if(presence.status == "idle"){
-      status = statusIdle
-    }else if(presence.status == "dnd"){
-      status = statusDnd
-    }
-    logger.newEmbed(msg.channel, 'User Info', `**Name** ${target.username}
-**Discriminator** ${target.discriminator}
-**Avatar** ${target.avatarURL}
-**Nickname** ${nick}
-**ID** ${target.id}
-**Joined At** ${guildTarget.joinedAt.toUTCString()}
-**Presence**
- **- Game** ${game}
- **- Status** ${status}
-**Voice**
- **- Client Deaf** ${guildTarget.selfDeaf}
- **- Client Mute** ${guildTarget.selfMute}
- **- Server Deaf** ${guildTarget.serverDeaf}
- **- Server Mute** ${guildTarget.serverMute}
-**Permissions**
-${JSON.stringify(guildTarget.permissions.serialize(), null, 2)}`, '#39CCCC')
-  })
+  
+}
+bot.on('ready', () => {
+  mongoose.connect('admin:XpCdV6K1DWwq4BW0k0l@178.32.177.169/cyclone?authSource=admin&authMechanism=SCRAM-SHA-1') // Initialize Mongoose
+  mongoose.Promise = global.Promise
+  commands.init(bot) // Initializes built in commands (!help, !eval)
+  createCommands()
   api.init(bot, (err) => { // Initialize API (create non-existent users in database)
     if(err){
       console.log(err)
