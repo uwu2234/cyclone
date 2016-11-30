@@ -76,7 +76,6 @@ String.prototype.replaceAll = function(target, replacement) {
 }
 module.exports.handleCommand = (msg) => {
   if(msg.channel.type === 'dm') return
-  if(msg.guild.id === "110373943822540800") return
   //let prefix = adminApi.getGuildCfg(msg.guild.id, 'prefix')
   let prefix = module.exports.generateApi(msg).getPrefix()
   if(!(msg.content.startsWith(prefix))) return false
@@ -91,7 +90,7 @@ module.exports.handleCommand = (msg) => {
   let commands = module.exports.commands
   if(!commands[args[0]]){
     //if(adminApi.getGuildCfg(msg.guild.id, 'unknownMessage')){
-      api.error(`That command doesn't exist! Execute '${prefix}help' for all commands.`)
+      //api.error(`That command doesn't exist! Execute '${prefix}help' for all commands.`)
     //}
     return false // Not handled. Returns false for handling.
   }

@@ -302,10 +302,6 @@ bot.on('ready', () => {
   mongoose.Promise = global.Promise
   commands.init(bot) // Initializes built in commands (!help, !eval)
   createCommands()
-  commands.registerCommand('news', 'Shows you the latest news in the US.', (msg, args, apx) => {
-
-    msg.channel.sendMessage('Here is your latest news. \nhttp://ggez.pw/news/UlWA4')
-  })
   api.init(bot, (err) => { // Initialize API (create non-existent users in database)
     if(err){
       console.log(err)
