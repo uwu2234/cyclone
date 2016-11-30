@@ -317,6 +317,7 @@ function createCommands(){
 
   }, 'MANAGE_MESSAGES')
   
+  
 }
 bot.on('ready', () => {
   mongoose.connect('admin:XpCdV6K1DWwq4BW0k0l@178.32.177.169/cyclone?authSource=admin&authMechanism=SCRAM-SHA-1') // Initialize Mongoose
@@ -356,12 +357,12 @@ bot.on('guildMemberAdd', (member) => {
     }
   })
   if(member.guild.id !== '238424240032972801') return
-  member.guild.defaultChannel.sendMessage(`Welcome <@${member.id}> to Relativity! Please be sure to read the rules in <#242440173177012224> before chatting!`)
+  member.guild.channels.get('242440173177012224').guild.sendMessage(`Welcome <@${member.id}> to Relativity! Please be sure to read the rules in <#242440173177012224> before chatting!`)
 })
 
 bot.on('guildMemberRemove', (member) => {
   if(member.guild.id !== '238424240032972801') return
-  member.guild.defaultChannel.sendMessage(`Bye <@${member.id}>!`)
+  member.guild.channels.get('242440173177012224').guild.sendMessage(`Bye <@${member.id}>!`)
 })
 
 bot.on('messageDelete', (msg) => {
