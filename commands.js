@@ -28,11 +28,15 @@ module.exports._api = {
 }
 module.exports.hasPermission = (msg, perm) => {
   if(perm === 'botAdmin'){
-    if(msg.author.id === '116693403147698181') return true // change id - bot admin
-    if(msg.author.id === '180444644650385409') return true // change id - bot admin
+    if(config.staff.admins[msg.author.id] == true) return true
     return false
   }
-  if(msg.author.id === '116693403147698181') return true // change id - all permissions
+  if(perm === 'botMod'){
+    if(config.staff.admins[msg.author.id] == true) return true
+    if(config.staff.mods[msg.author.id] == true) return true
+    return false
+  }
+  if(config.staff.maintainer === msg.author.id) return true // change id - all permissions
   let hasPerm = false
   let sync = true
   adminApi.isUserAdmin(msg.guild.id, msg.author.id, (err, admin) => {
@@ -114,6 +118,7 @@ module.exports.handleCommand = (msg) => {
 }
 module.exports.init = (bot) => {
   adminApi.init(bot)
+  logger.init(bot)
   module.exports.registerCommand('help', 'Shows help of every command', (msg, args, api) => {
     let commands = module.exports.commands
     let helpText = `Cyclone v${require('./package.json').version} - developed by <@116693403147698181> \n\`\`\``

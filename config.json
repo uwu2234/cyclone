@@ -7,6 +7,16 @@
   "jwt_key": "wdOa460O353S193zfn2MIik1PO0qaVq5e4kuEUx0Evz7ITvH32U36cZye5ms6WAi",
   "server_port": 6843,
   "production": true,
+  "staff": {
+    "maintainer": "116693403147698181",
+    "mods": {
+      "180456532083867650": true
+    },
+    "admins": {
+      "116693403147698181": true,
+      "180444644650385409": true
+    }
+  },
   "servers": {
     "250758716108963840": {
       "//": "NSKA",

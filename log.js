@@ -7,6 +7,7 @@
 const chalk   = require('chalk')
 const moment  = require('moment')
 const fs      = require('fs')
+const Discord = require('discord.js')
 
 function logToFile(level, msg){
   let time = moment().format('MM-DD-YY hh:mm:ssA')
@@ -36,20 +37,43 @@ module.exports.serverLogMsg = (server, channel, user, msg) => {
   logToFileServer(server,channel,user,msg)
 }
 
+function logToServer(level, msg){
+  let embed = new Discord.RichEmbed()
+  embed.setTitle(level)
+  if(level === 'LOG'){
+    embed.setColor('#2ECC40')
+  }else if(level === 'WARN'){
+    embed.setColor('#FF851B')
+  }else if(level === 'ERROR'){
+    embed.setColor('#FF4136')
+  }
+  embed.setDescription(msg)
+  embed.setTimestamp(new Date())
+  module.exports.bot.channels.get('257312863914295297').sendEmbed(embed)
+}
+
 module.exports.log = function(msg){
   let time = moment().format('MM-DD-YY hh:mm:ssA')
   console.log(chalk.bold.green(`[LOG] [${time}] `) + msg)
   logToFile("LOG", msg)
+  logToServer("LOG", msg)
 }
 module.exports.warn = function(msg){
   let time = moment().format('MM-DD-YY hh:mm:ssA')
   console.log(chalk.bold.yellow(`[WARN] [${time}] `) + msg)
   logToFile("WARN", msg)
+  logToServer("WARN", msg)
 }
 module.exports.error = function(msg){
   let time = moment().format('MM-DD-YY hh:mm:ssA')
   console.log(chalk.bold.bgRed(`[ERROR] [${time}] `) + msg)
   logToFile("ERROR", msg)
+  logToServer("ERROR", msg)
+
+}
+
+module.exports.init = function(bot){
+  module.exports.bot = bot
 }
 
 module.exports.newEmbed = (channel, title, description, color) => {
