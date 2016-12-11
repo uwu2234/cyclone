@@ -350,6 +350,48 @@ bot.on('message', (msg) => {
   }else{
     logger.serverLogMsg(msg.guild, msg.channel, msg.author, msg)
   }
+  if(msg.guild.id === '238424240032972801'){
+    if(msg.author.id === '194960599816470529') return
+    requestify.post('https://relatively-cleanspeak-api.inversoft.io/content/item/moderate', {
+      content: {
+        applicationId: 'd643404c-e8b6-4252-8833-461d2ee78c03',
+        createInstant: (new Date).getTime(),
+        location: 'Relativity',
+        parts: [{
+          content: msg.cleanContent,
+          type: 'text'
+        }],
+        senderDisplayName: msg.author.username,
+        senderId: '943a26c0-e6b1-4c36-9fe7-7433f69e7028'
+      }
+    }, 
+    {
+      headers: {
+        'Authorization': '6366454d-1d5f-45e9-81e2-467e70300f91'
+      }
+    }).then((res) => {
+      let body = res.getBody()
+      if(body.contentAction === 'reject'){
+        msg.delete().then((msg) => {
+          let channel = msg.guild.channels.find('name', 'staff_logs')
+          let embed = new Discord.RichEmbed()
+          embed.setAuthor(`${msg.author.username}#${msg.author.discriminator} (${msg.author.id})`, msg.author.avatarURL)
+          embed.setColor('#FF4136')
+          embed.setTitle('Message Deleted Due To Profanity')
+          embed.setTimestamp(new Date())
+          embed.setDescription(msg.content)
+          channel.sendEmbed(embed)
+
+          let embedx = new Discord.RichEmbed()
+          embedx.setColor('#FF4136')
+          embedx.setTitle('Profanity Detected')
+          embedx.setTimestamp(new Date())
+          embedx.setDescription('Your message was deleted due to profanity. Please try not to use profanity next time!')
+          channel.sendEmbed(embedx)
+        })
+      }
+    })
+  }
 })
 
 bot.on('guildMemberAdd', (member) => {
