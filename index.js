@@ -16,6 +16,7 @@ const api = require('./api')
 const bot = new Discord.Client()
 const app = require('./server')
 const db =  mongoose.createConnection('admin:XpCdV6K1DWwq4BW0k0l@178.32.177.169/cyclone?authSource=admin&authMechanism=SCRAM-SHA-1')
+let profanity = {}
 app.set('bot', bot)
 const iconCodeMap = {
   'tornado': ['0', '00'],
@@ -387,7 +388,8 @@ bot.on('message', (msg) => {
           embedx.setTitle('Profanity Detected')
           embedx.setTimestamp(new Date())
           embedx.setDescription('Your message was deleted due to profanity. Please try not to use profanity next time!')
-          channel.sendEmbed(embedx)
+          msg.channel.sendEmbed(embedx)
+          profanity[msg.id] = true
         })
       }
     })
@@ -411,6 +413,7 @@ bot.on('guildMemberRemove', (member) => {
 
 bot.on('messageDelete', (msg) => {
   if(msg.guild.id !== '238424240032972801') return
+  if(profanity[msg.id] == true) return
   let channel = msg.guild.channels.find('name', 'staff_logs')
   let embed = new Discord.RichEmbed()
   embed.setAuthor(`${msg.author.username}#${msg.author.discriminator} (${msg.author.id})`, msg.author.avatarURL)
