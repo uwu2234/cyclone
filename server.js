@@ -82,7 +82,7 @@ app.use((err,req,res,next) => {
 })
 
 app.listen(config.server_port, () => {
-  logger.log(`Webserver listening on port ${config.server_port}`)
+  console.log(`Webserver listening on port ${config.server_port}`)
 })
 
 module.exports = app
