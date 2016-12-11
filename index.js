@@ -369,7 +369,7 @@ bot.on('guildMemberRemove', (member) => {
 
 bot.on('messageDelete', (msg) => {
   if(msg.guild.id !== '238424240032972801') return
-  let channel = member.guild.channels.find('name', 'staff_logs')
+  let channel = msg.guild.channels.find('name', 'staff_logs')
   let embed = new Discord.RichEmbed()
   embed.setAuthor(`${member.user.username}#${member.user.discriminator} (${member.user.id})`, member.user.avatarURL)
   embed.setColor('#FF4136')
@@ -381,7 +381,7 @@ bot.on('messageDelete', (msg) => {
 
 bot.on('guildBanAdd', (guild,user) => {
   if(guild.id !== '238424240032972801') return
-  let channel = member.guild.channels.find('name', 'staff_logs')
+  let channel = guild.channels.find('name', 'staff_logs')
   let embed = new Discord.RichEmbed()
   embed.setAuthor(`${user.username}#${user.discriminator} (${user.id})`, user.avatarURL)
   embed.setColor('#FF4136')
@@ -392,7 +392,7 @@ bot.on('guildBanAdd', (guild,user) => {
 })
 bot.on('guildBanRemove', (guild,user) => {
   if(guild.id !== '238424240032972801') return
-  let channel = member.guild.channels.find('name', 'staff_logs')
+  let channel = guild.channels.find('name', 'staff_logs')
   let embed = new Discord.RichEmbed()
   embed.setAuthor(`${user.username}#${user.discriminator} (${user.id})`, user.avatarURL)
   embed.setColor('#2ECC40')
