@@ -55,7 +55,7 @@ module.exports.error = function(msg){
 
 module.exports.sendEmbed = (channel, embed) => {
   channel.sendMessage('', {
-    embed: embed
+    embed: embed.embed
   })
 }
 module.exports.newEmbed = (channel, title, description, color) => {

@@ -319,6 +319,7 @@ function createCommands(){
   
   
 }
+
 bot.on('ready', () => {
   mongoose.connect('admin:XpCdV6K1DWwq4BW0k0l@178.32.177.169/cyclone?authSource=admin&authMechanism=SCRAM-SHA-1') // Initialize Mongoose
   mongoose.Promise = global.Promise
