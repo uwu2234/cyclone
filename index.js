@@ -368,18 +368,37 @@ bot.on('guildMemberRemove', (member) => {
 
 bot.on('messageDelete', (msg) => {
   if(msg.guild.id !== '238424240032972801') return
-  logger.sendEmbed(bot.channels.get('251370243484680203'), logger.generateMessageDelete(msg))
+  let channel = member.guild.channels.find('name', 'staff_logs')
+  let embed = new Discord.RichEmbed()
+  embed.setAuthor(`${member.user.username}#${member.user.discriminator} (${member.user.id})`, member.user.avatarURL)
+  embed.setColor('#FF4136')
+  embed.setTitle('Message Deleted')
+  embed.setTimestamp(new Date())
+  embed.setDescription(msg.content)
+  channel.sendEmbed(embed)
 })
 
 bot.on('guildBanAdd', (guild,user) => {
   if(guild.id !== '238424240032972801') return
-  logger.sendEmbed(bot.channels.get('251370243484680203'), logger.generateUserBanned(guild,user))
-
+  let channel = member.guild.channels.find('name', 'staff_logs')
+  let embed = new Discord.RichEmbed()
+  embed.setAuthor(`${user.username}#${user.discriminator} (${user.id})`, user.avatarURL)
+  embed.setColor('#FF4136')
+  embed.setTitle('Member Banned')
+  embed.setTimestamp(new Date())
+  embed.setDescription('This member has been banned!')
+  channel.sendEmbed(embed)
 })
-
 bot.on('guildBanRemove', (guild,user) => {
   if(guild.id !== '238424240032972801') return
-  logger.sendEmbed(bot.channels.get('251370243484680203'), logger.generateUserUnbanned(guild,user))
+  let channel = member.guild.channels.find('name', 'staff_logs')
+  let embed = new Discord.RichEmbed()
+  embed.setAuthor(`${user.username}#${user.discriminator} (${user.id})`, user.avatarURL)
+  embed.setColor('#2ECC40')
+  embed.setTitle('Member Unbanned')
+  embed.setTimestamp(new Date())
+  embed.setDescription('This member has been unbanned!')
+  channel.sendEmbed(embed)
 })
 
 bot.login(config.token)
