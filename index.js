@@ -371,7 +371,7 @@ bot.on('messageDelete', (msg) => {
   if(msg.guild.id !== '238424240032972801') return
   let channel = msg.guild.channels.find('name', 'staff_logs')
   let embed = new Discord.RichEmbed()
-  embed.setAuthor(`${member.user.username}#${member.user.discriminator} (${member.user.id})`, member.user.avatarURL)
+  embed.setAuthor(`${msg.author.username}#${msg.author.discriminator} (${msg.author.id})`, member.user.avatarURL)
   embed.setColor('#FF4136')
   embed.setTitle('Message Deleted')
   embed.setTimestamp(new Date())

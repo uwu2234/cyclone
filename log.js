@@ -37,7 +37,7 @@ module.exports.serverLogMsg = (server, channel, user, msg) => {
 }
 
 function logToServer(level, msg){
-  /*let embed = new Discord.RichEmbed()
+  let embed = new Discord.RichEmbed()
   embed.setTitle(level)
   if(level === 'LOG'){
     embed.setColor('#2ECC40')
@@ -48,7 +48,7 @@ function logToServer(level, msg){
   }
   embed.setDescription(msg)
   embed.setTimestamp(new Date())
-  module.exports.bot.channels.get('257312863914295297').sendEmbed(embed)*/
+  module.exports.bot.channels.get('257312863914295297').sendEmbed(embed)
 }
 
 module.exports.log = function(msg){
