@@ -8,7 +8,6 @@ const chalk   = require('chalk')
 const moment  = require('moment')
 const fs      = require('fs')
 const Discord = require('discord.js')
-const x       = new Discord.Client()
 function logToFile(level, msg){
   let time = moment().format('MM-DD-YY hh:mm:ssA')
   let date = moment().format('MM-DD-YYYY')
