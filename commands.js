@@ -27,6 +27,10 @@ module.exports._api = {
   }
 }
 module.exports.hasPermission = (msg, perm) => {
+  if(perm === 'maintainer'){
+    if(config.staff.maintainer === msg.author.id) return true
+    return false
+  }
   if(perm === 'botAdmin'){
     if(config.staff.admins[msg.author.id] == true) return true
     return false
@@ -93,9 +97,6 @@ module.exports.handleCommand = (msg) => {
   let api = module.exports.generateApi(msg)
   let commands = module.exports.commands
   if(!commands[args[0]]){
-    //if(adminApi.getGuildCfg(msg.guild.id, 'unknownMessage')){
-      //api.error(`That command doesn't exist! Execute '${prefix}help' for all commands.`)
-    //}
     return false // Not handled. Returns false for handling.
   }
   let cmd = commands[args[0]]

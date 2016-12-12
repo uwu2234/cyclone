@@ -339,8 +339,8 @@ bot.on('ready', () => {
     console.log(`${bot.guilds.array().length} servers`)
     console.log(`${bot.channels.array().length} channels`)
     console.log(`${bot.users.array().length} users`)
-    bot.user.setStatus('dnd')
-    bot.user.setGame(`Cyclone ${require('./package.json').version} | ${config.prefix}help`)
+    bot.user.setStatus('online')
+    bot.user.setGame(`Cyclone ${require('./package.json').version} | ${config.prefix}help`, 'https://twitch.tv/')
   })
 })
 
