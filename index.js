@@ -339,7 +339,7 @@ bot.on('ready', () => {
     console.log(`${bot.guilds.array().length} servers`)
     console.log(`${bot.channels.array().length} channels`)
     console.log(`${bot.users.array().length} users`)
-    bot.user.setGame(`Cyclone ${require('./package.json').version} | ${config.prefix}help`, 'https://twitch.tv/directory')
+    bot.user.setGame(`Cyclone ${require('./package.json').version} | ${config.prefix}help`, 'http://twitch.tv/directory')
   })
 })
 
@@ -350,7 +350,7 @@ bot.on('message', (msg) => {
   }else{
     logger.serverLogMsg(msg.guild, msg.channel, msg.author, msg)
   }
-  if(msg.guild.id === '238424240032972801'){
+  if(!msg.channel.type === 'dm' && msg.guild.id === '238424240032972801'){
     if(msg.author.id === '194960599816470529') return
     requestify.post('https://relatively-cleanspeak-api.inversoft.io/content/item/moderate', {
       content: {
