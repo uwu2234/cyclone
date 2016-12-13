@@ -7,12 +7,14 @@
 const chalk   = require('chalk')
 const moment  = require('moment')
 const fs      = require('fs')
+const path    = require('path')
+
 const Discord = require('discord.js')
 function logToFile(level, msg){
   let time = moment().format('MM-DD-YY hh:mm:ssA')
   let date = moment().format('MM-DD-YYYY')
-  if(!fs.existsSync(`${__dirname}\\logs`)) fs.mkdirSync(`${__dirname}\\logs`)
-  fs.appendFile(`${__dirname}\\logs\\log.${date}.log`, `[${level}] [${time}] ${msg}`, (err) => {
+  if(!fs.existsSync(path.join(__dirname, '..', 'logs'))) fs.mkdirSync(path.join(__dirname, '..', 'logs'))
+  fs.appendFile(path.join(__dirname, '..', 'logs', `log.${date}.log`), `[${level}] [${time}] ${msg}`, (err) => {
     if(err){
       console.log(chalk.bold.bgRed(`[LOG ERROR] [${time}] `) + 'FAILED TO WRITE TO FILE!!')
       throw err
@@ -23,8 +25,8 @@ function logToFile(level, msg){
 function logToFileServer(server,channel,user,msg){
   let time = moment().format('MM-DD-YY hh:mm:ssA')
   let date = moment().format('MM-DD-YYYY')
-  if(!fs.existsSync(`${__dirname}\\logs`)) fs.mkdirSync(`${__dirname}\\logs`)
-  fs.appendFile(`${__dirname}\\logs\\${server.id}.${date}.msg.log`, `[${time}] [#${channel.name}] ${user.username}#${user.discriminator}: ${msg.cleanContent}\n`, (err) => {
+  if(!fs.existsSync(path.join(__dirname, '..', 'logs'))) fs.mkdirSync(path.join(__dirname, '..', 'logs'))
+  fs.appendFile(path.join(__dirname, '..', 'logs', `${server.id}.${date}.msg.log`), `[${time}] [#${channel.name}] ${user.username}#${user.discriminator}: ${msg.cleanContent}\n`, (err) => {
     if(err){
       console.log(chalk.bold.bgRed(`[LOG ERROR] [${time}] `) + 'FAILED TO WRITE TO FILE!!')
       throw err
