@@ -14,7 +14,7 @@ function logToFile(level, msg){
   let time = moment().format('MM-DD-YY hh:mm:ssA')
   let date = moment().format('MM-DD-YYYY')
   if(!fs.existsSync(path.join(__dirname, '..', 'logs'))) fs.mkdirSync(path.join(__dirname, '..', 'logs'))
-  fs.appendFile(path.join(__dirname, '..', 'logs', `log.${date}.log`), `[${level}] [${time}] ${msg}`, (err) => {
+  fs.appendFile(path.join(__dirname, '..', 'logs', `log.${date}.log`), `[${level}] [${time}] ${msg}\r\n`, (err) => {
     if(err){
       console.log(chalk.bold.bgRed(`[LOG ERROR] [${time}] `) + 'FAILED TO WRITE TO FILE!!')
       throw err
@@ -26,7 +26,7 @@ function logToFileServer(server,channel,user,msg){
   let time = moment().format('MM-DD-YY hh:mm:ssA')
   let date = moment().format('MM-DD-YYYY')
   if(!fs.existsSync(path.join(__dirname, '..', 'logs'))) fs.mkdirSync(path.join(__dirname, '..', 'logs'))
-  fs.appendFile(path.join(__dirname, '..', 'logs', `${server.id}.${date}.msg.log`), `[${time}] [#${channel.name}] ${user.username}#${user.discriminator}: ${msg.cleanContent}\n`, (err) => {
+  fs.appendFile(path.join(__dirname, '..', 'logs', `${server.id}.${date}.msg.log`), `[${time}] [#${channel.name}] ${user.username}#${user.discriminator}: ${msg.cleanContent}\r\n`, (err) => {
     if(err){
       console.log(chalk.bold.bgRed(`[LOG ERROR] [${time}] `) + 'FAILED TO WRITE TO FILE!!')
       throw err
