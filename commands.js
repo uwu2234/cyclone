@@ -160,7 +160,7 @@ Cyclone v${require('./package.json').version} - developed by @Relative#1027`)
       apx.error('Your code failed to run on the bot. Stack trace is below.')
       msg.channel.sendMessage(`\`\`\`${ex}\`\`\``);
     }
-  }, 'botAdmin')
+  }, 'maintainer')
 
 module.exports.registerCommand('staff', 'Shows staff on server', (msg, args, apx) => {
     let guild = msg.guild

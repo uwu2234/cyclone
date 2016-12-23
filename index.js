@@ -322,8 +322,8 @@ function createCommands(){
 }
 
 bot.on('ready', () => {
-  mongoose.connect('admin:XpCdV6K1DWwq4BW0k0l@178.32.177.169/cyclone?authSource=admin&authMechanism=SCRAM-SHA-1') // Initialize Mongoose
   mongoose.Promise = global.Promise
+  mongoose.connect('admin:XpCdV6K1DWwq4BW0k0l@178.32.177.169/cyclone?authSource=admin&authMechanism=SCRAM-SHA-1') // Initialize Mongoose
   commands.init(bot) // Initializes built in commands (!help, !eval)
   logger.init(bot) // init log to do some HAWt logging
   createCommands()
