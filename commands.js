@@ -5,6 +5,7 @@
  * Created on.........: 11/23/2016
  */
 
+const Discord = require('discord.js')
 const config = require('./config.json')
 const adminApi = require('./adminApi')
 const logger = require('./log')
@@ -286,7 +287,35 @@ Production: ${config.production.toString()}`)
 **Region** ${guild.region}
 **Features** ${JSON.stringify(guild.features)}`, '#39CCCC')
   })
-  module.exports.registerCommand('userinfo', 'User information', (msg,args,apx) => {
+  module.exports.registerCommand('profile', 'User profile', (msg,args,apx) => {
+    let target = msg.author
+    let guildTarget = msg.member
+    if(args[1]){
+      target = msg.client.users.get(args[1].replace('<@', '').replace('>', ''))
+      guildTarget = msg.guild.members.get(args[1].replace('<@', '').replace('>', ''))
+      if(!target){
+        return apx.error('That user does not exist. Try again?')
+      }
+    }
+    let embed = new Discord.RichEmbed()
+    embed.setTitle('Profile')
+    embed.setColor('#0074D9')
+    embed.setThumbnail(target.avatarURL)
+    embed.addField('Username', target.username, true)
+    embed.addField('Discriminator', target.discriminator, true)
+    embed.addField('ID', target.id, true)
+    embed.addField('Status', target.presence.status, true)
+    if(target.presence.game !== null){
+      embed.addField('Playing', target.presence.game, true)
+    }
+    if(guildTarget.nickname !== null){
+      embed.addField('Nickname', guildTarget.nickname, true)
+    }
+    embed.addField('Created', target.createdAt, true)
+    embed.addField('Joined', guildTarget.joinedAt, true)
+    msg.channel.sendEmbed(embed)
+  })
+  module.exports.registerCommand('olduserinfo', 'User information', (msg,args,apx) => {
     let target = msg.author
     let guildTarget = msg.guild.members.get(msg.author.id)
     let statusOnline = '<:statusOnline:252280901864521728> Online'
