@@ -7,9 +7,8 @@
 const Discord = require('discord.js')
 const mongoose = require('mongoose')
 const requestify = require('requestify')
-
+const CmdHandle = require('./cmdModule/commands')
 const config = require('./config.json')
-const commands = require('./commands')
 const logger = require('./log')
 const api = require('./api')
 
@@ -86,6 +85,7 @@ const iconEmojiMap = {
   'scattered-snow-night': ':cloud_snow: *(scattered)*',
   'scattered-thunderstorms-night': ':thunder_cloud_rain:'
 }
+
 function getIconName(_code){
   let code = _code.toString()
   let name
@@ -102,231 +102,15 @@ function getIconName(_code){
   }
   return 'na'
 }
-
-function createCommands(){
-  commands.registerCommand('balance', 'Retrieve your balance', (msg,args,apx) => {
-    if(typeof args[1] === 'string'){
-      let target = args[1].replace('<@', '').replace('>', '')
-      api.getBalance(target, (err, balance) => {
-        if(err){
-          return apx.error('Failed to get target\'s balance! Please try again later.')
-        }
-        msg.reply(`${bot.users.get(target).username}'s balance is **${balance}**!`)
-      })
-    }else{
-      api.getBalance(msg.author.id, (err, balance) => {
-        if(err){
-          return apx.error('Failed to get your balance! Please try again later.')
-        }
-        msg.reply(`Your balance is **${balance}**!`)
-      })
-    }
-
-  })
-  commands.registerCommand('setbalance', 'Set your balance', (msg,args,apx) => {
-    let target = args[1].replace('<@', '').replace('>', '')
-    let balance = parseInt(args[2])
-    api.setBalance(target, balance, (err) => {
-      if(err){
-        return apx.error('Failed to set target\'s balance! Please try again later.')
-      }
-      msg.reply(`Their balance is now set to **${balance}**!`)
-    })
-  }, 'botAdmin')
-  commands.registerCommand('bet', 'Bet your balance and probably lose', (msg,args,apx) => {
-    if(!args[1]){
-      return apx.error(`Usage: ${apx.getPrefix()}bet <money>`)
-    }
-    let toGamble = parseInt(args[1])
-    if(0 > toGamble){
-      return apx.error(`${toGamble} is less than 0. Aborting bet.`)
-    }
-    api.getBalance(msg.author.id, (err, bal) => {
-      if(err){
-        return apx.error('Error getting your balance. Nothing has been transacted from your account.')
-      }
-      let curBal = bal
-      if(toGamble > curBal){
-        return apx.error('You do not have enough money to bet on that. Nothing has been transacted from your account.')
-      }
-      api.subtractBalance(msg.author.id, toGamble, (err) => {
-        if(err){
-          return apx.error('Error subtracting gamble from your balance. Nothing has been transacted from your account.')
-        }
-        let rdm = Math.floor(Math.random()*(100)+1)
-        let moneyToGive = 0
-        if(rdm <= 1){
-          moneyToGive = toGamble*10
-          api.addBalance(msg.author.id, moneyToGive, (err) => {
-            if(err){
-              return apx.error(`Error giving you your money. Please show @Relative#1027 this message with the amount: ${toGamble} ${moneyToGive}`)
-            }
-            msg.channel.sendMessage(`:white_check_mark: :moneybag: You have won **$${moneyToGive}**! Your lucky number is ${rdm}. Check your balance with ${apx.getPrefix()}balance`)
-          })
-        }else if(rdm <= 42){
-          msg.channel.sendMessage(`:x: :bomb: You have lost **$${toGamble}**! Your unlucky number is ${rdm}. Check your balance with ${apx.getPrefix()}balance`)
-        }else if(rdm <= 52){
-          moneyToGive = toGamble*2
-          api.addBalance(msg.author.id, moneyToGive, (err) => {
-            if(err){
-              return apx.error(`Error giving you your money. Please show @Relative#1027 this message with the amount: ${toGamble} ${moneyToGive}`)
-            }
-            msg.channel.sendMessage(`:white_check_mark: :moneybag: You have won **$${moneyToGive}**! Your lucky number is ${rdm}. Check your balance with ${apx.getPrefix()}balance`)
-          })
-        }else if(rdm <= 76){
-          msg.channel.sendMessage(`:x: :bomb: You have lost **$${toGamble}**! Your unlucky number is ${rdm}. Check your balance with ${apx.getPrefix()}balance`)
-        }else if(rdm == 77){
-          moneyToGive = toGamble*12
-          api.addBalance(msg.author.id, moneyToGive, (err) => {
-            if(err){
-              return apx.error(`Error giving you your money. Please show @Relative#1027 this message with the amount: ${toGamble} ${moneyToGive}`)
-            }
-            msg.channel.sendMessage(`:white_check_mark: :money_mouth: You have won **$${moneyToGive}**!!! Your lucky number is ${rdm}. Check your balance with ${apx.getPrefix()}balance`)
-          })
-        }else if(rdm <= 86) {
-          moneyToGive = toGamble * 3
-          api.addBalance(msg.author.id, moneyToGive, (err) => {
-            if (err) {
-              return apx.error(`Error giving you your money. Please show @Relative#1027 this message with the amount: ${toGamble} ${moneyToGive}`)
-            }
-            msg.channel.sendMessage(`:white_check_mark: :moneybag: You have won **$${moneyToGive}**! Your lucky number is ${rdm}. Check your balance with ${apx.getPrefix()}balance`)
-          })
-        }else if(rdm <= 99){
-          msg.channel.sendMessage(`:x: :bomb: You have lost **$${toGamble}**! Your unlucky number is ${rdm}. Check your balance with ${apx.getPrefix()}balance`)
-        }else if(rdm == 100){
-          moneyToGive = toGamble * 6
-          api.addBalance(msg.author.id, moneyToGive, (err) => {
-            if (err) {
-              return apx.error(`Error giving you your money. Please show @Relative#1027 this message with the amount: ${toGamble} ${moneyToGive}`)
-            }
-            msg.channel.sendMessage(`:white_check_mark: :moneybag: You have won **$${moneyToGive}**! Your lucky number is ${rdm}. Check your balance with ${apx.getPrefix()}balance`)
-          })
-        }else{
-          moneyToGive = toGamble * 500
-          api.addBalance(msg.author.id, moneyToGive, (err) => {
-            if (err) {
-              return apx.error(`Error giving you your money. (ha x500 lost!!!11!1) Please show @Relative#1027 this message with the amount: ${toGamble} ${moneyToGive}`)
-            }
-            msg.channel.sendMessage(`:white_check_mark: :moneybag: You have won **$${moneyToGive}**! (x500). Your **EXTREMELY LUCKY** number is ${rdm}. You have won against all odds due to a programming flaw. Please enjoy the free money. Check your balance with ${apx.getPrefix()}balance`)
-          })
-        }
-      })
-    })
-  })
-  commands.registerCommand('warnings', 'Shows warnings for user', (msg,args,apx) => {
-    let target = args[1].replace('<@', '').replace('>', '')
-    api.getWarnings(target, (err, warnings) => {
-      if(typeof warnings[1] == 'undefined'){
-        return apx.success('Target has no warnings on record!')
-      }
-      let warns = `**Warning record for ${bot.users.get(target).username}**\n`
-      let idx = 1
-      warnings.forEach((warning) => {
-        if(typeof warning === 'undefined' || !warning) return
-        warns += api.digitsToEmoji(idx.toString()) + `${warning.reason} *by <@${warning.warner}>*\n`
-        idx++
-      })
-      msg.channel.sendMessage(warns)
-    })
-  }, 'MANAGE_MESSAGES', '238424240032972801')
-  commands.registerCommand('warn', 'Warns user for reason.', (msg,args,apx) => {
-    let target = args[1].replace('<@', '').replace('>', '')
-    api.addWarning(target, msg.author.id, args[2], (err) => {
-      if(err){
-        return apx.error('That command failed to execute. Please try again later!')
-      }
-      return apx.success('User has been warned successfully!')
-    })
-  }, 'MANAGE_MESSAGES', '238424240032972801')
-  commands.registerCommand('clearwarnings', 'Removes all warnings from user', (msg,args,apx) => {
-    let target = args[1].replace('<@', '').replace('>', '')
-    api.clearWarnings(msg.author.id, (err) => {
-      if(err){
-        return apx.error('That command failed to execute. Please try again later!')
-      }
-      return apx.success('User has been cleared of warnings successfully!')
-    })
-  }, 'MANAGE_MESSAGES', '238424240032972801')
-
-  commands.registerCommand('weather', '**US ONLY** Gives you the weather for your ZIP Code', (msg, args, apx) => {
-    if(!args[1]){
-      return apx.error(`Usage: ${apx.getPrefix()}weather <zipcode>`)
-    }
-    let zip = parseInt(args[1])
-    if(zip.length > 5){
-      return apx.error(`${zip} is not a valid US ZIP Code.`)
-    }
-    requestify.get(`http://wxdata.weather.com/wxdata/mobile/mobagg/${zip}:4:US.js?key=97ce49e2-cf1b-11e0-94e9-001d092f59fc`).then((res) => {
-      let body = res.getBody()
-      if(!body || !body[0]){
-        return apx.error(`${zip} is not a valid US ZIP Code.`)
-      }
-      body = body[0]
-      let response = `**${body.Location.city}, ${body.Location.state}**'s weather\n`
-      let iconName = getIconName(body.HiradObservation.wxIcon)
-      response += `${iconEmojiMap[iconName]} **${body.HiradObservation.text}**\n`
-      response += `:thermometer: ${body.HiradObservation.temp.toString()}\n`
-      response += ` **Feels Like** ${body.HiradObservation.feelsLike.toString()}\n`
-      response += `Winds ${body.HiradObservation.wDirText} at ${body.HiradObservation.wSpeed.toString()} mph`
-      msg.channel.sendMessage(response)
-    })
-  })
-
-  commands.registerCommand('shutdown', 'Shutsdown bot', (msg, args, apx) => {
-    bot.destroy().then(() => {
-      require('child_process').exec('pm2 stop Cyclone')
-    })
-  }, 'botAdmin')
-  commands.registerCommand('restart', 'Restarts bot', (msg, args, apx) => {
-    bot.destroy().then(() => {
-      require('child_process').exec('pm2 restart Cyclone')
-    })
-  }, 'botAdmin')
-
-  commands.registerCommand('update', 'Updates bot', (msg, args, apx) => {
-    bot.destroy().then(() => {
-      require('child_process').exec('cd ~/cyclone/source && git pull', (err, stdout, stderr) => {
-        if(err){
-          return require('child_process').exec('pm2 restart Cyclone')
-        }
-        require('child_process').exec('pm2 restart Cyclone')
-      })
-    })
-  }, 'botAdmin')
-  commands.registerCommand('admin', 'Sends link to authenticate to access admin panel', (msg, args, apx) => {
-    msg.channel.sendMessage('http://cyclonebot.com/auth')
-  })
-
-  commands.registerCommand('purge', 'Delete x messages in current channel.', (msg,args,apx) => {
-    let limit = 15
-    if(!(typeof args[1] === 'undefined')) limit = parseInt(args[1])
-    msg.channel.fetchMessages({limit: limit})
-    .then((messages) => msg.channel.bulkDelete(messages))
-    let msgOpts = {
-      embed: {
-        title: '✅ Success',
-        color: parseInt('FF4136', 16),
-        description: `${limit.toString()} message(s) have been purged from ${msg.channel.name}
-        This message will be deleted in 5 seconds.`,
-        timestamp: `${new Date().toISOString()}`
-      }
-    }
-    msg.channel.sendMessage('', msgOpts)
-      .then((msg) => {
-        msg.delete(5000)
-      })
-
-  }, 'MANAGE_MESSAGES')
-  
-  
-}
+const handler = new CmdHandle.CommandHandler({
+  bot: bot,
+  prefix: '!'
+})
 
 bot.on('ready', () => {
   mongoose.Promise = global.Promise
   mongoose.connect('admin:XpCdV6K1DWwq4BW0k0l@178.32.177.169/cyclone?authSource=admin&authMechanism=SCRAM-SHA-1') // Initialize Mongoose
-  commands.init(bot) // Initializes built in commands (!help, !eval)
   logger.init(bot) // init log to do some HAWt logging
-  createCommands()
   api.init(bot, (err) => { // Initialize API (create non-existent users in database)
     if(err){
       console.log(err)
@@ -344,54 +128,11 @@ bot.on('ready', () => {
 })
 
 bot.on('message', (msg) => {
-  let handled = commands.handleCommand(msg)
+  handler.handleMessage(msg)
   if(msg.channel.type === 'dm'){
     logger.serverLogMsg(msg.author, {name: '*DM*'}, msg.author, msg)
   }else{
     logger.serverLogMsg(msg.guild, msg.channel, msg.author, msg)
-  }
-  if(!msg.channel.type === 'dm' && msg.guild.id === '238424240032972801'){
-    if(msg.author.id === '194960599816470529') return
-    requestify.post('https://relatively-cleanspeak-api.inversoft.io/content/item/moderate', {
-      content: {
-        applicationId: 'd643404c-e8b6-4252-8833-461d2ee78c03',
-        createInstant: (new Date).getTime(),
-        location: 'Relativity',
-        parts: [{
-          content: msg.cleanContent,
-          type: 'text'
-        }],
-        senderDisplayName: msg.author.username,
-        senderId: '943a26c0-e6b1-4c36-9fe7-7433f69e7028'
-      }
-    }, 
-    {
-      headers: {
-        'Authorization': '6366454d-1d5f-45e9-81e2-467e70300f91'
-      }
-    }).then((res) => {
-      let body = res.getBody()
-      if(body.contentAction === 'reject'){
-        msg.delete().then((msg) => {
-          let channel = msg.guild.channels.find('name', 'staff_logs')
-          let embed = new Discord.RichEmbed()
-          embed.setAuthor(`${msg.author.username}#${msg.author.discriminator} (${msg.author.id})`, msg.author.avatarURL)
-          embed.setColor('#FF4136')
-          embed.setTitle('Message Deleted Due To Profanity')
-          embed.setTimestamp(new Date())
-          embed.setDescription(msg.content)
-          channel.sendEmbed(embed)
-
-          let embedx = new Discord.RichEmbed()
-          embedx.setColor('#FF4136')
-          embedx.setTitle('Profanity Detected')
-          embedx.setTimestamp(new Date())
-          embedx.setDescription('Your message was deleted due to profanity. Please try not to use profanity next time!')
-          msg.channel.sendEmbed(embedx)
-          profanity[msg.id] = true
-        })
-      }
-    })
   }
 })
 

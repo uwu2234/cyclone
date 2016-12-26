@@ -1,11 +1,11 @@
 {
   "name": "cyclone",
-  "version": "0.3.0",
+  "version": "1.0.0-dev",
   "description": "Cyclone bot for Discord",
   "main": "index.js",
   "private": true,
   "scripts": {
-    "start": "node index.js",
+    "start": "node --harmony .",
     "deploy": "pm2 deploy production"
   },
   "repository": {
