@@ -73,7 +73,7 @@ class CommandApi {
    */
   getRank(user) {
     let cycloneGuild = this.handler.bot.guilds.get('257307356541485066')
-    if(cycloneGuild.members.find(user.id)){
+    if(cycloneGuild.members.get(user.id)){
       let member = cycloneGuild.members.find(user.id)
       if(member.roles.get('257307403580735498')) return 'botAdmin'
       if(member.roles.get('257307453966909440')) return 'botMod'
