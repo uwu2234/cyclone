@@ -273,29 +273,6 @@ function createCommands(){
       })
     })
   }, 'botAdmin')
-
-  commands.registerCommand('purge', 'Delete x messages in current channel.', (msg,args,apx) => {
-    let limit = 15
-    if(!(typeof args[1] === 'undefined')) limit = parseInt(args[1])
-    msg.channel.fetchMessages({limit: limit})
-    .then((messages) => msg.channel.bulkDelete(messages))
-    let msgOpts = {
-      embed: {
-        title: '✅ Success',
-        color: parseInt('FF4136', 16),
-        description: `${limit.toString()} message(s) have been purged from ${msg.channel.name}
-        This message will be deleted in 5 seconds.`,
-        timestamp: `${new Date().toISOString()}`
-      }
-    }
-    msg.channel.sendMessage('', msgOpts)
-      .then((msg) => {
-        msg.delete(5000)
-      })
-
-  }, 'MANAGE_MESSAGES')
-  
-  
 }
 
 bot.on('ready', () => {
