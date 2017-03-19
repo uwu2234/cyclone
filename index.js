@@ -15,7 +15,7 @@ const api = require('./api')
 
 const bot = new Discord.Client()
 const app = require('./server')
-const db =  mongoose.createConnection('admin:XpCdV6K1DWwq4BW0k0l@178.32.177.169/cyclone?authSource=admin&authMechanism=SCRAM-SHA-1')
+const db =  mongoose.createConnection('admin:LhBWu6K2yo@69.195.152.138/cyclone?authSource=admin&authMechanism=SCRAM-SHA-1')
 let profanity = {}
 app.set('bot', bot)
 const iconCodeMap = {
@@ -104,34 +104,8 @@ function getIconName(_code){
 }
 
 function createCommands(){
-  commands.registerCommand('balance', 'Retrieve your balance', (msg,args,apx) => {
-    if(typeof args[1] === 'string'){
-      let target = args[1].replace('<@', '').replace('>', '')
-      api.getBalance(target, (err, balance) => {
-        if(err){
-          return apx.error('Failed to get target\'s balance! Please try again later.')
-        }
-        msg.reply(`${bot.users.get(target).username}'s balance is **${balance}**!`)
-      })
-    }else{
-      api.getBalance(msg.author.id, (err, balance) => {
-        if(err){
-          return apx.error('Failed to get your balance! Please try again later.')
-        }
-        msg.reply(`Your balance is **${balance}**!`)
-      })
-    }
-
-  })
   commands.registerCommand('setbalance', 'Set your balance', (msg,args,apx) => {
-    let target = args[1].replace('<@', '').replace('>', '')
-    let balance = parseInt(args[2])
-    api.setBalance(target, balance, (err) => {
-      if(err){
-        return apx.error('Failed to set target\'s balance! Please try again later.')
-      }
-      msg.reply(`Their balance is now set to **${balance}**!`)
-    })
+    
   }, 'botAdmin')
   commands.registerCommand('bet', 'Bet your balance and probably lose', (msg,args,apx) => {
     if(!args[1]){
@@ -293,9 +267,6 @@ function createCommands(){
       })
     })
   }, 'botAdmin')
-  commands.registerCommand('admin', 'Sends link to authenticate to access admin panel', (msg, args, apx) => {
-    msg.channel.sendMessage('http://cyclonebot.com/auth')
-  })
 
   commands.registerCommand('purge', 'Delete x messages in current channel.', (msg,args,apx) => {
     let limit = 15
@@ -323,7 +294,7 @@ function createCommands(){
 
 bot.on('ready', () => {
   mongoose.Promise = global.Promise
-  mongoose.connect('admin:XpCdV6K1DWwq4BW0k0l@178.32.177.169/cyclone?authSource=admin&authMechanism=SCRAM-SHA-1') // Initialize Mongoose
+  mongoose.connect('admin:LhBWu6K2yo@69.195.152.138/cyclone?authSource=admin&authMechanism=SCRAM-SHA-1') // Initialize Mongoose
   commands.init(bot) // Initializes built in commands (!help, !eval)
   logger.init(bot) // init log to do some HAWt logging
   createCommands()
@@ -350,7 +321,7 @@ bot.on('message', (msg) => {
   }else{
     logger.serverLogMsg(msg.guild, msg.channel, msg.author, msg)
   }
-  if(!msg.channel.type === 'dm' && msg.guild.id === '238424240032972801'){
+  /*if(!msg.channel.type === 'dm' && msg.guild.id === '238424240032972801'){
     if(msg.author.id === '194960599816470529') return
     requestify.post('https://relatively-cleanspeak-api.inversoft.io/content/item/moderate', {
       content: {
@@ -392,7 +363,8 @@ bot.on('message', (msg) => {
         })
       }
     })
-  }
+  }*/
+
 })
 
 bot.on('guildMemberAdd', (member) => {
