@@ -2,6 +2,7 @@ module.exports = {
   apps : [{
       name      : "Cyclone",
       script    : "index.js",
+      interpreter_args: "--harmony",
       env: {
         COMMON_VARIABLE: "true"
       },
