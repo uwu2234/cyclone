@@ -7,6 +7,7 @@
 const Discord = require('discord.js')
 const mongoose = require('mongoose')
 const requestify = require('requestify')
+const CmdHandle = require('./cmdModule/commands')
 
 const config = require('./config.json')
 const commands = require('./commands')
@@ -102,6 +103,11 @@ function getIconName(_code){
   }
   return 'na'
 }
+
+const handler = new CmdHandle.CommandHandler({
+  bot: bot,
+  prefix: '!'
+})
 
 function createCommands(){
   commands.registerCommand('setbalance', 'Set your balance', (msg,args,apx) => {
@@ -315,7 +321,8 @@ bot.on('ready', () => {
 })
 
 bot.on('message', (msg) => {
-  let handled = commands.handleCommand(msg)
+  handler.handleMessage(msg)
+  //let handled = commands.handleCommand(msg)
   if(msg.channel.type === 'dm'){
     logger.serverLogMsg(msg.author, {name: '*DM*'}, msg.author, msg)
   }else{
