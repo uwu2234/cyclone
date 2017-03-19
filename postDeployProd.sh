@@ -5,3 +5,4 @@ chmod +x ~/.nvm/nvm.sh
 export PATH="$PATH:/home/ubuntu/.nvm/versions/node/v7.2.0/bin"
 npm install
 pm2 startOrRestart ecosystem.config.js --env production
+echo "this may have worked"
