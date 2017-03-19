@@ -9,6 +9,7 @@ class SetBalanceCommand extends Command {
     })
   }
   hasPermission(message, api) {
+      console.log(message.author)
       if(api.getRank(message.author) == 'botMod' || api.getRank(message.author) == 'botAdmin') return true
       return false
   }
