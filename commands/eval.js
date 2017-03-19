@@ -15,7 +15,9 @@ class EvalCommand extends Command {
   async run(message, args, api) {
     try{
       let code = message.content.substr(5);
+      global.eapi = api;
       let resp = eval(code);
+      global.eapi = undefined;
       api.success('Your code successfully ran on the bot!')
       message.channel.sendMessage(`\`\`\`${resp}\`\`\``);
     }catch(ex){
