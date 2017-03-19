@@ -118,8 +118,7 @@ class CommandHandler {
       if(!this.commands[args[0]]) return false
       let command = this.commands[args[0]]
       if(command.loaded == false) return false
-      let _api = new api(message, args, this)
-      if(command.hasPermission(message, _api)) {
+      if(command.hasPermission(message, new api(message, args, this))) {
         command.run(message, args, new api(message, args, this))
         return true
       } else {

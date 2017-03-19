@@ -21,7 +21,7 @@ class HelpCommand extends Command {
     for(let _cmd in api.handler.commands) {
       if(!api.handler.commands.hasOwnProperty(_cmd)) continue
       let cmd = api.handler.commands[_cmd]
-      if(!cmd.hasPermission(message)) continue
+      if(!cmd.hasPermission(message, api)) continue
       text += `\n${api.handler.prefix}${cmd.name} » ${cmd.help}`      
     }
     embed.setDescription(text)
