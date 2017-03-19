@@ -27,7 +27,7 @@ module.exports = {
       host : "69.195.152.138",
       ref  : "origin/master",
       repo : "git@github.com:FNCxPro/cyclone.git",
-      path : "~/cyclone",
+      path : "/home/ubuntu/cyclone",
       //"pre-deploy-local": "PATH=%PATH%;C:/Program Files/Git/usr/bin",
       "post-deploy" : "chmod +x postDeployProd.sh && ./postDeployProd.sh"
     }
