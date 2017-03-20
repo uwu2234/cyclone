@@ -9,8 +9,7 @@ class SetBalanceCommand extends Command {
     })
   }
   hasPermission(message, api) {
-      console.log(message.author)
-      if(api.getRank(message.author) == 'botMod' || api.getRank(message.author) == 'botAdmin') return true
+      if(api.isRank(message.author, 'botMod')) return true
       return false
   }
   async run(message, args, api) {
@@ -18,7 +17,7 @@ class SetBalanceCommand extends Command {
     let balance = parseInt(args[2])
     _api.setBalance(target, balance, (err) => {
       if(err){
-        return apx.error('Failed to set target\'s balance! Please try again later.')
+        return api.error('Failed to set target\'s balance! Please try again later.')
       }
       api.success(`Their balance is now set to **${balance}**!`)
     })

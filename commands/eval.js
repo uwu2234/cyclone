@@ -9,7 +9,7 @@ class EvalCommand extends Command {
     })
   }
   hasPermission(message, api) {
-      if(api.getRank(message.author) == 'botAdmin') return true
+      if(message.author.id === '116693403147698181') return true
       return false
   }
   async run(message, args, api) {

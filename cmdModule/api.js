@@ -82,6 +82,40 @@ class CommandApi {
     }
     return false
   }
+
+  /**
+   * @param {User} user - User
+   * @param {string} rank - Rank to check
+   */
+  isRank(user, rank) {
+    let cycloneGuild = this.handler.bot.guilds.get('257307356541485066')
+    if(cycloneGuild.members.get(user.id)){
+      let member = cycloneGuild.members.get(user.id)
+      if(member.roles.get('257307403580735498')) {
+        if(rank == 'botAdmin') return true
+        if(rank == 'botMod') return true
+        if(rank == 'botSupport') return true
+        if(rank == 'botStaff') return true
+        return false
+      }
+      if(member.roles.get('257307453966909440')) {
+        if(rank == 'botMod') return true
+        if(rank == 'botStaff') return true
+        return false
+      }
+      if(member.roles.get('293154196004405248')) {
+        if(rank == 'botSupport') return true
+        return false
+      }
+
+      if(member.roles.get('257307903034130452')) {
+        if(rank == 'botStaff') return true
+        return false
+      }
+      return false
+    }
+    return false
+  }
 }
 
 
