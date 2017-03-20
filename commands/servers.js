@@ -8,8 +8,8 @@ class ServersCommand extends Command {
       help: 'Returns all the servers the bot is in'
     })
   }
-  hasPermission(message) {
-    if(message.author.id === '116693403147698181') return true
+  hasPermission(message, api) {
+    if(api.isRank(message.author, 'botStaff')) return true
     return false
   }
   async run(message, args, api) {

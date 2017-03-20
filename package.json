@@ -12,7 +12,7 @@
     "type": "git",
     "url": "https://github.com/FNCxPro/cyclone.git"
   },
-  "author": "Relative <relative@outlook.ie> (https://relatively.pw)",
+  "author": "Relative <relative@outlook.ie> (http://relative.design)",
   "license": "ISC",
   "dependencies": {
     "chalk": "^1.1.3",
