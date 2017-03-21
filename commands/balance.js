@@ -19,7 +19,7 @@ class BalanceCommand extends Command {
         api.success(`${bot.users.get(target).username}'s balance is **${balance}**!`)
       })
     }else{
-      _api.getBalance(msg.author.id, (err, balance) => {
+      _api.getBalance(message.author.id, (err, balance) => {
         if(err){
           return api.error('Failed to get your balance! Please try again later.')
         }
