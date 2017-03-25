@@ -11,23 +11,23 @@ class BetCommand extends Command {
 
   async run(message, args, api) {
     if(!args[1]){
-      return apx.error(`Usage: ${api.handler.prefix}bet <money>`)
+      return api.error(`Usage: ${api.handler.prefix}bet <money>`)
     }
     let toGamble = parseInt(args[1])
     if(0 > toGamble){
-      return apx.error(`${toGamble} is less than 0. Aborting bet.`)
+      return api.error(`${toGamble} is less than 0. Aborting bet.`)
     }
     _api.getBalance(message.author.id, (err, bal) => {
       if(err){
-        return apx.error('Error getting your balance. Nothing has been transacted from your account.')
+        return api.error('Error getting your balance. Nothing has been transacted from your account.')
       }
       let curBal = bal
       if(toGamble > curBal){
-        return apx.error('You do not have enough money to bet on that. Nothing has been transacted from your account.')
+        return api.error('You do not have enough money to bet on that. Nothing has been transacted from your account.')
       }
       _api.subtractBalance(message.author.id, toGamble, (err) => {
         if(err){
-          return apx.error('Error subtracting gamble from your balance. Nothing has been transacted from your account.')
+          return api.error('Error subtracting gamble from your balance. Nothing has been transacted from your account.')
         }
         let rdm = Math.floor(Math.random()*(100)+1)
         let moneyToGive = 0
