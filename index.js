@@ -106,7 +106,7 @@ function getIconName(_code){
 
 const handler = new CmdHandle.CommandHandler({
   bot: bot,
-  prefix: 'c!'
+  prefix: 'cy!'
 })
 
 bot.on('ready', () => {
