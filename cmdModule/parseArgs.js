@@ -10,7 +10,7 @@ String.prototype.replaceAll = function(target, replacement) {
  */
 module.exports = function(content) {
   if(typeof content !== 'string') throw new TypeError('Content must be a string.')
-  let par = Discord.escapeMarkdown(content.substr(1))
+  let par = Discord.escapeMarkdown(content.substr(3))
   let parsed = par.match(/[^\s"]+|"([^"]*)"/gi)
   for(let _arg in parsed) {
     if(!parsed.hasOwnProperty(_arg)) continue
