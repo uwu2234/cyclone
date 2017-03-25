@@ -11,7 +11,7 @@ class BetCommand extends Command {
 
   async run(message, args, api) {
     if(!args[1]){
-      return apx.error(`Usage: ${apx.getPrefix()}bet <money>`)
+      return apx.error(`Usage: ${api.handler.prefix}bet <money>`)
     }
     let toGamble = parseInt(args[1])
     if(0 > toGamble){
@@ -37,53 +37,53 @@ class BetCommand extends Command {
             if(err){
               return api.error(`Error giving you your money. Please show @Relative#2600 this message with the amount: ${toGamble} ${moneyToGive}`)
             }
-            message.channel.sendMessage(`:white_check_mark: :moneybag: You have won **$${moneyToGive}**! Your lucky number is ${rdm}. Check your balance with ${_api.getPrefix()}balance`)
+            message.channel.sendMessage(`:white_check_mark: :moneybag: You have won **$${moneyToGive}**! Your lucky number is ${rdm}. Check your balance with ${api.handler.prefix}balance`)
           })
         }else if(rdm <= 42){
-          message.channel.sendMessage(`:x: :bomb: You have lost **$${toGamble}**! Your unlucky number is ${rdm}. Check your balance with ${_api.getPrefix()}balance`)
+          message.channel.sendMessage(`:x: :bomb: You have lost **$${toGamble}**! Your unlucky number is ${rdm}. Check your balance with ${api.handler.prefix}balance`)
         }else if(rdm <= 52){
           moneyToGive = toGamble*2
-          _api.addBalance(msg.author.id, moneyToGive, (err) => {
+          _api.addBalance(message.author.id, moneyToGive, (err) => {
             if(err){
               return api.error(`Error giving you your money. Please show @Relative#2600 this message with the amount: ${toGamble} ${moneyToGive}`)
             }
-            message.channel.sendMessage(`:white_check_mark: :moneybag: You have won **$${moneyToGive}**! Your lucky number is ${rdm}. Check your balance with ${_api.getPrefix()}balance`)
+            message.channel.sendMessage(`:white_check_mark: :moneybag: You have won **$${moneyToGive}**! Your lucky number is ${rdm}. Check your balance with ${api.handler.prefix}balance`)
           })
         }else if(rdm <= 76){
-          msg.channel.sendMessage(`:x: :bomb: You have lost **$${toGamble}**! Your unlucky number is ${rdm}. Check your balance with ${_api.getPrefix()}balance`)
+          message.channel.sendMessage(`:x: :bomb: You have lost **$${toGamble}**! Your unlucky number is ${rdm}. Check your balance with ${api.handler.prefix}balance`)
         }else if(rdm == 77){
           moneyToGive = toGamble*12
-          _api.addBalance(msg.author.id, moneyToGive, (err) => {
+          _api.addBalance(message.author.id, moneyToGive, (err) => {
             if(err){
               return api.error(`Error giving you your money. Please show @Relative#2600 this message with the amount: ${toGamble} ${moneyToGive}`)
             }
-            message.channel.sendMessage(`:white_check_mark: :money_mouth: You have won **$${moneyToGive}**!!! Your lucky number is ${rdm}. Check your balance with ${_api.getPrefix()}balance`)
+            message.channel.sendMessage(`:white_check_mark: :money_mouth: You have won **$${moneyToGive}**!!! Your lucky number is ${rdm}. Check your balance with ${api.handler.prefix}balance`)
           })
         }else if(rdm <= 86) {
           moneyToGive = toGamble * 3
-          _api.addBalance(msg.author.id, moneyToGive, (err) => {
+          _api.addBalance(message.author.id, moneyToGive, (err) => {
             if (err) {
               return api.error(`Error giving you your money. Please show @Relative#2600 this message with the amount: ${toGamble} ${moneyToGive}`)
             }
-            message.channel.sendMessage(`:white_check_mark: :moneybag: You have won **$${moneyToGive}**! Your lucky number is ${rdm}. Check your balance with ${apx.getPrefix()}balance`)
+            message.channel.sendMessage(`:white_check_mark: :moneybag: You have won **$${moneyToGive}**! Your lucky number is ${rdm}. Check your balance with ${api.handler.prefix}balance`)
           })
         }else if(rdm <= 99){
-          message.channel.sendMessage(`:x: :bomb: You have lost **$${toGamble}**! Your unlucky number is ${rdm}. Check your balance with ${apx.getPrefix()}balance`)
+          message.channel.sendMessage(`:x: :bomb: You have lost **$${toGamble}**! Your unlucky number is ${rdm}. Check your balance with ${api.handler.prefix}balance`)
         }else if(rdm == 100){
           moneyToGive = toGamble * 6
-          _api.addBalance(msg.author.id, moneyToGive, (err) => {
+          _api.addBalance(message.author.id, moneyToGive, (err) => {
             if (err) {
-              return api.error(`Error giving you your money. Please show @Relative#1027 this message with the amount: ${toGamble} ${moneyToGive}`)
+              return api.error(`Error giving you your money. Please show @Relative#2600 this message with the amount: ${toGamble} ${moneyToGive}`)
             }
-            message.channel.sendMessage(`:white_check_mark: :moneybag: You have won **$${moneyToGive}**! Your lucky number is ${rdm}. Check your balance with ${apx.getPrefix()}balance`)
+            message.channel.sendMessage(`:white_check_mark: :moneybag: You have won **$${moneyToGive}**! Your lucky number is ${rdm}. Check your balance with ${api.handler.prefix}balance`)
           })
         }else{
-          moneyToGive = toGamble * 500
-          _api.addBalance(msg.author.id, moneyToGive, (err) => {
+          moneyToGive = toGamble * 5000
+          _api.addBalance(message.author.id, moneyToGive, (err) => {
             if (err) {
-              return api.error(`Error giving you your money. (ha x500 lost!!!11!1) Please show @Relative#1027 this message with the amount: ${toGamble} ${moneyToGive}`)
+              return api.error(`Error giving you your money. (ha x5000 lost!!!11!1) Please show @Relative#2600 this message with the amount: ${toGamble} ${moneyToGive}`)
             }
-            message.channel.sendMessage(`:white_check_mark: :moneybag: You have won **$${moneyToGive}**! (x500). Your **EXTREMELY LUCKY** number is ${rdm}. You have won against all odds due to a programming flaw. Please enjoy the free money. Check your balance with ${apx.getPrefix()}balance`)
+            message.channel.sendMessage(`:white_check_mark: :moneybag: You have won **$${moneyToGive}**! (x500). Your **EXTREMELY LUCKY** number is ${rdm}. You have won against all odds due to a programming flaw. Please enjoy the free money. Check your balance with ${api.handler.prefix}balance`)
           })
         }
       })
