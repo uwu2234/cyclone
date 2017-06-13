@@ -1,0 +1,23 @@
+{
+  "name": "cyclone",
+  "description": "oh",
+  "displayName": "Cyclone",
+  "version": "2.0",
+  "private": true,
+  "main": "index.js",
+  "scripts": {
+    "start": "node ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/FNCxPro/cyclone.git"
+  },
+  "author": "Relative#2600",
+  "license": "ISC",
+  "dependencies": {
+    "common-tags": "^1.4.0",
+    "eris": "^0.7.0",
+    "erlpack": "github:hammerandchisel/erlpack",
+    "uws": "^0.14.5"
+  }
+}
