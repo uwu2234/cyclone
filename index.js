@@ -94,7 +94,6 @@ function blacklisted(msg, args) {
 
 bot.on('ready', () => {
   log.info('Cyclone is ready.')
-  log.warn('Test sentry event.')
   bot.editStatus('online', {
     name: `cy!help`,
     type: 1,
