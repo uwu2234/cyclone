@@ -91,29 +91,31 @@ function blacklisted(msg, args) {
   }
   return false
 }
-
-bot.on('ready', () => {
-  log.info('Cyclone is ready.')
-  bot.editStatus('online', {
-    name: `cy!help`,
-    type: 1,
-    url: 'https://twitch.tv/directory'
+ 
+/* log events & ready events */
+bot
+  .on('ready', () => {
+    log.info('Cyclone is ready.')
+    bot.editStatus('online', {
+      name: `cy!help`,
+      type: 1,
+      url: 'https://twitch.tv/directory'
+    })
   })
-})
-bot.on('shardReady', (id) => {
-  log.info(`Shard ${id} connected`)
-})
+  .on('shardReady', (id) => {
+    log.info(`Shard ${id} connected`)
+  })
+  .on('debug', (msg, id) => {
+    log.debug(`[shard ${id}]: ${message}`)
+  })
+  .on('warn', (msg, id) => {
+    log.warn(`[shard ${id}]: ${message}`)
+  })
+  .on('error', (err, id) => {
+    log.error(`[shard ${id}]: ${err}`)
+  })
 
-bot.on('debug', (message, id) => {
-  log.debug(`[shard ${id}]: ${message}`)
-})
-bot.on('warn', (message, id) => {
-  log.warn(`[shard ${id}]: ${message}`)
-})
-bot.on('error', (err, id) => {
-  log.error(`[shard ${id}]: ${err}`)
-})
-
+/* other events */
 bot.on('guildMemberUpdate', (guild, member, oldMember) => {
   if (member.roles != oldMember.roles) {
     if (member.roles.indexOf('259592767867584512') != -1) {
