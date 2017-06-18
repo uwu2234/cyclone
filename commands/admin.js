@@ -1,5 +1,6 @@
 const sr = require('common-tags').stripIndents
 const RichEmbed = require('../embed')
+const vm = require('vm')
 module.exports = function (bot, db, log) {
   const requirements = {
     requirements: {
@@ -66,7 +67,6 @@ module.exports = function (bot, db, log) {
     ],
     argsRequired: true
   })
-
   let userCommand = adminCommand.registerSubcommand('user', sr`cy!admin user [bl|unb|set]`, requirements)
   userCommand.registerSubcommand('blacklist', (msg, args) => {
     let user
@@ -118,17 +118,31 @@ module.exports = function (bot, db, log) {
       ],
       argsRequired: true
   })
+
   bot.registerCommand('eval', (msg, args) => {
     try {
       let code = args.join('')
       code = code.replaceAll('`', '')
       let res = eval(code)
-      return sr`Result:
-      \`\`\`${res}\`\`\``
+      var embed = new RichEmbed()
+      embed.setColor(colorcfg.green2)
+      embed.setAuthor(`${msg.author.username}#${msg.author.discriminator}`, msg.author.avatarURL)
+      embed.setTitle('Executed')
+      embed.setDescription(`**Result:** \`\`\`${res}\`\`\``)
+      embed.setTimestamp()
+      msg.channel.createMessage({ embed: embed.toJSON() })
+      embed = undefined
+      return
     } catch (ex) {
-      return sr`Your code resulted in an error.
-      **STACKTRACE**
-      \`\`\`${ex}\`\`\``
+      var embed = new RichEmbed()
+      embed.setColor(colorcfg.red)
+      embed.setAuthor(`${msg.author.username}#${msg.author.discriminator}`, msg.author.avatarURL)
+      embed.setTitle('Error')
+      embed.setDescription(`**Error:** \`\`\`${ex}\`\`\``)
+      embed.setTimestamp()
+      msg.channel.createMessage({ embed: embed.toJSON() })
+      embed = undefined
+      return
     }
   }, {
     requirements: {
@@ -136,6 +150,46 @@ module.exports = function (bot, db, log) {
     },
     description: 'Evaluate JavaScript code on Cyclone',
     fullDescription: 'Evaluate JavaScript code on Cyclone'
+  })
+
+  bot.registerCommand('vm', (msg, args) => {
+    try {
+      let sandbox = {
+        message: msg,
+        args: args,
+        bot: bot,
+        db: db,
+        Embed: RichEmbed
+      }
+      vm.createContext(sandbox)
+      let code = args.join(' ').replaceAll('`', '')
+      let res = vm.runInContext(code, sandbox)
+      var embed = new RichEmbed()
+      embed.setColor(colorcfg.green2)
+      embed.setAuthor(`${msg.author.username}#${msg.author.discriminator}`, msg.author.avatarURL)
+      embed.setTitle('Executed')
+      embed.setDescription(`**Result:** \`\`\`${res}\`\`\`\n**Sandbox:** \`\`\`${util.inspect(sandbox)}\`\`\``)
+      embed.setTimestamp()
+      msg.channel.createMessage({ embed: embed.toJSON() })
+      embed = undefined
+      return
+    } catch (ex) {
+      var embed = new RichEmbed()
+      embed.setColor(colorcfg.red)
+      embed.setAuthor(`${msg.author.username}#${msg.author.discriminator}`, msg.author.avatarURL)
+      embed.setTitle('Error')
+      embed.setDescription(`**Error:** \`\`\`${ex}\`\`\``)
+      embed.setTimestamp()
+      msg.channel.createMessage({ embed: embed.toJSON() })
+      embed = undefined
+      return
+    }
+  }, {
+    requirements: {
+      userIDs: ['116693403147698181']
+    },
+    description: 'Evaluate JavaScript code on Cyclone in a Node VM',
+    fullDescription: 'Evaluate JavaScript code on Cyclone in a Node VM'
   })
 
   log.info('Admin commands registered')
