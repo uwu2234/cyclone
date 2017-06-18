@@ -2,11 +2,12 @@
   "name": "cyclone",
   "description": "oh",
   "displayName": "Cyclone",
-  "version": "2.0",
+  "version": "2.0.0",
   "private": true,
   "main": "index.js",
   "scripts": {
-    "start": "node ."
+    "start": "set NODE_ENV=production && node index.js",
+    "start:dev": "set NODE_ENV=dev && node index.js"
   },
   "repository": {
     "type": "git",
@@ -16,8 +17,15 @@
   "license": "ISC",
   "dependencies": {
     "common-tags": "^1.4.0",
+    "decache": "^4.1.0",
     "eris": "^0.7.0",
     "erlpack": "github:hammerandchisel/erlpack",
-    "uws": "^0.14.5"
+    "fs-extra": "^3.0.1",
+    "requestify": "^0.2.5",
+    "uws": "^0.14.5",
+    "vm2": "^3.4.6",
+    "winston": "^2.3.1",
+    "winston-daily-rotate-file": "^1.4.6",
+    "winston-sentry": "^0.2.1"
   }
 }
