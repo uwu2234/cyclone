@@ -105,10 +105,10 @@ bot
   .on('shardReady', (id) => {
     log.info(`Shard ${id} connected`)
   })
-  .on('debug', (msg, id) => {
+  .on('debug', (message, id) => {
     log.debug(`[shard ${id}]: ${message}`)
   })
-  .on('warn', (msg, id) => {
+  .on('warn', (message, id) => {
     log.warn(`[shard ${id}]: ${message}`)
   })
   .on('error', (err, id) => {
