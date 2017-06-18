@@ -39,24 +39,8 @@ var log = new (winston.Logger)({
     })
   ]
 })
-
-
-
-const colorcfg = {
-  green: '#139A43',
-  red: '#DA2C38',
-  blue: '#256EFF',
-  purple: '#5E239D',
-  green2: '#0DAB76'
-}
-const requirements = {
-  requirements: {
-    userIDs: ['116693403147698181']
-  }
-}
-
 const bot = new Eris.CommandClient(config.token, {
-  maxShards: 2,
+  maxShards: config.sharding.shardCount,
   autoReconnect: true,
   getAllUsers: true
 }, {
@@ -69,7 +53,13 @@ const bot = new Eris.CommandClient(config.token, {
     errorMessage: `⛔ This command failed to execute! Try again later!`
   }
 })
-
+const colorcfg = {
+  green: '#139A43',
+  red: '#DA2C38',
+  blue: '#256EFF',
+  purple: '#5E239D',
+  green2: '#0DAB76'
+}
 function blacklisted(msg, args) {
   if(typeof (db.getServerOption(msg.channel.guild.id, 'blacklisted')) != 'undefined' && db.getServerOption(msg.channel.guild.id, 'blacklisted') == true) {
     let embed = new RichEmbed()
@@ -130,7 +120,7 @@ bot.on('guildMemberUpdate', (guild, member, oldMember) => {
 require('./commands/misc')(bot, db, log)
 require('./commands/admin')(bot, db, log)
 require('./commands/db')(bot, db, log)
-//require('./commands/sbeval')(bot, db, log)
+//require('./commands/sbeval')(bot, db, log) 
 
 let moneyCommand = bot.registerCommand('money', (msg, args) => {
   if(blacklisted(msg, args)) return
