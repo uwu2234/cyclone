@@ -172,8 +172,8 @@ class RedisDatabase {
     this.client = redis.createClient(`redis://:${config.redis.password}@${config.redis.host}:${config.redis.port}/${config.redis.database}`)
     this.bot = bot
     this.log = log
-    client.on('ready', this.log.info('Redis is ready!'))
-    client.on('error', err => this.log.error(`Redis error! ${util.inspect(err)}`))
+    this.client.on('ready', this.log.info('Redis is ready!'))
+    this.client.on('error', err => this.log.error(`Redis error! ${util.inspect(err)}`))
     this.init()
   }
   async init() {
