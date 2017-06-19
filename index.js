@@ -53,7 +53,7 @@ function blacklisted(msg, args) {
     let embed = new RichEmbed()
     embed.setColor(colorcfg.red)
     embed.setTitle('Blacklisted')
-    embed.setDescription('Sorry, but you or the server was blacklisted from using Cyclone! Apologies! **server**')
+    embed.setDescription('Sorry, but you or the server was blacklisted from using Cyclone! Apologies!')
     embed.setTimestamp()
     msg.channel.createMessage({embed: embed.toJSON()})
     return true
@@ -62,12 +62,12 @@ function blacklisted(msg, args) {
     let embed = new RichEmbed()
     embed.setColor(colorcfg.red)
     embed.setTitle('Blacklisted')
-    embed.setDescription('Sorry, but you or the server was blacklisted from using Cyclone! Apologies! **user**')
+    embed.setDescription('Sorry, but you or the server was blacklisted from using Cyclone! Apologies!')
     embed.setTimestamp()
     msg.channel.createMessage({embed: embed.toJSON()})
     return true
   }
-  if((process.env.NODE_ENV == 'dev') && (typeof db.getUserOption(msg.author.id, 'whitelisted') == 'undefined' || db.getUserOption(msg.author.id, 'whitelisted') == false)) {
+  if(env == 'dev' && (typeof db.getUserOption(msg.author.id, 'whitelisted') == 'undefined' || db.getUserOption(msg.author.id, 'whitelisted') == false)) {
     let embed = new RichEmbed()
     embed.setColor(colorcfg.red)
     embed.setTitle('Development Mode')
