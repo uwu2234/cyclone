@@ -1,7 +1,15 @@
+const bluebird = require('bluebird')
 const decache = require('decache')
+const colors = require('colors')
 const db = require('./db.json')
+const redis = require('redis')
 const path = require('path')
 const fs = require('fs')
+const util = require('util')
+
+var config = require('./config.json')
+const env = process.env.NODE_ENV.substr(0,process.env.NODE_ENV.length - 1)
+if(env == 'dev') config = require('./config.dev.json')
 
 /* modified from https://stackoverflow.com/a/6394168 */
 function index(obj,i) {
@@ -157,5 +165,50 @@ class Database {
   }
 }
 
+class RedisDatabase {
+  constructor(bot, log) {
+    bluebird.promisifyAll(redis.RedisClient.prototype)
+    bluebird.promisifyAll(redis.Multi.prototype)
+    this.client = redis.createClient(`redis://:${config.redis.password}@${config.redis.host}:${config.redis.port}/${config.redis.database}`)
+    this.bot = bot
+    this.log = log
+    client.on('ready', this.log.info('Redis is ready!'))
+    client.on('error', err => this.log.error(`Redis error! ${util.inspect(err)}`))
+    this.init()
+  }
+  async init() {
+    let client = this.client
+    
+    let res = await client.getAsync('lol')
+    console.log(res)
+    return res
+  }
+  async getServerOption(guild, key, def = undefined) {
+    let val = await this.client.hgetAsync(guild, key)
+    if(val == 'null' || val == null || val == '' && typeof def  == 'undefined') {
+      this.setServerOption(guild, key, def)
+      return def
+    }
+    return val
+  }
+  async setServerOption(guild, key, val) {
+    this.client.hset(guild, key, val)
+  }
+  async getUserOption(member, key, def = undefined) {
+    let val = await this.client.hgetAsync(member, key)
+    if(val == 'null' || val == null || val == '' && typeof def  == 'undefined') {
+      this.setUserOption(member, key, def)
+      return def
+    }
+    return val
+  }
+  async setUserOption(member, key, val) {
+    this.client.hset(member, key, val)
+  }
+}
 
-module.exports = Database
+
+module.exports = {
+  Database: Database,
+  RedisDatabase: RedisDatabase
+}

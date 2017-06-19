@@ -6,8 +6,8 @@
   "private": true,
   "main": "index.js",
   "scripts": {
-    "start": "set NODE_ENV=production && node index.js",
-    "start:dev": "set NODE_ENV=dev && node index.js"
+    "start": "set NODE_ENV=production && node index.js --harmony",
+    "start:dev": "set NODE_ENV=dev && node index.js --harmony"
   },
   "repository": {
     "type": "git",
@@ -16,6 +16,7 @@
   "author": "Relative#2600",
   "license": "ISC",
   "dependencies": {
+    "bluebird": "^3.5.0",
     "colors": "^1.1.2",
     "common-tags": "^1.4.0",
     "decache": "^4.1.0",
@@ -23,6 +24,7 @@
     "erlpack": "github:hammerandchisel/erlpack",
     "fs-extra": "^3.0.1",
     "moment": "^2.18.1",
+    "redis": "^2.7.1",
     "requestify": "^0.2.5",
     "strip-ansi": "^3.0.1",
     "uws": "^0.14.5",
