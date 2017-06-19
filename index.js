@@ -5,17 +5,19 @@ const RichEmbed = require('./embed')
 require('winston-daily-rotate-file')
 const winston = require('winston')
 const Database = require('./db')
+const colors = require('colors')
 const {NodeVM} = require('vm2')
 const path = require('path')
 const Eris = require('eris')
 const vm = require('vm')
 const fs = require('fs-extra')
 const db = new Database()
-const config =  process.env.ENV === 'development' ? require('./config.dev.json') : require('./config.json')
-
+var config = require('./config.json')
+const env = process.env.NODE_ENV.substr(0,process.env.NODE_ENV.length - 1)
+if(env == 'dev') config = require('./config.dev.json')
 String.prototype.replaceAll = function(target, replacement) { return this.split(target).join(replacement); };
 var log = new (winston.Logger)({
-  level: process.env.ENV === 'development' ? 'debug' : 'info',
+  level: env === 'dev' ? 'debug' : 'info',
   transports: [
     new (winston.transports.Console)({
       colorize: true
@@ -27,14 +29,14 @@ var log = new (winston.Logger)({
       localTime: true,
       json: false,
       prepend: true,
-      level: process.env.NODE_ENV === 'dev' ? 'debug' : 'info'
+      level: env === 'dev' ? 'debug' : 'info'
     }),
     new Sentry({
       level: 'warn',
       dsn: 'https://162d4b510da44c1e94f480c97452a05d:d9a9a1db561f45e2b1521341bcd40cad@sentry.io/180885',
       tags: {
         version: require('./package.json').version, 
-        environment: process.env.NODE_ENV
+        environment: env
       }
     })
   ]
@@ -79,7 +81,7 @@ function blacklisted(msg, args) {
     msg.channel.createMessage({embed: embed.toJSON()})
     return true
   }
-  if(typeof db.getUserOption(msg.author.id, 'whitelisted') == 'undefined' || db.getUserOption(msg.author.id, 'whitelisted') == false) {
+  if((process.env.NODE_ENV == 'dev') && (typeof db.getUserOption(msg.author.id, 'whitelisted') == 'undefined' || db.getUserOption(msg.author.id, 'whitelisted') == false)) {
     let embed = new RichEmbed()
     embed.setColor(colorcfg.red)
     embed.setTitle('Development Mode')
@@ -90,11 +92,17 @@ function blacklisted(msg, args) {
   }
   return false
 }
- 
+console.log(env)
+console.log(env)
+if(env == 'dev') {
+  log.debug('Cyclone is running in ' + 'development'.magenta + ' mode. Users not whitelisted will not be able to run any commands on the bot.')
+  //TODO: any other logic for specifically dev environment.
+}
+
 /* log events & ready events */
 bot
   .on('ready', () => {
-    log.info('Cyclone is ready.')
+    log.info(`${'Cyclone'.red} is ready.`)
     bot.editStatus('online', {
       name: `cy!help`,
       type: 1,
@@ -102,16 +110,19 @@ bot
     })
   })
   .on('shardReady', (id) => {
-    log.info(`Shard ${id} connected`)
+    log.info(`Shard ${id.toString().cyan} connected`)
   })
   .on('debug', (message, id) => {
-    log.debug(`[shard ${id}]: ${message}`)
+    if(typeof id != 'undefined') return log.debug(`${'[Shard'.magenta + id.cyan + ']'.magenta}: ${message}`)
+    log.debug(`${message}`)
   })
   .on('warn', (message, id) => {
-    log.warn(`[shard ${id}]: ${message}`)
+    if(typeof id != 'undefined') return log.warn(`${'[Shard'.yellow + id.cyan + ']'.yellow}: ${message}`)
+    log.warn(`${message}`)
   })
   .on('error', (err, id) => {
-    log.error(`[shard ${id}]: ${err}`)
+    if(typeof id != 'undefined') return log.error(`${'[Shard'.red + id.cyan + ']'.red}: ${message}`)
+    log.error(`${err}`)
   })
 
 /* other events */

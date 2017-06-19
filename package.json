@@ -16,6 +16,7 @@
   "author": "Relative#2600",
   "license": "ISC",
   "dependencies": {
+    "colors": "^1.1.2",
     "common-tags": "^1.4.0",
     "decache": "^4.1.0",
     "eris": "github:FNCxPro/eris#dev",
