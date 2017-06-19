@@ -36,7 +36,7 @@ function setBlank(obj, val) {
   })
   return obj
 }
-class Database {
+class FileDatabase {
   constructor() {
     this.load()
     if(typeof this.db.servers === 'undefined') this.db.servers = {}
@@ -209,6 +209,6 @@ class RedisDatabase {
 
 
 module.exports = {
-  Database: Database,
+  FileDatabase: FileDatabase,
   RedisDatabase: RedisDatabase
 }
