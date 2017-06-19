@@ -1,11 +1,13 @@
 const sr = require('common-tags').stripIndents
 const requestify = require('requestify')
 const Sentry = require('winston-sentry')
+const stripAnsi = require('strip-ansi')
 const RichEmbed = require('./embed')
 require('winston-daily-rotate-file')
 const winston = require('winston')
 const Database = require('./db')
 const colors = require('colors')
+const moment = require('moment')
 const {NodeVM} = require('vm2')
 const path = require('path')
 const Eris = require('eris')
@@ -29,7 +31,12 @@ var log = new (winston.Logger)({
       localTime: true,
       json: false,
       prepend: true,
-      level: env === 'dev' ? 'debug' : 'info'
+      colorize: false,
+      level: env === 'dev' ? 'debug' : 'info',
+      formatter: (options) => {
+        let msg = `${moment().format('YYYY-MM-DD HH:mm:ss.SSS')} - ${options.level}: ${stripAnsi(options.message)}`
+        return msg
+      }
     }),
     new Sentry({
       level: 'warn',
@@ -113,15 +120,15 @@ bot
     log.info(`Shard ${id.toString().cyan} connected`)
   })
   .on('debug', (message, id) => {
-    if(typeof id != 'undefined') return log.debug(`${'[Shard'.magenta + id.cyan + ']'.magenta}: ${message}`)
+    if(typeof id != 'undefined' && id != null) return log.debug(`${'[Shard'.magenta + ' ' +  id.cyan + ']'.magenta}: ${message}`)
     log.debug(`${message}`)
   })
   .on('warn', (message, id) => {
-    if(typeof id != 'undefined') return log.warn(`${'[Shard'.yellow + id.cyan + ']'.yellow}: ${message}`)
+    if(typeof id != 'undefined' && id != null) return log.warn(`${'[Shard'.yellow + ' ' + id.cyan + ']'.yellow}: ${message}`)
     log.warn(`${message}`)
   })
   .on('error', (err, id) => {
-    if(typeof id != 'undefined') return log.error(`${'[Shard'.red + id.cyan + ']'.red}: ${message}`)
+    if(typeof id != 'undefined' && id != null) return log.error(`${'[Shard'.red + ' ' + id.cyan + ']'.red}: ${message}`)
     log.error(`${err}`)
   })
 
