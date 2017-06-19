@@ -1,6 +1,7 @@
 const sr = require('common-tags').stripIndents
 const RichEmbed = require('../embed')
 const vm = require('vm')
+const util = require('util')
 module.exports = function (bot, db, log) {
   const requirements = {
     requirements: {

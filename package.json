@@ -18,7 +18,7 @@
   "dependencies": {
     "common-tags": "^1.4.0",
     "decache": "^4.1.0",
-    "eris": "^0.7.0",
+    "eris": "github:FNCxPro/eris#master",
     "erlpack": "github:hammerandchisel/erlpack",
     "fs-extra": "^3.0.1",
     "requestify": "^0.2.5",

@@ -11,7 +11,7 @@ const Eris = require('eris')
 const vm = require('vm')
 const fs = require('fs-extra')
 const db = new Database()
-const config = require('./config.json')
+const config =  process.env.ENV === 'development' ? require('./config.dev.json') : require('./config.json')
 
 String.prototype.replaceAll = function(target, replacement) { return this.split(target).join(replacement); };
 var log = new (winston.Logger)({
@@ -79,6 +79,15 @@ function blacklisted(msg, args) {
     msg.channel.createMessage({embed: embed.toJSON()})
     return true
   }
+  if(typeof db.getUserOption(msg.author.id, 'whitelisted') == 'undefined' || db.getUserOption(msg.author.id, 'whitelisted') == false) {
+    let embed = new RichEmbed()
+    embed.setColor(colorcfg.red)
+    embed.setTitle('Development Mode')
+    embed.setDescription('Sorry, but the bot is in development mode and only whitelisted users may use the bot while in development mode.')
+    embed.setTimestamp()
+    msg.channel.createMessage({embed: embed.toJSON()})
+    return true
+  }
   return false
 }
  
@@ -114,6 +123,10 @@ bot.on('guildMemberUpdate', (guild, member, oldMember) => {
       }
     }
   }
+})
+
+bot.on('commandExecuted', (label, invoker, msg, args) => {
+  log.info(`Command invoked by ${invoker.username}#${invoker.discriminator}: cy!${label} ${args.join(" ")}`)
 })
 
 
