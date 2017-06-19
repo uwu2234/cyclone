@@ -48,27 +48,6 @@ var log = new (winston.Logger)({
     })
   ]
 })
-const bot = new Eris.CommandClient(config.token, {
-  maxShards: config.sharding.shardCount,
-  autoReconnect: true,
-  getAllUsers: true
-}, {
-  description: `Cyclone v${require('./package.json').version}`,
-  owner: 'Relative',
-  prefix: 'cy!',
-  defaultCommandOptions: {
-    cooldownMessage: `Please wait to use this command again!`,
-    permissionMessage: `⛔ You don't have permission to use this command!`,
-    errorMessage: `⛔ This command failed to execute! Try again later!`
-  }
-})
-const colorcfg = {
-  green: '#139A43',
-  red: '#DA2C38',
-  blue: '#256EFF',
-  purple: '#5E239D',
-  green2: '#0DAB76'
-}
 function blacklisted(msg, args) {
   if(typeof (db.getServerOption(msg.channel.guild.id, 'blacklisted')) != 'undefined' && db.getServerOption(msg.channel.guild.id, 'blacklisted') == true) {
     let embed = new RichEmbed()
@@ -99,6 +78,29 @@ function blacklisted(msg, args) {
   }
   return false
 }
+const bot = new Eris.CommandClient(config.token, {
+  maxShards: config.sharding.shardCount,
+  autoReconnect: true,
+  getAllUsers: true
+}, {
+  description: `Cyclone v${require('./package.json').version}`,
+  owner: 'Relative',
+  prefix: 'cy!',
+  defaultCommandOptions: {
+    cooldownMessage: `Please wait to use this command again!`,
+    permissionMessage: `⛔ You don't have permission to use this command!`,
+    errorMessage: `⛔ This command failed to execute! Try again later!`
+  },
+  preCommand: blacklisted
+})
+const colorcfg = {
+  green: '#139A43',
+  red: '#DA2C38',
+  blue: '#256EFF',
+  purple: '#5E239D',
+  green2: '#0DAB76'
+}
+
 console.log(env)
 console.log(env)
 if(env == 'dev') {

@@ -9,29 +9,7 @@ module.exports = function (bot, db, log) {
     purple: '#5E239D',
     green2: '#0DAB76'
   }
-  function blacklisted(msg, args) {
-    if (typeof (db.getServerOption(msg.channel.guild.id, 'blacklisted')) != 'undefined' && db.getServerOption(msg.channel.guild.id, 'blacklisted') == true) {
-      let embed = new RichEmbed()
-      embed.setColor(colorcfg.red)
-      embed.setTitle('Blacklisted')
-      embed.setDescription('Sorry, but you or the server was blacklisted from using Cyclone! Apologies! **server**')
-      embed.setTimestamp()
-      msg.channel.createMessage({ embed: embed.toJSON() })
-      return true
-    }
-    if (typeof (db.getUserOption(msg.author.id, 'blacklisted')) != 'undefined' && db.getUserOption(msg.author.id, 'blacklisted') == true) {
-      let embed = new RichEmbed()
-      embed.setColor(colorcfg.red)
-      embed.setTitle('Blacklisted')
-      embed.setDescription('Sorry, but you or the server was blacklisted from using Cyclone! Apologies! **user**')
-      embed.setTimestamp()
-      msg.channel.createMessage({ embed: embed.toJSON() })
-      return true
-    }
-    return false
-  }
   bot.registerCommand('sbeval', (msg, args) => {
-    if(blacklisted(msg, args)) return
     let code = args.join(' ')
     requestify.post(`http://rextester.com/rundotnet/Run`, {
       LanguageChoiceWrapper: 23,
@@ -88,7 +66,6 @@ module.exports = function (bot, db, log) {
   })
 
   bot.registerCommand('pyeval', (msg, args) => {
-    if(blacklisted(msg, args)) return
     let code = args.join(' ')
     requestify.post(`http://rextester.com/rundotnet/Run`, {
       LanguageChoiceWrapper: 24,
