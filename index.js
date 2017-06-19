@@ -134,7 +134,7 @@ bot
     log.warn(`${message}`)
   })
   .on('error', (err, id) => {
-    if(typeof id != 'undefined' && id != null) return log.error(`${'[Shard'.red + ' ' + id.toString().cyan + ']'.red}: ${message}`)
+    if(typeof id != 'undefined' && id != null) return log.error(`${'[Shard'.red + ' ' + id.toString().cyan + ']'.red}: ${err}`)
     log.error(`${err}`)
   })
 

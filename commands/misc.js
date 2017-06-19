@@ -26,7 +26,7 @@ module.exports = function (bot, db, log) {
     fullDescription: 'Information about the bot.'
   })
   bot.registerCommand('shards', (msg, args) => {
-    let shards = `ID    Ping    Guilds`
+    let shards = `  ID    Ping    Guilds`
     let shardGuildCt = {}
     for(let k in bot.guildShardMap) {
       if(!bot.guildShardMap.hasOwnProperty(k)) continue
@@ -34,10 +34,13 @@ module.exports = function (bot, db, log) {
       shardGuildCt[v] = (shardGuildCt[v] + 1) || 1
     }
     bot.shards.forEach((shard) => {
-      if(message.guild && message.guild.shard.id == shard.id) {
+      if(msg.channel.guild && msg.channel.guild.shard.id == shard.id) {
         shards += `\n* ${shard.id}    ${shard.latency}    ${shardGuildCt[shard.id]}`
-      } 
+      } else {
+        shards += `\n  ${shard.id}    ${shard.latency}    ${shardGuildCt[shard.id]}`
+      }
     })
+    return '```' + shards + '```'
   }, {
     description: 'View the shards of Cyclone',
     fullDescription: 'View the shards of Cyclone'

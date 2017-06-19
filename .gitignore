@@ -60,5 +60,9 @@ package-lock.json
 # dotenv environment variables file
 .env
 
+# config files
+config.json
+config.dev.json
+
 # database
 db.json

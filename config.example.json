@@ -1,0 +1,6 @@
+{
+  "token": "token",
+  "sharding": {
+    "shardCount": 3
+  }
+}
