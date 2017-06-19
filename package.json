@@ -19,6 +19,7 @@
     "bluebird": "^3.5.0",
     "colors": "^1.1.2",
     "common-tags": "^1.4.0",
+    "deasync": "^0.1.10",
     "decache": "^4.1.0",
     "eris": "github:FNCxPro/eris#dev",
     "erlpack": "github:hammerandchisel/erlpack",

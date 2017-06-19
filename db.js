@@ -191,22 +191,22 @@ class RedisDatabase {
     let val = await this.client.hgetAsync(guild, key)
     if(val == 'null' || val == null || val == '' && typeof def  == 'undefined') {
       this.setServerOption(guild, key, def)
-      return parse(def)
+      return await parse(def)
     }
-    return parse(val)
+    return await parse(val)
   }
-  async setServerOption(guild, key, val) {
+  setServerOption(guild, key, val) {
     this.client.hset(guild, key, val)
   }
   async getUserOption(member, key, def = undefined) {
     let val = await this.client.hgetAsync(member, key)
     if(val == 'null' || val == null || val == '' && typeof def != 'undefined') {
       this.setUserOption(member, key, def)
-      return parse(def)
+      return await parse(def)
     }
-    return parse(val)
+    return await parse(val)
   }
-  async setUserOption(member, key, val) {
+  setUserOption(member, key, val) {
     this.client.hset(member, key, val)
   }
 }

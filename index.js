@@ -13,7 +13,7 @@ const path = require('path')
 const Eris = require('eris')
 const vm = require('vm')
 const fs = require('fs-extra')
-//const db = new Database.Database()
+const db = new Database.FileDatabase()
 var config = require('./config.json')
 const env = process.env.NODE_ENV.substr(0,process.env.NODE_ENV.length - 1)
 if(env == 'dev') config = require('./config.dev.json')
@@ -50,7 +50,7 @@ var log = new (winston.Logger)({
 })
 
 function blacklisted(msg, args) {
-  if(typeof (db.getServerOption(msg.channel.guild.id, 'blacklisted', false)) != 'undefined' && db.getServerOption(msg.channel.guild.id, 'blacklisted', false) == true) {
+  if(typeof (db.getServerOption(msg.channel.guild.id, 'blacklisted')) != 'undefined' && db.getServerOption(msg.channel.guild.id, 'blacklisted') == true) {
     let embed = new RichEmbed()
     embed.setColor(colorcfg.red)
     embed.setTitle('Blacklisted')
@@ -59,7 +59,7 @@ function blacklisted(msg, args) {
     msg.channel.createMessage({embed: embed.toJSON()})
     return true
   }
-  if(typeof (db.getUserOption(msg.author.id, 'blacklisted', false)) != 'undefined' && db.getUserOption(msg.author.id, 'blacklisted', false) == true) {
+  if(typeof (db.getUserOption(msg.author.id, 'blacklisted')) != 'undefined' && db.getUserOption(msg.author.id, 'blacklisted') == true) {
     let embed = new RichEmbed()
     embed.setColor(colorcfg.red)
     embed.setTitle('Blacklisted')
@@ -68,7 +68,7 @@ function blacklisted(msg, args) {
     msg.channel.createMessage({embed: embed.toJSON()})
     return true
   }
-  if(env == 'dev' && (typeof db.getUserOption(msg.author.id, 'whitelisted', false) == 'undefined' || db.getUserOption(msg.author.id, 'whitelisted', false) == false)) {
+  if(env == 'dev' && (typeof db.getUserOption(msg.author.id, 'whitelisted') == 'undefined' || db.getUserOption(msg.author.id, 'whitelisted') == false)) {
     let embed = new RichEmbed()
     embed.setColor(colorcfg.red)
     embed.setTitle('Development Mode')
@@ -94,7 +94,7 @@ const bot = new Eris.CommandClient(config.token, {
   },
   preCommand: blacklisted
 })
-const db = new Database.RedisDatabase(bot, log)
+//const db = new Database.RedisDatabase(bot, log)
 
 const colorcfg = {
   green: '#139A43',
@@ -162,16 +162,8 @@ bot.on('commandExecuted', (label, invoker, msg, args) => {
 require('./commands/misc')(bot, db, log)
 require('./commands/admin')(bot, db, log)
 require('./commands/db')(bot, db, log)
+require('./commands/money')(bot, db, log)
 //require('./commands/sbeval')(bot, db, log) 
 
-let moneyCommand = bot.registerCommand('money', (msg, args) => {
-  if(blacklisted(msg, args)) return
-  return sr`Invalid usage.
-  \`cy!money [balance|pay|flip|]\``
-})
-moneyCommand.registerSubcommand('balance', (msg, args) => {
-  if(blacklisted(msg, args)) return
-  return 'wip'
-})
 
 bot.connect()

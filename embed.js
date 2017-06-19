@@ -119,6 +119,15 @@ module.exports = class RichEmbed {
     this.author = { name: name, icon_url: icon, url };
     return this;
   }
+  /**
+   * Sets the author of this embed using an Eris User object.
+   * @param {User} user The Eris user to use to set the author.
+   */
+  setErisAuthor(user) {
+    this.author = { name: `${user.username}#${user.discriminator}`, icon_url: user.avatarURL };
+    return this;
+  }
+
 
   /**
    * Sets the timestamp of this embed.
