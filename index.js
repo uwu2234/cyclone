@@ -101,8 +101,6 @@ const colorcfg = {
   green2: '#0DAB76'
 }
 
-console.log(env)
-console.log(env)
 if(env == 'dev') {
   log.debug('Cyclone is running in ' + 'development'.magenta + ' mode. Users not whitelisted will not be able to run any commands on the bot.')
   //TODO: any other logic for specifically dev environment.
