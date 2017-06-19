@@ -25,5 +25,22 @@ module.exports = function (bot, db, log) {
     description: 'Information',
     fullDescription: 'Information about the bot.'
   })
+  bot.registerCommand('shards', (msg, args) => {
+    let shards = `ID    Ping    Guilds`
+    let shardGuildCt = {}
+    for(let k in bot.guildShardMap) {
+      if(!bot.guildShardMap.hasOwnProperty(k)) continue
+      let v = bot.guildShardMap[k]
+      shardGuildCt[v] = (shardGuildCt[v] + 1) || 1
+    }
+    bot.shards.forEach((shard) => {
+      if(message.guild && message.guild.shard.id == shard.id) {
+        shards += `\n* ${shard.id}    ${shard.latency}    ${shardGuildCt[shard.id]}`
+      } 
+    })
+  }, {
+    description: 'View the shards of Cyclone',
+    fullDescription: 'View the shards of Cyclone'
+  })
   log.info('Misc commands registered')
 }
