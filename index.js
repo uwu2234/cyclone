@@ -119,16 +119,22 @@ bot
   .on('shardReady', (id) => {
     log.info(`Shard ${id.toString().cyan} connected`)
   })
+  .on('shardResume', (id) => {
+    log.info(`Shard ${id.toString().cyan} resumed`)
+  })
+  .on('shardDisconnect', (id) => {
+    log.info(`Shard `.red + id.toString().cyan + ` disconnected`.red)
+  })
   .on('debug', (message, id) => {
-    if(typeof id != 'undefined' && id != null) return log.debug(`${'[Shard'.magenta + ' ' +  id.cyan + ']'.magenta}: ${message}`)
+    if(typeof id != 'undefined' && id != null) return log.debug(`${'[Shard'.magenta + ' ' +  id.toString().cyan + ']'.magenta}: ${message}`)
     log.debug(`${message}`)
   })
   .on('warn', (message, id) => {
-    if(typeof id != 'undefined' && id != null) return log.warn(`${'[Shard'.yellow + ' ' + id.cyan + ']'.yellow}: ${message}`)
+    if(typeof id != 'undefined' && id != null) return log.warn(`${'[Shard'.yellow + ' ' + id.toString().cyan + ']'.yellow}: ${message}`)
     log.warn(`${message}`)
   })
   .on('error', (err, id) => {
-    if(typeof id != 'undefined' && id != null) return log.error(`${'[Shard'.red + ' ' + id.cyan + ']'.red}: ${message}`)
+    if(typeof id != 'undefined' && id != null) return log.error(`${'[Shard'.red + ' ' + id.toString().cyan + ']'.red}: ${message}`)
     log.error(`${err}`)
   })
 
