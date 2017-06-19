@@ -164,7 +164,11 @@ class FileDatabase {
     return
   }
 }
-
+function parse(arg) {
+  if(arg == 'true' || arg == true) return true
+  if(arg == 'false' || arg == false) return false
+  return arg
+}
 class RedisDatabase {
   constructor(bot, log) {
     bluebird.promisifyAll(redis.RedisClient.prototype)
@@ -187,9 +191,9 @@ class RedisDatabase {
     let val = await this.client.hgetAsync(guild, key)
     if(val == 'null' || val == null || val == '' && typeof def  == 'undefined') {
       this.setServerOption(guild, key, def)
-      return def
+      return parse(def)
     }
-    return val
+    return parse(val)
   }
   async setServerOption(guild, key, val) {
     this.client.hset(guild, key, val)
@@ -198,9 +202,9 @@ class RedisDatabase {
     let val = await this.client.hgetAsync(member, key)
     if(val == 'null' || val == null || val == '' && typeof def != 'undefined') {
       this.setUserOption(member, key, def)
-      return def
+      return parse(def)
     }
-    return val
+    return parse(val)
   }
   async setUserOption(member, key, val) {
     this.client.hset(member, key, val)

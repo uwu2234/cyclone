@@ -48,6 +48,7 @@ var log = new (winston.Logger)({
     })
   ]
 })
+
 function blacklisted(msg, args) {
   if(typeof (db.getServerOption(msg.channel.guild.id, 'blacklisted', false)) != 'undefined' && db.getServerOption(msg.channel.guild.id, 'blacklisted', false) == true) {
     let embed = new RichEmbed()
