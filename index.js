@@ -49,7 +49,7 @@ var log = new (winston.Logger)({
   ]
 })
 function blacklisted(msg, args) {
-  if(typeof (db.getServerOption(msg.channel.guild.id, 'blacklisted')) != 'undefined' && db.getServerOption(msg.channel.guild.id, 'blacklisted') == true) {
+  if(typeof (db.getServerOption(msg.channel.guild.id, 'blacklisted', false)) != 'undefined' && db.getServerOption(msg.channel.guild.id, 'blacklisted', false) == true) {
     let embed = new RichEmbed()
     embed.setColor(colorcfg.red)
     embed.setTitle('Blacklisted')
@@ -58,7 +58,7 @@ function blacklisted(msg, args) {
     msg.channel.createMessage({embed: embed.toJSON()})
     return true
   }
-  if(typeof (db.getUserOption(msg.author.id, 'blacklisted')) != 'undefined' && db.getUserOption(msg.author.id, 'blacklisted') == true) {
+  if(typeof (db.getUserOption(msg.author.id, 'blacklisted', false)) != 'undefined' && db.getUserOption(msg.author.id, 'blacklisted', false) == true) {
     let embed = new RichEmbed()
     embed.setColor(colorcfg.red)
     embed.setTitle('Blacklisted')
@@ -67,7 +67,7 @@ function blacklisted(msg, args) {
     msg.channel.createMessage({embed: embed.toJSON()})
     return true
   }
-  if(env == 'dev' && (typeof db.getUserOption(msg.author.id, 'whitelisted') == 'undefined' || db.getUserOption(msg.author.id, 'whitelisted') == false)) {
+  if(env == 'dev' && (typeof db.getUserOption(msg.author.id, 'whitelisted', false) == 'undefined' || db.getUserOption(msg.author.id, 'whitelisted', false) == false)) {
     let embed = new RichEmbed()
     embed.setColor(colorcfg.red)
     embed.setTitle('Development Mode')
