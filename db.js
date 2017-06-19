@@ -172,16 +172,16 @@ class RedisDatabase {
     this.client = redis.createClient(`redis://:${config.redis.password}@${config.redis.host}:${config.redis.port}/${config.redis.database}`)
     this.bot = bot
     this.log = log
-    this.client.on('ready', this.log.info('Redis is ready!'))
-    this.client.on('error', err => this.log.error(`Redis error! ${util.inspect(err)}`))
+    this.client.on('ready', () => {
+      this.log.info('Redis is ready!')
+    })
+    this.client.on('error', (err) => {
+      this.log.error(`Redis error! ${util.inspect(err)}`)
+    })
     this.init()
   }
   async init() {
     let client = this.client
-    
-    let res = await client.getAsync('lol')
-    console.log(res)
-    return res
   }
   async getServerOption(guild, key, def = undefined) {
     let val = await this.client.hgetAsync(guild, key)
@@ -196,7 +196,7 @@ class RedisDatabase {
   }
   async getUserOption(member, key, def = undefined) {
     let val = await this.client.hgetAsync(member, key)
-    if(val == 'null' || val == null || val == '' && typeof def  == 'undefined') {
+    if(val == 'null' || val == null || val == '' && typeof def != 'undefined') {
       this.setUserOption(member, key, def)
       return def
     }
