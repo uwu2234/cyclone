@@ -14,7 +14,6 @@ const Eris = require('eris')
 const vm = require('vm')
 const fs = require('fs-extra')
 //const db = new Database.Database()
-const db = new Database.RedisDatabase()
 var config = require('./config.json')
 const env = process.env.NODE_ENV.substr(0,process.env.NODE_ENV.length - 1)
 if(env == 'dev') config = require('./config.dev.json')
@@ -94,6 +93,8 @@ const bot = new Eris.CommandClient(config.token, {
   },
   preCommand: blacklisted
 })
+const db = new Database.RedisDatabase(bot, log)
+
 const colorcfg = {
   green: '#139A43',
   red: '#DA2C38',
