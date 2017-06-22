@@ -109,7 +109,9 @@ if(env == 'dev') {
   //TODO: any other logic for specifically dev environment.
 }
 
-
+function randomNumber(min,max) {
+    return Math.floor(Math.random()*(max-min+1)+min);
+}
 
 /* log events & ready events */
 bot
@@ -151,6 +153,19 @@ bot.on('guildMemberUpdate', (guild, member, oldMember) => {
         member.removeRole('259592767867584512', 'Role automatically removed by Cyclone. Bot role is only for OAuth bots.')
       }
     }
+  }
+})
+
+bot.on('messageCreate', (msg) => {
+  let amount = 5
+  let num = randomNumber(1, 1000)
+  if(num > 372 && num < 412) {
+    let registered = db.getUserOption(msg.author.id, 'registered')
+    let balance = db.getUserOption(msg.author.id, 'balance')
+    if(typeof registered == 'undefined') return
+    balance = balance + amount
+    db.setUserOption(msg.author.id, 'balance', balance)
+    msg.addReaction('🤑')
   }
 })
 

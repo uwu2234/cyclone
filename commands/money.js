@@ -134,6 +134,10 @@ module.exports = function (bot, db, log) {
       return sr`Please set your nonce by doing cy!money setnonce 'nonce'
       You do not need to use quotes around your nonce.`
     }
+    let userseed = db.getUserOption(msg.author.id, 'userseed')
+    if (typeof nonce == 'undefined' || nonce == '') {
+      return sr`Please set your userseed by doing cy!money newseed`
+    }
     if (heads == true || heads == false) {
       let amount = parseInt(args[1])
       if (amount < 1) return sr`Please bet more than 1 ¢.`
@@ -210,7 +214,115 @@ module.exports = function (bot, db, log) {
     }
   }, {
       description: 'Flip'
-    })
+  })
+  moneyCommand.registerSubcommand('highlow', (msg, args) => {
+    let high
+    if (args[0] == 'high' || args[0] == 'h' || args[0] == '>') high = true
+    if (args[0] == 'low' || args[0] == 'l' || args[0] == '<') high = false
+    if(typeof db.getUserOption(msg.author.id, 'registered') == 'undefined') return sr`Register an account with \`cy!money register\``
+    let nonce = db.getUserOption(msg.author.id, 'nonce')
+    if (typeof nonce == 'undefined' || nonce == '') {
+      return sr`Please set your nonce by doing cy!money setnonce 'nonce'
+      You do not need to use quotes around your nonce.`
+    }
+    let userseed = db.getUserOption(msg.author.id, 'userseed')
+    if (typeof nonce == 'undefined' || nonce == '') {
+      return sr`Please set your userseed by doing cy!money newseed`
+    }
+    if (high == true || high == false) {
+      let amount = parseInt(args[2])
+      if (amount < 1) return sr`Please bet more than 1 ¢.`
+      if (parseInt(args[1]) > 100) return sr`Please lower your number below 100.` 
+      takeMoney(msg.author, parseInt(args[2]))
+      log.info(`Took ${amount} from ${msg.author.username}#${msg.author.discriminator} (${msg.author.id}) for using cy!highlow ${high ? 'high' : 'low'} ${amount.toString()}`)
+      let uuid = uuidv4()
+      let number = parseInt(crypto.randomBytes(Math.ceil(2)).toString('hex').slice(0, 4), 16)
+      let output = []
+      let sNumber = number.toString()
+      for (var i = 0, len = sNumber.length; i < len; i += 1) output.push(+sNumber.charAt(i));
+      for (var i = 0, sum = 0; i < output.length; sum += output[i++]);
+      console.log(uuid)
+      console.log(sum)
+      let hash = genFlipRound(msg.author, amount, uuid)
+      require('requestify').post('https://hastebin.com/documents', base64(sr`Randomizer: ${hash.randomizer}
+      Client seed: ${hash.clientSeed} (key: ${hash.clientKey})
+      User seed (Srv seed): ${hash.serverSeed} (key: ${hash.serverKey})
+      Amount: ${hash.amount}
+      Result: ${hash.roundRes}`)).then((response) => {
+        let end = ``
+        let res = true
+        if (parseInt(hash.roundRes) > 100) {
+          awardMoney(msg.author, amount)
+          return `Round was a failure, returned money. over 100`
+        }
+        let num = parseInt(args[1])
+        if(high) {
+          if(parseInt(hash.roundRes) > num) res = true
+          if(parseInt(hash.roundRes) < num) res = false
+        } else if(!high) {
+          if(parseInt(hash.roundRes) < num) res = false
+          if(parseInt(hash.roundRes) > num) res = true
+        } else {
+          awardMoney(msg.author, amount)
+          return `Round was a failure, returned money. else 167`
+        }
+        let multiplier
+        if(!high) {
+          if(num > 80) {
+            multiplier = (100 - num) * 0.001
+          } else {
+            multiplier = (100 - num) * 0.001
+          }
+          
+        } else {
+          multiplier = num * 0.001
+        }
+        if (res == true && high == true) {
+          awardMoney(msg.author, amount + (amount * multiplier))
+          let newBal = getMoney(msg.author)
+          let embed = new RichEmbed()
+          embed.setErisAuthor(msg.author)
+          embed.setColor(colorcfg.green)
+          embed.setDescription(`You have won the round! Round: https://hastebin.com/raw/${response.getBody().key}`)
+          embed.addField(`Won`, (amount * multiplier).toString() + ' ¢')
+          embed.addField('New Balance', newBal + ' ¢', true)
+          embed.setTimestamp()
+          msg.channel.createMessage({ embed })
+          log.info(`${msg.author.username}#${msg.author.discriminator} (${msg.author.id}) won round ${response.getBody().key}, amount ${amount}`)
+        } else if (res == false && high == false) {
+          awardMoney(msg.author, amount + (amount * multiplier))
+          let newBal = getMoney(msg.author)
+          let embed = new RichEmbed()
+          embed.setErisAuthor(msg.author)
+          embed.setColor(colorcfg.green)
+          embed.setDescription(`You have won the round! Round: https://hastebin.com/raw/${response.getBody().key}`)
+          embed.addField(`Won`, (amount * multiplier).toString() + ' ¢')
+          embed.addField('New Balance', newBal + ' ¢', true)
+          embed.setTimestamp()
+          msg.channel.createMessage({ embed })
+          log.info(`${msg.author.username}#${msg.author.discriminator} (${msg.author.id}) won round ${response.getBody().key}, amount ${amount}`)
+        } else {
+          let newBal = getMoney(msg.author)
+          let embed = new RichEmbed()
+          embed.setErisAuthor(msg.author)
+          embed.setColor(colorcfg.red)
+          embed.setDescription(`You have lost the round! Round: https://hastebin.com/raw/${response.getBody().key}`)
+          embed.addField(`Lost`, (amount).toString() + ' ¢')
+          embed.addField('New Balance', newBal + ' ¢', true)
+          embed.setTimestamp()
+          msg.channel.createMessage({ embed })
+          log.info(`${msg.author.username}#${msg.author.discriminator} (${msg.author.id}) lost round ${response.getBody().key}, amount ${amount}`)
+        }
+      })
+    } else {
+      return sr`Invalid usage!
+      cy!money highlow [high/low] [number] [amount]`
+    }
+  }, {
+    requirements: {
+      userIDs: ['116693403147698181']
+    }
+  })
   moneyCommand.registerSubcommand('setnonce', (msg, args) => {
     let nonce = args.join(' ')
     db.setUserOption(msg.author.id, 'nonce', nonce)
