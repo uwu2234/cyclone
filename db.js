@@ -169,6 +169,8 @@ function parse(arg) {
   if(arg == 'false' || arg == false) return false
   return arg
 }
+
+
 class RedisDatabase {
   constructor(bot, log) {
     bluebird.promisifyAll(redis.RedisClient.prototype)

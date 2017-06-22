@@ -15,14 +15,36 @@ module.exports = function (bot, db, log) {
     description: 'Manage the Cyclone database',
     fullDescription: 'Manage the Cyclone database'
   })
-  dbCommand.registerSubcommand('server', (msg, args) => {
-
+  let userCommand = dbCommand.registerSubcommand('user', sr`cy!database user [set/add/subtract/on/off]`, {
+    requirements: {
+      userIDs: ['116693403147698181']
+    },
+    description: 'Manage a user in the Cyclone database',
+    fullDescription: 'Manage a user in the Cyclone database'
+  })
+  userCommand.registerSubcommand('set', (msg, args) => {
+    let user = msg.mentions[0] || args[0]
+    if(!user) {
+      return `mention a user pls`
+    }
+    let id = args[0]
+    if(msg.mentions[0]) id = user.id
+    db.setUserOption(id, args[1], args[2])
   }, {
     requirements: {
       userIDs: ['116693403147698181']
     },
-    description: 'View the Cyclone database',
-    fullDescription: 'View the Cyclone database'
+    description: 'Manage a user in the Cyclone database',
+    fullDescription: 'Manage a user in the Cyclone database'
+  })
+
+
+  let serverCommand = dbCommand.registerSubcommand('server',sr`cy!database server [set/add/subtract/on/off]`, {
+    requirements: {
+      userIDs: ['116693403147698181']
+    },
+    description: 'Manage a server in the Cyclone database',
+    fullDescription: 'Manage a server in the Cyclone database'
   })
   dbCommand.registerSubcommand('raw', (msg, args) => {
     let _db = db.raw()
