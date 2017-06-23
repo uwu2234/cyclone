@@ -1,5 +1,6 @@
 const sr = require('common-tags').stripIndents
 const RichEmbed = require('../embed')
+const moment = require('moment')
 module.exports = function (bot, db, log) {  
   const colorcfg = {
     green: '#139A43',
@@ -45,5 +46,49 @@ module.exports = function (bot, db, log) {
     description: 'View the shards of Cyclone',
     fullDescription: 'View the shards of Cyclone'
   })
+  bot.registerCommand('title', (msg, args) => {
+    if(typeof args == 'undefined' || args[0] == null) {
+      let title = db.getUserOption(msg.author.id, 'title')
+      if(typeof title ==  'undefined') {
+        return sr`You do not have a title.
+        To set one, run the command \`cy!title this is my title\``
+      }
+      return sr`Your title is \`\`\`${title}\`\`\``
+    } else {
+      let title = args.join(' ')
+      db.setUserOption(msg.author.id, 'title', title)
+      return sr`Your title has been set to \`\`\`${title}\`\`\``
+    }
+  }, {
+    description: 'Set your title',
+    fullDescription: 'Set your title'
+  })
+  bot.registerCommand('profile', (msg, args) => {
+    try {
+      let target = msg.author
+      let member = msg.member
+      if(msg.mentions && msg.mentions[0]) target = msg.mentions[0]
+      if(msg.mentions && msg.mentions[0]) member = msg.channel.guild.members.get(target.id)
+      if(!member) return sr`Please provid a value member that is in this server as a mention.`
+      let embed = new RichEmbed()
+      embed.setErisAuthor(target)
+      embed.setColor(colorcfg.purple)
+      embed.setThumbnail(target.avatarURL)
+      embed.setDescription(db.getUserOption(target.id, 'title') || 'No title defined', true)
+      embed.addField('💵 CycloneCoins', db.getUserOption(target.id, 'balance') || 'Account not opened', true)
+      embed.addField('Account Creation', `${moment(target.createdAt).format('MMMM Do YYYY, h:mm:ss a')} (${moment(target.createdAt).fromNow()})`, true)
+      embed.addField('Joined', `${moment(member.joinedAt).format('MMMM Do YYYY, h:mm:ss a')} (${moment(member.joinedAt).fromNow()})`, true)
+      msg.channel.createMessage({embed})
+    } catch(ex) {
+      console.error(ex)
+    }
+    
+  }, {
+    description: 'View the profile of someone',
+    fullDescription: 'View the profile of someone',
+    guildOnly: true
+  })
+
+
   log.info('Misc commands registered')
 }

@@ -138,6 +138,8 @@ module.exports = function (bot, db, log) {
     if (typeof nonce == 'undefined' || nonce == '') {
       return sr`Please set your userseed by doing cy!money newseed`
     }
+    if(isNaN(args[1])) return sr`Please put in a valid amount.`
+    if(getMoney(msg.author) < parseInt(args[1])) return sr`You do not have enough money.`
     if (heads == true || heads == false) {
       let amount = parseInt(args[1])
       if (amount < 1) return sr`Please bet more than 1 ¢.`
@@ -225,10 +227,13 @@ module.exports = function (bot, db, log) {
       return sr`Please set your nonce by doing cy!money setnonce 'nonce'
       You do not need to use quotes around your nonce.`
     }
+    if(isNaN(args[2])) return sr`Please put in a valid amount.`
+    if(isNaN(args[1])) return sr`Please put in a valid number.`
     let userseed = db.getUserOption(msg.author.id, 'userseed')
     if (typeof nonce == 'undefined' || nonce == '') {
       return sr`Please set your userseed by doing cy!money newseed`
     }
+    if(getMoney(msg.author) < parseInt(args[2])) return sr`You do not have enough money.`
     if (high == true || high == false) {
       let amount = parseInt(args[2])
       if (amount < 1) return sr`Please bet more than 1 ¢.`
@@ -318,10 +323,6 @@ module.exports = function (bot, db, log) {
       return sr`Invalid usage!
       cy!money highlow [high/low] [number] [amount]`
     }
-  }, {
-    requirements: {
-      userIDs: ['116693403147698181']
-    }
   })
   moneyCommand.registerSubcommand('setnonce', (msg, args) => {
     let nonce = args.join(' ')
@@ -337,12 +338,30 @@ module.exports = function (bot, db, log) {
     let target = msg.mentions[0]
     return awardMoney(target, parseInt(args[1]), msg.channel)
   }, {
-      requirements: {
-        userIDs: ['116693403147698181']
-      },
-      description: 'Set a users balance in the database',
-      fullDescription: 'Set a users balance in the database'
-    })
-
+    requirements: {
+      userIDs: ['116693403147698181']
+    },
+    description: 'Set a users balance in the database',
+    fullDescription: 'Set a users balance in the database'
+  })
+  moneyCommand.registerSubcommand('transfer', (msg, args) => {
+    let target
+    if(!msg.mentions) return sr`Please mention a user to pay to.`
+    target = msg.mentions[0]
+    let amount = args[1]
+    if(!amount || !args[1]) return sr`Please put in a correct amount to pay.`
+    if(isNaN(amount)) return sr`No cheating!`
+    amount = parseInt(amount)
+    if(target.id == '327650579671154689') {
+      awardMoney(msg.author, -amount)
+      awardMoney(target, amount)
+      target.createMessage(`pay|${msg.author.id}|${args[1]}`)
+    } else {
+      awardMoney(msg.author, -amount)
+      awardMoney(target, amount)
+      target.createMessage(`Hey, you've been sent ${amount} by ${msg.author.username}#${msg.author.discriminator}`)
+      return sr`Sent ${amount} to <@${target.id}>`
+    }
+  })
   log.info('Money commands registered')
 }
