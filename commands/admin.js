@@ -22,7 +22,7 @@ module.exports = function (bot, db, log) {
     let guild = bot.guilds.get(args.join(''))
     if (guild = bot.guilds.get(args.join(''))) {
       await db.checkServer(guild)
-      db.r.table('servers').get(guild.id).update({blacklisted: true})
+      db.r.table('servers').get(guild.id).update({blacklisted: true}).run()
       let embed = new RichEmbed()
       embed.setColor(colorcfg.red)
       embed.setAuthor(guild.name)
@@ -31,7 +31,7 @@ module.exports = function (bot, db, log) {
       msg.channel.createMessage({ embed: embed.toJSON() })
     } else {
       await db.makeServer(args.join(''))
-      db.r.table('servers').get(args.join('')).update({blacklisted: true})
+      db.r.table('servers').get(args.join('')).update({blacklisted: true}).run()
       let embed = new RichEmbed()
       embed.setColor(colorcfg.red)
       embed.setAuthor('Server')
@@ -50,7 +50,7 @@ module.exports = function (bot, db, log) {
     let guild = bot.guilds.get(args.join(''))
     if (guild = bot.guilds.get(args.join(''))) {
       await db.checkServer(guild)
-      db.r.table('servers').get(guild.id).update({blacklisted: false})
+      db.r.table('servers').get(guild.id).update({blacklisted: false}).run()
       let embed = new RichEmbed()
       embed.setColor(colorcfg.green)
       embed.setAuthor(guild.name)
@@ -59,7 +59,7 @@ module.exports = function (bot, db, log) {
       msg.channel.createMessage({ embed: embed.toJSON() })
     } else {
       await db.makeServer(args.join(''))
-      db.r.table('servers').get(args.join('')).update({blacklisted: false})
+      db.r.table('servers').get(args.join('')).update({blacklisted: false}).run()
       let embed = new RichEmbed()
       embed.setColor(colorcfg.green)
       embed.setAuthor('Server')
@@ -107,7 +107,7 @@ module.exports = function (bot, db, log) {
     let user = bot.users.get(args.join(''))
     if (user = bot.users.get(args.join(''))) {
       await db.checkUser(user)
-      db.r.table('users').get(user.id).update({blacklisted: true}).run()
+      db.r.table('users').get(user.id).update({blacklisted: false}).run()
       let embed = new RichEmbed()
       embed.setColor(colorcfg.green)
       embed.setAuthor(user.username)
