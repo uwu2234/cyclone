@@ -68,7 +68,7 @@ async function blacklisted(msg, args) {
   if(blacklisted) {
     let embed = new RichEmbed()
     embed.setColor(colorcfg.red)
-    embed.setTitle('Blacklisted')
+    embed.setTitle('<:xmark:314349398824058880> `Blacklisted`')
     embed.setDescription('Sorry, but you or the server was blacklisted from using Cyclone! Apologies!')
     embed.setTimestamp()
     msg.channel.createMessage({embed: embed.toJSON()})
