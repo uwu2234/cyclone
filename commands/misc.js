@@ -20,6 +20,7 @@ module.exports = function (bot, db, log) {
     embed.addField('Owner', '<@116693403147698181>', true)
     embed.addField('Guilds', bot.guilds.size, true)
     embed.addField('Users', bot.users.size, true)
+    embed.addField('Library', 'Eris', true)
     embed.setTimestamp()
     msg.channel.createMessage({ embed: embed.toJSON() })
   }, { 
@@ -46,9 +47,10 @@ module.exports = function (bot, db, log) {
     description: 'View the shards of Cyclone',
     fullDescription: 'View the shards of Cyclone'
   })
-  bot.registerCommand('title', (msg, args) => {
+  bot.registerCommand('title', async (msg, args) => {
     if(typeof args == 'undefined' || args[0] == null) {
-      let title = db.getUserOption(msg.author.id, 'title')
+      let user = await db.getUser(msg.author)
+      let title = user.title
       if(typeof title ==  'undefined') {
         return sr`You do not have a title.
         To set one, run the command \`cy!title this is my title\``
@@ -56,26 +58,67 @@ module.exports = function (bot, db, log) {
       return sr`Your title is \`\`\`${title}\`\`\``
     } else {
       let title = args.join(' ')
-      db.setUserOption(msg.author.id, 'title', title)
+      db.r.table('users').get(msg.author.id).update({title: title}).run()
       return sr`Your title has been set to \`\`\`${title}\`\`\``
     }
   }, {
     description: 'Set your title',
     fullDescription: 'Set your title'
   })
-  bot.registerCommand('profile', (msg, args) => {
+  bot.registerCommand('invite', 'https://discordapp.com/oauth2/authorize?client_id=194960506308526080&scope=bot&permissions=70642880', {
+    description: 'Invite URL for Cyclone',
+    fullDescription: 'Run this command to get the invite URL to add Cyclone to your server.',
+    aliases: ['oauth', 'oauth2', 'join']
+  })
+  bot.registerCommand('support', 'https://discord.gg/BDgGx5N', {
+    description: 'Cyclone support server',
+    fullDescription: 'The support server for Cyclone'
+  })
+  bot.registerCommand('server', async (msg, args) => {
+    let server = msg.channel.guild
+    //console.log(server.id)
+    let guild = await db.getServer(server)
+    let premium = guild.premium
+    let embed = new RichEmbed()
+    embed.setErisAuthor(msg.author)
+    embed.setColor(colorcfg.blue)
+    embed.addField('Name', server.name, true)
+    embed.addField('Region', server.region, true)
+    embed.addField('Members', server.memberCount, true)
+    embed.addField('Owner', `<@${server.ownerID}>`, true)
+    embed.addField('Created', `${moment(server.createdAt).format('MMMM Do YYYY, h:mm:ss a')} (${moment(server.createdAt).fromNow()})`, true)
+    embed.addField('ID', server.id, true)
+    embed.setThumbnail(server.iconURL)
+    if(premium) embed.addField('<:premium:332571056940515328> Premium', 'Premium Server', true)
+    embed.setTimestamp()
+    msg.channel.createMessage({embed: embed})
+  }, {
+    description: 'View information about the current server',
+    fullDescription: 'View information about the current server',
+    guildOnly: true
+  })
+
+  bot.registerCommand('profile', async (msg, args) => {
     try {
       let target = msg.author
       let member = msg.member
       if(msg.mentions && msg.mentions[0]) target = msg.mentions[0]
       if(msg.mentions && msg.mentions[0]) member = msg.channel.guild.members.get(target.id)
-      if(!member) return sr`Please provid a value member that is in this server as a mention.`
+      if(!member) return sr`Please provide a value member that is in this server as a mention.`
+      let user = await db.getUser(target)
+      let bal = user.balance
+      let title = user.title
+      let registered = user.registered
+      let admin = user.admin
+      let dev = user.dev
       let embed = new RichEmbed()
       embed.setErisAuthor(target)
       embed.setColor(colorcfg.purple)
       embed.setThumbnail(target.avatarURL)
-      embed.setDescription(db.getUserOption(target.id, 'title') || 'No title defined', true)
-      embed.addField('💵 CycloneCoins', db.getUserOption(target.id, 'balance') || 'Account not opened', true)
+      embed.setDescription(title || '*No title defined*', true)
+      if (admin) embed.addField('<:stafftools:314348604095594498> Admin', 'Cyclone Admin')
+      if (dev) embed.addField('<:stafftools:314348604095594498> Developer', 'Cyclone Developer')
+      embed.addField('💵 CycloneCoins', registered ? bal : '*Account not opened*', true)
       embed.addField('Account Creation', `${moment(target.createdAt).format('MMMM Do YYYY, h:mm:ss a')} (${moment(target.createdAt).fromNow()})`, true)
       embed.addField('Joined', `${moment(member.joinedAt).format('MMMM Do YYYY, h:mm:ss a')} (${moment(member.joinedAt).fromNow()})`, true)
       msg.channel.createMessage({embed})

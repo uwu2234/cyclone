@@ -1,11 +1,15 @@
 {
-  "redis": {
-    "host": "127.0.0.1",
-    "port": 6379,
-    "password": "AUTH PW",
-    "database": 2
+  "rethink": {
+    "host": "ip",
+    "port": 28015,
+    "db": "cyclone",
+    "user": "admin",
+    "password": "password"
   },
-  "token": "token",
+  "secrets": {
+    "token": "token",
+    "dbots": "bots.discord.pw token"
+  },
   "sharding": {
     "shardCount": 3
   }

@@ -355,11 +355,16 @@ module.exports = function (bot, db, log) {
     if(target.id == '327650579671154689') {
       awardMoney(msg.author, -amount)
       awardMoney(target, amount)
-      target.createMessage(`pay|${msg.author.id}|${args[1]}`)
+      bot.getDMChannel(target.id).then((chan) => {
+        chan.createMessage(`pay|${msg.author.id}|${args[1]}`)
+      })
+      return sr`Sent ${amount} to <@${target.id}>`
     } else {
       awardMoney(msg.author, -amount)
       awardMoney(target, amount)
-      target.createMessage(`Hey, you've been sent ${amount} by ${msg.author.username}#${msg.author.discriminator}`)
+      bot.getDMChannel(target.id).then((chan) => {
+        chan.createMessage(`Hey, you've been sent ${amount} by ${msg.author.username}#${msg.author.discriminator}`)
+      })
       return sr`Sent ${amount} to <@${target.id}>`
     }
   })

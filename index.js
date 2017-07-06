@@ -5,7 +5,7 @@ const stripAnsi = require('strip-ansi')
 const RichEmbed = require('./embed')
 require('winston-daily-rotate-file')
 const winston = require('winston')
-const Database = require('./db')
+const Database = require('./dbapi')
 const colors = require('colors')
 const moment = require('moment')
 const {NodeVM} = require('vm2')
@@ -13,7 +13,9 @@ const path = require('path')
 const Eris = require('eris')
 const vm = require('vm')
 const fs = require('fs-extra')
-const db = new Database.FileDatabase()
+const snekfetch = require('snekfetch')
+//const db = new Database.FileDatabase()
+const db = new Database()
 var config = require('./config.json')
 const env = process.env.NODE_ENV.substr(0,process.env.NODE_ENV.length - 1)
 if(env == 'dev') config = require('./config.dev.json')
@@ -49,44 +51,39 @@ var log = new (winston.Logger)({
   ]
 })
 
-function blacklisted(msg, args) {
-  if(typeof (db.getServerOption(msg.channel.guild.id, 'blacklisted')) != 'undefined' && db.getServerOption(msg.channel.guild.id, 'blacklisted') == true) {
+async function blacklisted(msg, args) {
+  let blacklisted = false
+  let r = db.r
+  db.checkUser(msg.author)
+  if (msg.guild) db.checkServer(msg.guild)
+  let user = await r.table('users').get(msg.author.id).run()
+  let server = false
+  if(msg.guild) server = await r.table('servers').get(msg.guild.id).run()
+  if(user && user.blacklisted) {
+    blacklisted = true
+  }
+  if(server && server.blacklisted) {
+    blacklisted = true
+  }
+  if(blacklisted) {
     let embed = new RichEmbed()
     embed.setColor(colorcfg.red)
     embed.setTitle('Blacklisted')
     embed.setDescription('Sorry, but you or the server was blacklisted from using Cyclone! Apologies!')
-    embed.setTimestamp()
-    msg.channel.createMessage({embed: embed.toJSON()})
-    return true
-  }
-  if(typeof (db.getUserOption(msg.author.id, 'blacklisted')) != 'undefined' && db.getUserOption(msg.author.id, 'blacklisted') == true) {
-    let embed = new RichEmbed()
-    embed.setColor(colorcfg.red)
-    embed.setTitle('Blacklisted')
-    embed.setDescription('Sorry, but you or the server was blacklisted from using Cyclone! Apologies!')
-    embed.setTimestamp()
-    msg.channel.createMessage({embed: embed.toJSON()})
-    return true
-  }
-  if(env == 'dev' && (typeof db.getUserOption(msg.author.id, 'whitelisted') == 'undefined' || db.getUserOption(msg.author.id, 'whitelisted') == false)) {
-    let embed = new RichEmbed()
-    embed.setColor(colorcfg.red)
-    embed.setTitle('Development Mode')
-    embed.setDescription('Sorry, but the bot is in development mode and only whitelisted users may use the bot while in development mode.')
     embed.setTimestamp()
     msg.channel.createMessage({embed: embed.toJSON()})
     return true
   }
   return false
 }
-const bot = new Eris.CommandClient(config.token, {
-  maxShards: config.sharding.shardCount,
+const bot = new Eris.CommandClient(config.secrets.token, {
+  //maxShards: config.sharding.shardCount,
   autoReconnect: true,
   getAllUsers: true
 }, {
   description: `Cyclone v${require('./package.json').version}`,
-  owner: 'Relative',
-  prefix: 'cy!',
+  owner: 'Relative#2600',
+  prefix: ['cy!', '@mention '],
   defaultCommandOptions: {
     cooldownMessage: `Please wait to use this command again!`,
     permissionMessage: `⛔ You don't have permission to use this command!`,
@@ -94,7 +91,7 @@ const bot = new Eris.CommandClient(config.token, {
   },
   preCommand: blacklisted
 })
-//const db = new Database.RedisDatabase(bot, log)
+db.setClient(bot)
 
 const colorcfg = {
   green: '#139A43',
@@ -113,6 +110,17 @@ function randomNumber(min,max) {
     return Math.floor(Math.random()*(max-min+1)+min);
 }
 
+function botlistPing() {
+  snekfetch.post('https://bots.discord.pw/api/bots/194960599816470529/stats')
+      .set('Authorization', config.secrets.dbots)
+      .send({
+        server_count: bot.guilds.size
+      })
+      .then((r) => {
+        log.info(`Pinged bots.discord.pw with servercount! ${r.status} | ${r.statusText}`)
+      })
+}
+
 /* log events & ready events */
 bot
   .on('ready', () => {
@@ -122,6 +130,8 @@ bot
       type: 1,
       url: 'https://twitch.tv/directory'
     })
+    setInterval(botlistPing, 600000)
+    //botlistPing()
   })
   .on('shardReady', (id) => {
     log.info(`Shard ${id.toString().cyan} connected`)
@@ -134,15 +144,16 @@ bot
   })
   .on('debug', (message, id) => {
     if(typeof id != 'undefined' && id != null) return log.debug(`${'[Shard'.magenta + ' ' +  id.toString().cyan + ']'.magenta}: ${message}`)
-    log.debug(`${message}`)
+    log.debug(`${message}`, message)
   })
   .on('warn', (message, id) => {
     if(typeof id != 'undefined' && id != null) return log.warn(`${'[Shard'.yellow + ' ' + id.toString().cyan + ']'.yellow}: ${message}`)
-    log.warn(`${message}`)
+    log.warn(`${message}`, message)
   })
   .on('error', (err, id) => {
     if(typeof id != 'undefined' && id != null) return log.error(`${'[Shard'.red + ' ' + id.toString().cyan + ']'.red}: ${err}`)
-    log.error(`${err}`)
+    if(err.stack) return log.warn(`${err}`, err)
+    log.error(`${err}`, err)
   })
 
 /* other events */
@@ -157,7 +168,7 @@ bot.on('guildMemberUpdate', (guild, member, oldMember) => {
 })
 
 bot.on('messageCreate', (msg) => {
-  let amount = 5
+  /*let amount = 5
   let num = randomNumber(1, 1000)
   if(num > 372 && num < 412) {
     let registered = db.getUserOption(msg.author.id, 'registered')
@@ -166,7 +177,7 @@ bot.on('messageCreate', (msg) => {
     balance = balance + amount
     db.setUserOption(msg.author.id, 'balance', balance)
     msg.addReaction('🤑')
-  }
+  }*/
 })
 
 bot.on('commandExecuted', (label, invoker, msg, args) => {
@@ -178,6 +189,7 @@ require('./commands/misc')(bot, db, log)
 require('./commands/admin')(bot, db, log)
 require('./commands/db')(bot, db, log)
 require('./commands/money')(bot, db, log)
+require('./commands/test')(bot, db, log)
 //require('./commands/sbeval')(bot, db, log) 
 
 

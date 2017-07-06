@@ -2,6 +2,7 @@ const sr = require('common-tags').stripIndents
 const RichEmbed = require('../embed')
 const vm = require('vm')
 const util = require('util')
+const r = require('../dbapi')
 module.exports = function (bot, db, log) {
   const requirements = {
     requirements: {
@@ -18,9 +19,10 @@ module.exports = function (bot, db, log) {
   let adminCommand = bot.registerCommand('admin', sr`cy!admin [server|user]`, requirements)
   let serverCommand = adminCommand.registerSubcommand('server', sr`cy!admin server [bl|unbl]`, requirements)
   serverCommand.registerSubcommand('blacklist', (msg, args) => {
-    let guild
-    db.setServerOption(args.join(''), 'blacklisted', true)
+    let guild = bot.guilds.get(args.join(''))
     if (guild = bot.guilds.get(args.join(''))) {
+      db.checkServer(guild)
+      db.r.table('servers').get(guild.id).update({blacklisted: true})
       let embed = new RichEmbed()
       embed.setColor(colorcfg.red)
       embed.setAuthor(guild.name)
@@ -28,6 +30,8 @@ module.exports = function (bot, db, log) {
       embed.setDescription(sr`Blacklisted server ${guild.name} (${guild.id}) successfully.`)
       msg.channel.createMessage({ embed: embed.toJSON() })
     } else {
+      db.makeServer(args.join(''))
+      db.r.table('servers').get(args.join('')).update({blacklisted: true})
       let embed = new RichEmbed()
       embed.setColor(colorcfg.red)
       embed.setAuthor('Server')
@@ -43,10 +47,11 @@ module.exports = function (bot, db, log) {
     argsRequired: true
   })
   serverCommand.registerSubcommand('unblacklist', (msg, args) => {
-    let guild
+    let guild = bot.guilds.get(args.join(''))
     db.setServerOption(args.join(''), 'blacklisted', false)
     if (guild = bot.guilds.get(args.join(''))) {
-
+      db.checkServer(guild)
+      db.r.table('servers').get(guild.id).update({blacklisted: false})
       let embed = new RichEmbed()
       embed.setColor(colorcfg.green)
       embed.setAuthor(guild.name)
@@ -54,6 +59,8 @@ module.exports = function (bot, db, log) {
       embed.setDescription(sr`Unblacklisted server ${guild.name} (${guild.id}) successfully.`)
       msg.channel.createMessage({ embed: embed.toJSON() })
     } else {
+      db.makeServer(args.join(''))
+      db.r.table('servers').get(args.join('')).update({blacklisted: false})
       let embed = new RichEmbed()
       embed.setColor(colorcfg.green)
       embed.setAuthor('Server')
@@ -70,9 +77,11 @@ module.exports = function (bot, db, log) {
   })
   let userCommand = adminCommand.registerSubcommand('user', sr`cy!admin user [bl|unb|set]`, requirements)
   userCommand.registerSubcommand('blacklist', (msg, args) => {
-    let user
+    let user = bot.users.get(args.join(''))
     db.setUserOption(args.join(''), 'blacklisted', true)
     if (user = bot.users.get(args.join(''))) {
+      db.checkServer(guild)
+      db.r.table('users').get(user.id).update({blacklisted: true})
       let embed = new RichEmbed()
       embed.setColor(colorcfg.red)
       embed.setAuthor(user.username)
@@ -80,6 +89,8 @@ module.exports = function (bot, db, log) {
       embed.setDescription(sr`Blacklisted user ${user.username}#${user.discriminator} successfully.`)
       msg.channel.createMessage({ embed: embed.toJSON() })
     } else {
+      db.makeServer(args.join(''))
+      db.r.table('users').get(args.join('')).update({blacklisted: true})
       let embed = new RichEmbed()
       embed.setColor(colorcfg.red)
       embed.setAuthor('Server')
@@ -95,9 +106,11 @@ module.exports = function (bot, db, log) {
     argsRequired: true
   })
   userCommand.registerSubcommand('unblacklist', (msg, args) => {
-    let user
+    let user = bot.users.get(args.join(''))
     db.setUserOption(args.join(''), 'blacklisted', false)
     if (user = bot.users.get(args.join(''))) {
+      db.checkServer(guild)
+      db.r.table('users').get(user.id).update({blacklisted: true})
       let embed = new RichEmbed()
       embed.setColor(colorcfg.green)
       embed.setAuthor(user.username)
@@ -105,6 +118,8 @@ module.exports = function (bot, db, log) {
       embed.setDescription(sr`Unblacklisted user ${user.username}#${user.discriminator} successfully.`)
       msg.channel.createMessage({ embed: embed.toJSON() })
     } else {
+      db.makeServer(args.join(''))
+      db.r.table('users').get(args.join('')).update({blacklisted: false})
       let embed = new RichEmbed()
       embed.setColor(colorcfg.green)
       embed.setAuthor('Server')
