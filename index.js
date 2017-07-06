@@ -54,11 +54,11 @@ var log = new (winston.Logger)({
 async function blacklisted(msg, args) {
   let blacklisted = false
   let r = db.r
-  db.checkUser(msg.author)
-  if (msg.guild) db.checkServer(msg.guild)
-  let user = await r.table('users').get(msg.author.id).run()
+  await db.checkUser(msg.author)
+  if (msg.channel.guild) await db.checkServer(msg.channel.guild)
+  let user = await db.getUser(msg.author)
   let server = false
-  if(msg.guild) server = await r.table('servers').get(msg.guild.id).run()
+  if(msg.channel.guild) server = await db.getServer(msg.channel.guild)
   if(user && user.blacklisted) {
     blacklisted = true
   }
