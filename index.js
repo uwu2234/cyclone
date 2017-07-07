@@ -168,6 +168,9 @@ bot.on('guildMemberUpdate', (guild, member, oldMember) => {
 })
 
 bot.on('messageCreate', (msg) => {
+  if(msg.content.toLowerCase() == 'ok') {
+    msg.addReaction('🆗')
+  }
   /*let amount = 5
   let num = randomNumber(1, 1000)
   if(num > 372 && num < 412) {
@@ -191,6 +194,6 @@ require('./commands/db')(bot, db, log)
 require('./commands/money')(bot, db, log)
 require('./commands/test')(bot, db, log)
 //require('./commands/sbeval')(bot, db, log) 
-
+require('./web/index')(bot, db, log)
 
 bot.connect()

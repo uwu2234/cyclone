@@ -1,8 +1,8 @@
 const sr = require('common-tags').stripIndents
 const RichEmbed = require('../embed')
 const moment = require('moment')
+var indexes = {}
 var _rcmds = []
-var index = 0
 module.exports = function (bot, db, log) {  
   const colorcfg = {
     green: '#139A43',
@@ -22,8 +22,8 @@ module.exports = function (bot, db, log) {
       _rcmds = rcmds
     }
     let embed = new RichEmbed()
+    let index = indexes[msg.author.id] = 0
     embed.setColor(colorcfg.purple)
-    embed.setErisAuthor(msg.author)
     embed.addField('Command', `cy!${_rcmds[index].label}`)
     embed.addField('Description', `${_rcmds[index].description}`)
     return {embed: embed.toJSON()}
@@ -35,33 +35,49 @@ module.exports = function (bot, db, log) {
         emoji: '⬅',
         type: 'edit',
         response: (msg) => {
-          let embed = new RichEmbed()
+          let author = bot.activeMessages[msg.id].invoker
+          let index = indexes[author]
+          console.log('liA', index)
           index = index - 1
+          console.log('liB', index)
+          if(index < 0) {
+            index = index + 1
+            console.log('liZ', index)
+            index[author] = index
+            return
+          }
+          let embed = new RichEmbed()
+          indexes[author] = index
+          console.log('liC', index)
           embed.setColor(colorcfg.purple)
-          embed.setErisAuthor(msg.author)
+          console.log('liD', index)
           embed.addField('Command', `cy!${_rcmds[index].label}`)
           embed.addField('Description', `${_rcmds[index].description}`)
-          msg.edit({embed: embed})
+          return {embed}
         }
       },
       {
         emoji: '⏹',
-        type: 'edit',
-        response: (msg) => {
-          msg.edit('stop')
-        }
+        type: 'cancel'
       },
       {
         emoji: '➡',
         type: 'edit',
         response: (msg) => {
-          let embed = new RichEmbed()
+          let author = bot.activeMessages[msg.id].invoker
+          let index = indexes[author]
+          console.log('riA', index)
           index = index + 1
+          console.log('riB', index)
+          if(index < 0) return "wtf did you do? try again in 15 seconds..."
+          let embed = new RichEmbed()
+          console.log('riC', index)
+          indexes[author] = index
+          console.log('riD', index)
           embed.setColor(colorcfg.purple)
-          embed.setErisAuthor(msg.author)
           embed.addField('Command', `cy!${_rcmds[index].label}`)
           embed.addField('Description', `${_rcmds[index].description}`)
-          msg.edit({embed: embed})
+          return {embed}
         }
       }
     ],

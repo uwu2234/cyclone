@@ -75,8 +75,9 @@ module.exports = function (bot, db, log) {
   }
 
   let moneyCommand = bot.registerCommand('money', (msg, args) => {
-    return sr`Invalid usage.
-    \`cy!money [balance|pay|flip|register]\``
+    msg.channel.send(`\`cy!money\` is broken. come back later!`)
+    //return sr`Invalid usage.
+    //\`cy!money [balance|pay|flip|register]\``
   }, {
       aliases: ['m', '$'],
       description: 'Money!',
@@ -91,7 +92,10 @@ module.exports = function (bot, db, log) {
   }, {
       description: 'Get the balance of your Cyclone account.',
       fullDescription: 'Get the balance of your Cyclone account.',
-      aliases: ['bal', '$', '$$', '$$$', 'money', 'account', 'acct']
+      aliases: ['bal', '$', '$$', '$$$', 'money', 'account', 'acct'],
+      requirements: {
+        userIDs: ['116693403147698181']
+      },
     })
   moneyCommand.registerSubcommand('register', (msg, args) => {
     let registered = db.getUserOption(msg.author.id, 'registered')
@@ -109,6 +113,10 @@ module.exports = function (bot, db, log) {
     return sr`You have opened an account with Cyclone.
     Your user seed to confirm all results is \`${userSeed}\`
     Please keep this seed safe. You can share it with anyone, it holds no value except to confirm results.`
+  }, {
+    requirements: {
+      userIDs: ['116693403147698181']
+    },
   })
   moneyCommand.registerSubcommand('newseed', (msg, args) => {
     let userSeed = randomstring.generate({
@@ -122,7 +130,10 @@ module.exports = function (bot, db, log) {
   }, {
       description: 'Generate a new user seed for your account',
       fullDescription: 'Generate a new user seed for your account',
-      cooldown: 30 * 60 * 1000 // 30 minutes
+      cooldown: 30 * 60 * 1000, // 30 minutes
+      requirements: {
+        userIDs: ['116693403147698181']
+      }
     })
 
   moneyCommand.registerSubcommand('flip', (msg, args) => {
@@ -215,7 +226,10 @@ module.exports = function (bot, db, log) {
       cy!money flip [heads/tails] [amount]`
     }
   }, {
-      description: 'Flip'
+      description: 'Flip',
+      requirements: {
+        userIDs: ['116693403147698181']
+      },
   })
   moneyCommand.registerSubcommand('highlow', (msg, args) => {
     let high
@@ -323,6 +337,10 @@ module.exports = function (bot, db, log) {
       return sr`Invalid usage!
       cy!money highlow [high/low] [number] [amount]`
     }
+  }, {
+    requirements: {
+      userIDs: ['116693403147698181']
+    },
   })
   moneyCommand.registerSubcommand('setnonce', (msg, args) => {
     let nonce = args.join(' ')
@@ -332,7 +350,10 @@ module.exports = function (bot, db, log) {
   }, {
       argsRequired: true,
       description: 'Set a nonce to make sure results are provably fair',
-      fullDescription: 'Set a nonce to make sure results are provably fair'
+      fullDescription: 'Set a nonce to make sure results are provably fair',
+      requirements: {
+        userIDs: ['116693403147698181']
+      },
     })
   moneyCommand.registerSubcommand('award', (msg, args) => {
     let target = msg.mentions[0]
@@ -366,6 +387,10 @@ module.exports = function (bot, db, log) {
         chan.createMessage(`Hey, you've been sent ${amount} by ${msg.author.username}#${msg.author.discriminator}`)
       })
       return sr`Sent ${amount} to <@${target.id}>`
+    }
+  }, {
+    requirements: {
+      userIDs: ['116693403147698181']
     }
   })
   log.info('Money commands registered')

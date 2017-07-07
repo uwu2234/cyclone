@@ -134,8 +134,8 @@ module.exports = function (bot, db, log) {
 
   bot.registerCommand('eval', (msg, args) => {
     try {
-      let code = args.join('')
-      code = code.replaceAll('`', '')
+      let code = args.join(' ')
+      code = code.replaceAll('```', '')
       let res = eval(code)
       var embed = new RichEmbed()
       embed.setColor(colorcfg.green2)
