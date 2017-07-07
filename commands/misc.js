@@ -132,6 +132,20 @@ module.exports = function (bot, db, log) {
     guildOnly: true
   })
 
+  bot.registerCommand('stats', async (msg, args) => {
+    let msgs = await db.r.table('stats').get('message')
+    let count = msgs.count
+    let embed = new RichEmbed()
+    embed.setColor(colorcfg.purple)
+    embed.setTitle('🔢 `Top 5 Commands`')
+    embed.addField(msgs.friendlyName, count)
+    embed.setTimestamp()
+    return {embed}
+  }, {
+    cooldown: 5000,
+    description: 'Show the top 5 commands by usage.'
+  })
+
 
   log.info('Misc commands registered')
 }

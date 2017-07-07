@@ -10,5 +10,7 @@ module.exports = (bot, db, log) => {
   app.get('/', (req, res) => {
     res.render('index')
   })
-  app.listen(7233, console.log('Listening on port 7233'))
+  app.listen(7233, () => {
+    log.info('Webserver listening on port 7233')
+  })
 }

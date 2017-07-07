@@ -20,6 +20,8 @@ var config = require('./config.json')
 const env = process.env.NODE_ENV.substr(0,process.env.NODE_ENV.length - 1)
 if(env == 'dev') config = require('./config.dev.json')
 String.prototype.replaceAll = function(target, replacement) { return this.split(target).join(replacement); };
+var msgcount = 0
+
 var log = new (winston.Logger)({
   level: env === 'dev' ? 'debug' : 'info',
   transports: [
@@ -79,11 +81,16 @@ async function blacklisted(msg, args) {
 const bot = new Eris.CommandClient(config.secrets.token, {
   //maxShards: config.sharding.shardCount,
   autoReconnect: true,
-  getAllUsers: true
+  getAllUsers: true,
+  disableEvents: {
+    PRESENCE_UPDATE: true,
+    TYPING_START: true
+  }
 }, {
   description: `Cyclone v${require('./package.json').version}`,
   owner: 'Relative#2600',
   prefix: ['cy!', '@mention '],
+  defaultHelpCommand: false,
   defaultCommandOptions: {
     cooldownMessage: `Please wait to use this command again!`,
     permissionMessage: `⛔ You don't have permission to use this command!`,
@@ -120,16 +127,24 @@ function botlistPing() {
         log.info(`Pinged bots.discord.pw with servercount! ${r.status} | ${r.statusText}`)
       })
 }
-
+var logchan
 /* log events & ready events */
 bot
-  .on('ready', () => {
+  .on('ready', async () => {
     log.info(`${'Cyclone'.red} is ready.`)
+    msgcount = await db.r.table('stats').get('message').run()
+    msgcount = msgcount.count
     bot.editStatus('online', {
       name: `cy!help`,
       type: 1,
       url: 'https://twitch.tv/directory'
     })
+    logchan = bot.guilds.get('257307356541485066').channels.get('257312863914295297')
+    setInterval(async () => {
+      await db.r.table('stats').get('message').update({
+        count: msgcount
+      }).run()
+    }, 10000)
     setInterval(botlistPing, 600000)
     //botlistPing()
   })
@@ -167,10 +182,12 @@ bot.on('guildMemberUpdate', (guild, member, oldMember) => {
   }
 })
 
-bot.on('messageCreate', (msg) => {
+bot.on('messageCreate', async (msg) => {
+  msgcount = msgcount + 1
+  /*if(msg.channel.guild && msg.channel.guild.id == '110373943822540800') return
   if(msg.content.toLowerCase() == 'ok') {
     msg.addReaction('🆗')
-  }
+  }*/
   /*let amount = 5
   let num = randomNumber(1, 1000)
   if(num > 372 && num < 412) {
@@ -183,17 +200,35 @@ bot.on('messageCreate', (msg) => {
   }*/
 })
 
-bot.on('commandExecuted', (label, invoker, msg, args) => {
-  log.info(`Command invoked by ${invoker.username}#${invoker.discriminator}: cy!${label} ${args.join(" ")}`)
+bot.on('commandExecuted', (label, invoker, msg, args, command) => {
+  let embed = new RichEmbed()
+  embed.setErisAuthor(invoker)
+  embed.setURL(`http://cyclonebot.com/users/${invoker.id}`)
+  embed.addField('Command', label, true)
+  embed.addField('Arguments', args.join(' ') || '*No arguments*', true)
+  embed.addField('Full Command', msg.content)
+  if(command.permissionCheck(msg)) {
+    embed.setTitle('<:check:314349398811475968> `Command Executed`')
+    embed.setColor(colorcfg.blue)
+    embed.setDescription(`${invoker.username}#${invoker.discriminator} ran command cy!${label}.`)
+    log.info(`Command invoked by ${invoker.username}#${invoker.discriminator}: cy!${label} ${args.join(" ")}`)
+  } else {
+    embed.setTitle('<:xmark:314349398824058880> `Attempted Command Execution (noperm)`')
+    embed.setColor(colorcfg.red)
+    embed.setDescription(`${invoker.username}#${invoker.discriminator} attempted to run command cy!${label}, but failed because he had no permission.`)
+    log.warn(`${invoker.username}#${invoker.discriminator} attempted to run command 'cy!${label} ${args.join(" ")}' but failed because he did not have permission.`)
+  }
+  logchan.createMessage({embed}).catch((err) => {
+    log.error('Failed to create command log message', err)
+  })
 })
 
-
+require('./web/index')(bot, db, log)
+require('./commands/help')(bot, db, log)
 require('./commands/misc')(bot, db, log)
 require('./commands/admin')(bot, db, log)
 require('./commands/db')(bot, db, log)
 require('./commands/money')(bot, db, log)
-require('./commands/test')(bot, db, log)
 //require('./commands/sbeval')(bot, db, log) 
-require('./web/index')(bot, db, log)
 
 bot.connect()
