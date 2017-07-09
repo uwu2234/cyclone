@@ -207,7 +207,7 @@ bot.on('commandExecuted', (label, invoker, msg, args, command) => {
   embed.addField('Command', label, true)
   embed.addField('Arguments', args.join(' ') || '*No arguments*', true)
   embed.addField('Full Command', msg.content)
-  if(command.permissionCheck(msg)) {
+  if(command && command.permissionCheck(msg)) {
     embed.setTitle('<:check:314349398811475968> `Command Executed`')
     embed.setColor(colorcfg.blue)
     embed.setDescription(`${invoker.username}#${invoker.discriminator} ran command cy!${label}.`)
@@ -215,8 +215,8 @@ bot.on('commandExecuted', (label, invoker, msg, args, command) => {
   } else {
     embed.setTitle('<:xmark:314349398824058880> `Attempted Command Execution (noperm)`')
     embed.setColor(colorcfg.red)
-    embed.setDescription(`${invoker.username}#${invoker.discriminator} attempted to run command cy!${label}, but failed because he had no permission.`)
-    log.warn(`${invoker.username}#${invoker.discriminator} attempted to run command 'cy!${label} ${args.join(" ")}' but failed because he did not have permission.`)
+    embed.setDescription(`${invoker.username}#${invoker.discriminator} attempted to run command cy!${label || '*idk*'}, but failed because he had no permission.`)
+    log.warn(`${invoker.username}#${invoker.discriminator} attempted to run command 'cy!${label || '*idk*'} ${args.join(" ")}' but failed because he did not have permission.`)
   }
   logchan.createMessage({embed}).catch((err) => {
     log.error('Failed to create command log message', err)
