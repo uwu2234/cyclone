@@ -89,7 +89,7 @@ const bot = new Eris.CommandClient(config.secrets.token, {
 }, {
   description: `Cyclone v${require('./package.json').version}`,
   owner: 'Relative#2600',
-  prefix: ['cy!', '@mention '],
+  prefix: [config.prefix || 'cy!', '@mention '],
   defaultHelpCommand: false,
   defaultCommandOptions: {
     cooldownMessage: `Please wait to use this command again!`,
