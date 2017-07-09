@@ -3,6 +3,10 @@ const RichEmbed = require('../embed')
 const vm = require('vm')
 const util = require('util')
 const r = require('../dbapi')
+
+const config = require('../config')
+const env = process.env.NODE_ENV
+
 module.exports = function (bot, db, log) {
   const requirements = {
     requirements: {

@@ -10,7 +10,8 @@ const colorcfg = {
 const uuidv4 = require('uuid/v4')
 const crypto = require('crypto')
 const randomstring = require('randomstring')
-
+const config = require('../config')
+const env = process.env.NODE_ENV
 function base64(str) {
   return Buffer.from(str).toString('base64')
 }

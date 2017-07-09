@@ -1,6 +1,8 @@
 const sr = require('common-tags').stripIndents
 const RichEmbed = require('../embed')
 const requestify = require('requestify')
+const config = require('../config')
+const env = process.env.NODE_ENV
 module.exports = function (bot, db, log) {
   const colorcfg = {
     green: '#139A43',

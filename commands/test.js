@@ -1,8 +1,8 @@
 const sr = require('common-tags').stripIndents
 const RichEmbed = require('../embed')
 const moment = require('moment')
-var config = require('./config')
-const env = config.environ
+const config = require('../config')
+const env = process.env.NODE_ENV
 const util = require('util')
 const wolfram = require('wolfram-alpha').createClient(config.secrets.wolfram || config.secrets.wolframAlpha)
 String.prototype.replaceAll = function(search, replacement) {

@@ -3,6 +3,9 @@ const RichEmbed = require('../embed')
 const moment = require('moment')
 var indexes = {}
 var cmdsu = {}
+const config = require('../config')
+const env = process.env.NODE_ENV
+
 module.exports = function (bot, db, log) {
   const colorcfg = {
     green: '#139A43',

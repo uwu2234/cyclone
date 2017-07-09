@@ -1,6 +1,9 @@
 const sr = require('common-tags').stripIndents
 const RichEmbed = require('../embed')
 const path = require('path')
+
+const config = require('../config')
+const env = process.env.NODE_ENV
 module.exports = function (bot, db, log) {
   const requirements = {
     requirements: {

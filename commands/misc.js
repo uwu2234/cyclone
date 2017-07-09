@@ -1,8 +1,8 @@
 const sr = require('common-tags').stripIndents
 const RichEmbed = require('../embed')
 const moment = require('moment')
-var config = require('./config')
-const env = config.environ
+const config = require('../config')
+const env = process.env.NODE_ENV
 module.exports = function (bot, db, log) {  
   const colorcfg = {
     green: '#139A43',
@@ -18,12 +18,12 @@ module.exports = function (bot, db, log) {
   bot.registerCommand('info', (msg, args) => {
     let embed = new RichEmbed()
     embed.setAuthor(bot.user.username, bot.user.avatarURL, 'https://cyclonebot.com')
-    embed.addField('Version', require('../package.json').version, true)
+    embed.addField('Version', env == 'prod' ? require('../package.json').version : require('../package.json').version+'-dev', true)
     embed.addField('Owner', '<@116693403147698181>', true)
     embed.addField('Guilds', bot.guilds.size, true)
     embed.addField('Users', bot.users.size, true)
     embed.addField('Library', 'Eris', true)
-    embed.addField('Environment', env ? env : 'Production', true)
+    embed.addField('Environment', env == 'prod' ? 'Production' : 'Development')
     embed.setTimestamp()
     msg.channel.createMessage({ embed: embed.toJSON() })
   }, { 

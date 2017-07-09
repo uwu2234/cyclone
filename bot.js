@@ -17,7 +17,7 @@ const snekfetch = require('snekfetch')
 //const db = new Database.FileDatabase()
 const db = new Database()
 var config = require('./config')
-const env = config.environ
+const env = process.env.NODE_ENV
 String.prototype.replaceAll = function(target, replacement) { return this.split(target).join(replacement); };
 var msgcount = 0
 
@@ -88,10 +88,10 @@ const bot = new Eris.CommandClient(config.secrets.token, {
 }, {
   description: `Cyclone v${require('./package.json').version}`,
   owner: 'Relative#2600',
-  prefix: [config.prefix || 'cy!', '@mention '],
+  prefix: [config.prefix, '@mention '],
   defaultHelpCommand: false,
   defaultCommandOptions: {
-    cooldownMessage: `Please wait to use this command again!`,
+    cooldownMessage: `⛔ Please wait to use this command again!`,
     permissionMessage: `⛔ You don't have permission to use this command!`,
     errorMessage: `⛔ This command failed to execute! Try again later!`
   },
@@ -117,6 +117,7 @@ function randomNumber(min,max) {
 }
 
 function botlistPing() {
+  if(env == 'dev') return
   snekfetch.post('https://bots.discord.pw/api/bots/194960599816470529/stats')
       .set('Authorization', config.secrets.dbots)
       .send({

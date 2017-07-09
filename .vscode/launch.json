@@ -7,20 +7,13 @@
     {
       "type": "node",
       "request": "launch",
-      "name": "Prod Test",
-      "program": "${workspaceRoot}\\index.js",
-      "env": {
-        "NODE_ENV": "production "
-      }
-    },
-    {
-      "type": "node",
-      "request": "launch",
-      "name": "Development",
-      "program": "${workspaceRoot}\\index.js",
-      "env": {
-        "NODE_ENV": "dev "
-      }
+      "name": "CycloneDev",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": [
+        "run-script",
+        "start:dev"
+      ],
+      "port": 5858
     }
   ]
 }
