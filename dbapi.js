@@ -1,4 +1,5 @@
-const config = require('./config.json')
+var config = require('./config')
+const env = config.environ
 const r = require('rethinkdbdash')({
   host: config.rethink.host,
   port: config.rethink.port,

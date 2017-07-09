@@ -1,6 +1,8 @@
 const sr = require('common-tags').stripIndents
 const RichEmbed = require('../embed')
 const moment = require('moment')
+var config = require('./config')
+const env = config.environ
 module.exports = function (bot, db, log) {  
   const colorcfg = {
     green: '#139A43',
@@ -21,6 +23,7 @@ module.exports = function (bot, db, log) {
     embed.addField('Guilds', bot.guilds.size, true)
     embed.addField('Users', bot.users.size, true)
     embed.addField('Library', 'Eris', true)
+    embed.addField('Environment', env ? env : 'Production', true)
     embed.setTimestamp()
     msg.channel.createMessage({ embed: embed.toJSON() })
   }, { 
