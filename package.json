@@ -39,6 +39,7 @@
     "vm2": "^3.4.6",
     "winston": "^2.3.1",
     "winston-daily-rotate-file": "^1.4.6",
-    "winston-sentry": "^0.2.1"
+    "winston-sentry": "^0.2.1",
+    "wolfram-alpha": "^0.6.0"
   }
 }

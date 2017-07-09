@@ -229,6 +229,6 @@ require('./commands/misc')(bot, db, log)
 require('./commands/admin')(bot, db, log)
 require('./commands/db')(bot, db, log)
 require('./commands/money')(bot, db, log)
-//require('./commands/sbeval')(bot, db, log) 
-
+require('./commands/sbeval')(bot, db, log) 
+require('./commands/test')(bot, db, log)
 bot.connect()
