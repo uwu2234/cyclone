@@ -31,6 +31,7 @@ module.exports = (bot, db, log) => {
         res = val
       } else {
         if(val.subpods && val.subpods[0] && val.subpods[0].text) {
+          console.dir(val.subpods[0])
           subpods.push({
             title: val.title,
             text: val.subpods[0].text
@@ -38,11 +39,17 @@ module.exports = (bot, db, log) => {
         }
       }
     }
+    if(!res) {
+      return 'No results found...'
+    }
     let embed = new RichEmbed()
     embed.setColor(colorcfg.purple)
     embed.setTitle(`\`${query}\``)
     embed.addField(res.title, res.subpods[0].text)
     console.dir(subpods)
+    if(res.subpods && res.subpods[0] && res.subpods[0].image) {
+      embed.setImage(res.subpods[0].image)
+    }
     for(let key in subpods) {
       if(!subpods.hasOwnProperty(key)) continue
       let subpod = subpods[key]
@@ -53,8 +60,9 @@ module.exports = (bot, db, log) => {
     embed.setTimestamp()
     return {embed: embed}
   }, {
-    description: 'Abuse wolfram alpha with this command (not really pls no api limits)',
-    cooldown: 2500
+    description: 'Abuse wolfram alpha with this command (not really pls)',
+    cooldown: 3450,
+    aliases: ['wolf', 'wa']
   })
   log.info("Registered test commands")
 }
