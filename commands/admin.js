@@ -209,5 +209,14 @@ module.exports = function (bot, db, log) {
     fullDescription: 'Evaluate JavaScript code on Cyclone in a Node VM'
   })
 
+  bot.registerCommand('shell', (msg, args) => {
+
+  }, {
+    requirements: {
+      userIDs: ['116693403147698181']
+    },
+    description: 'Run some shell scripts on the platform.'
+  })
+
   log.info('Admin commands registered')
 }

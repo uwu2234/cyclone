@@ -88,7 +88,7 @@ const bot = new Eris.CommandClient(config.secrets.token, {
 }, {
   description: `Cyclone v${require('./package.json').version}`,
   owner: 'Relative#2600',
-  prefix: [config.prefix, '@mention '],
+  prefix: [config.prefix, '@mention ', 'luna '],
   defaultHelpCommand: false,
   defaultCommandOptions: {
     cooldownMessage: `⛔ Please wait to use this command again!`,
@@ -145,6 +145,7 @@ bot
         count: msgcount
       }).run()
     }, 10000)
+    bot.registerGuildPrefix(295341979800436736, [env == 'dev' ? 'cy$' : 'cy!', '@mention ', 'please ', 'luna '])
     setInterval(botlistPing, 600000)
     //botlistPing()
   })
@@ -218,7 +219,9 @@ bot.on('commandExecuted', (label, invoker, msg, args, command) => {
     embed.setDescription(`${invoker.username}#${invoker.discriminator} attempted to run command cy!${label || '*idk*'}, but failed because he had no permission.`)
     log.warn(`${invoker.username}#${invoker.discriminator} attempted to run command 'cy!${label || '*idk*'} ${args.join(" ")}' but failed because he did not have permission.`)
   }
-  logchan.createMessage({embed}).catch((err) => {
+  let chtl = logchan
+  if(env === 'dev') chtl = bot.guilds.get('257307356541485066').channels.get('333734203227111424')
+  chtl.createMessage({embed}).catch((err) => {
     log.error('Failed to create command log message', err)
   })
 })
