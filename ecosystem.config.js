@@ -1,11 +1,6 @@
 module.exports = {
-  /**
-   * Application configuration section
-   * http://pm2.keymetrics.io/docs/usage/application-declaration/
-   */
-  apps : [
 
-    // First application
+  apps : [
     {
       name: 'Cyclone',
       script: 'index.js',
@@ -17,7 +12,6 @@ module.exports = {
       }
     }
   ],
-
   /**
    * Deployment section
    * http://pm2.keymetrics.io/docs/usage/deployment/
@@ -28,8 +22,8 @@ module.exports = {
       host : '69.195.152.138',
       ref  : 'origin/master',
       repo : 'git@github.com:FNCxPro/cyclone.git',
-      path : '/home/cyclone/prod',
-      'post-deploy' : 'chmod +x deploy/prod.sh && ./deploy/prod.sh'
+      path : '~/cyclone',
+      'post-deploy' : 'chmod +x ~/cyclone/deploy/prod.sh && ./deploy/prod.sh'
     },
     dev: {
       user : 'cyclone',

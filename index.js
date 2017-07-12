@@ -1,7 +1,11 @@
-process.env.NODE_ENV = 'prod'
+function setEnv(env){
+  process.env.NODE_ENV = env
+}
 let args = process.argv.slice(2)
-if (args[0] === 'dev' || args[0] === 'development') {
-  process.env.NODE_ENV = 'dev'
+if(process.env.NODE_ENV.startsWith('dev') || args[0] === 'dev' || args[0] === 'development') {
+  setEnv('dev')
+} else {
+  setEnv('prod')
 }
 
 
