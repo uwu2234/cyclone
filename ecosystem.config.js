@@ -29,7 +29,7 @@ module.exports = {
       ref  : 'origin/master',
       repo : 'git@github.com:FNCxPro/cyclone.git',
       path : '/home/cyclone/prod',
-      'post-deploy' : 'npm install && pm2 reload ecosystem.config.js --env production'
+      'post-deploy' : 'chmod +x deploy/prod.sh && ./deploy/prod.sh'
     },
     dev: {
       user : 'cyclone',
