@@ -17,7 +17,7 @@ module.exports = {
     production: {
       user: 'cyclone',
       host: '69.195.152.138',
-      ref: '2.0',
+      ref: 'origin/2.0',
       repo: 'git@github.com:FNCxPro/cyclone.git',
       path: '~/prod',
       'post-deploy': 'chmod +x deploy/prod.sh && ./deploy/prod.sh'
