@@ -16,7 +16,7 @@ module.exports = function (bot, db, log) {
   }
   bot.registerCommand('prefix', (msg, args) => {
     if(args && args[0] === 'reset') {
-      db.r.table('servers').get(msg.channel.guild.id).update({prefix: undefined}).run()
+      db.r.table('servers').get(msg.channel.guild.id).update({prefix: 'cy!'}).run()
       bot.registerGuildPrefix(msg.channel.guild.id, ['cy!', '@mention '])
       return `Prefix reset to \`cy!\``
     }
