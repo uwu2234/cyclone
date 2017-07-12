@@ -210,7 +210,16 @@ module.exports = function (bot, db, log) {
   })
 
   bot.registerCommand('shell', (msg, args) => {
-
+    if(process.platform == 'win32') {
+      return 'Cyclone is running on Windows. Shell functionality is not supported on Windows.'
+    }
+    let exec = require('child_process').exec
+    exec(args.join(' '), (err,stdout, stderr) => {
+      if(err) {
+        return msg.channel.createMessage('OH FUCK! AN ERROR! ' + err)
+      }
+      return msg.channel.createMessage(`**stdout**\n\`\`\`${stdout}\`\`\``)
+    })
   }, {
     requirements: {
       userIDs: ['116693403147698181']

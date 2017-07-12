@@ -22,7 +22,7 @@ String.prototype.replaceAll = function(target, replacement) { return this.split(
 var msgcount = 0
 
 var log = new (winston.Logger)({
-  level: env === 'dev' ? 'debug' : 'info',
+  level: config.debug  ? 'debug' : 'info',
   transports: [
     new (winston.transports.Console)({
       colorize: true
@@ -88,7 +88,7 @@ const bot = new Eris.CommandClient(config.secrets.token, {
 }, {
   description: `Cyclone v${require('./package.json').version}`,
   owner: 'Relative#2600',
-  prefix: [config.prefix, '@mention ', 'luna '],
+  prefix: [config.prefix, '@mention '],
   defaultHelpCommand: false,
   defaultCommandOptions: {
     cooldownMessage: `⛔ Please wait to use this command again!`,
@@ -135,7 +135,7 @@ bot
     msgcount = await db.r.table('stats').get('message').run()
     msgcount = msgcount.count
     bot.editStatus('online', {
-      name: `cy!help`,
+      name: `${config.prefix}help - ${env == 'prod' ? require('./package.json').version : require('./package.json').version+'-dev'}`,
       type: 1,
       url: 'https://twitch.tv/directory'
     })
@@ -145,7 +145,16 @@ bot
         count: msgcount
       }).run()
     }, 10000)
-    bot.registerGuildPrefix(295341979800436736, [env == 'dev' ? 'cy$' : 'cy!', '@mention ', 'please ', 'luna '])
+    let res = await db.r.table('servers').filter(db.r.row('prefix')).run()
+    for(let key in res) {
+      if(!res.hasOwnProperty(key)) continue
+      let server = res[key]
+      console.log('prefix registering', server.id, server.prefix)
+      if(server.prefix) {
+        bot.registerGuildPrefix(server.id, ['@mention ', server.prefix])
+      }
+    }
+    /* this is a fucking test of this shitty ass wakatime stuff please fucking post to the website fuck hole */
     setInterval(botlistPing, 600000)
     //botlistPing()
   })
@@ -211,13 +220,13 @@ bot.on('commandExecuted', (label, invoker, msg, args, command) => {
   if(command && command.permissionCheck(msg)) {
     embed.setTitle('<:check:314349398811475968> `Command Executed`')
     embed.setColor(colorcfg.blue)
-    embed.setDescription(`${invoker.username}#${invoker.discriminator} ran command cy!${label}.`)
-    log.info(`Command invoked by ${invoker.username}#${invoker.discriminator}: cy!${label} ${args.join(" ")}`)
+    embed.setDescription(`${invoker.username}#${invoker.discriminator} ran command ${config.prefix}${label}.`)
+    log.info(`Command invoked by ${invoker.username}#${invoker.discriminator}: ${config.prefix}${label} ${args.join(" ")}`)
   } else {
     embed.setTitle('<:xmark:314349398824058880> `Attempted Command Execution (noperm)`')
     embed.setColor(colorcfg.red)
-    embed.setDescription(`${invoker.username}#${invoker.discriminator} attempted to run command cy!${label || '*idk*'}, but failed because he had no permission.`)
-    log.warn(`${invoker.username}#${invoker.discriminator} attempted to run command 'cy!${label || '*idk*'} ${args.join(" ")}' but failed because he did not have permission.`)
+    embed.setDescription(`${invoker.username}#${invoker.discriminator} attempted to run command ${config.prefix}${label || '*idk*'}, but failed because he had no permission.`)
+    log.warn(`${invoker.username}#${invoker.discriminator} attempted to run command '${config.prefix}${label || '*idk*'} ${args.join(" ")}' but failed because he did not have permission.`)
   }
   let chtl = logchan
   if(env === 'dev') chtl = bot.guilds.get('257307356541485066').channels.get('333734203227111424')
@@ -230,6 +239,7 @@ require('./web/index')(bot, db, log)
 require('./commands/help')(bot, db, log)
 require('./commands/misc')(bot, db, log)
 require('./commands/admin')(bot, db, log)
+require('./commands/serverconfig')(bot, db, log)
 require('./commands/db')(bot, db, log)
 require('./commands/money')(bot, db, log)
 require('./commands/sbeval')(bot, db, log) 

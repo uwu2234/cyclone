@@ -31,14 +31,14 @@ module.exports = function (bot, db, log) {
       for (let _c in rcmds) {
         if(!rcmds.hasOwnProperty(_c)) continue
         let cmd = rcmds[_c]
-        buf += `**cy!${cmd.label}** - *${cmd.description}*\n`
+        buf += `**${config.prefix}${cmd.label}** - *${cmd.description}*\n`
       }
       return buf
     } else if (args || args[0] == 'test') {
       let embed = new RichEmbed()
       let index = indexes[msg.author.id] = 0
       embed.setColor(colorcfg.purple)
-      embed.addField('Command', `cy!${_rcmds[index].label}`)
+      embed.addField('Command', `${config.prefix}${_rcmds[index].label}`)
       embed.addField('Description', `${_rcmds[index].description}`)
       return { embed }
     }
@@ -62,7 +62,7 @@ module.exports = function (bot, db, log) {
             let embed = new RichEmbed()
             indexes[author] = index
             embed.setColor(colorcfg.purple)
-            embed.addField('Command', `cy!${_rcmds[index].label}`)
+            embed.addField('Command', `${config.prefix}${_rcmds[index].label}`)
             embed.addField('Description', `${_rcmds[index].description}`)
             return { embed }
           }
@@ -83,7 +83,7 @@ module.exports = function (bot, db, log) {
             let embed = new RichEmbed()
             indexes[author] = index
             embed.setColor(colorcfg.purple)
-            embed.addField('Command', `cy!${_rcmds[index].label}`)
+            embed.addField('Command', `${config.prefix}${_rcmds[index].label}`)
             embed.addField('Description', `${_rcmds[index].description}`)
             return { embed }
           }

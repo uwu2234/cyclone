@@ -2,17 +2,11 @@
 <html lang="en">
 
 <head>
-  <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN"
-    crossorigin="anonymous">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.4.2/css/bulma.css" />
-  <link rel="stylesheet" href="css/style.css">
+  <%- include partials/head.ejs %>
 </head>
 
 <body>
-  <section class="hero is-large is-dark is-bold">
+  <section class="hero is-medium is-info is-bold">
     <div class="hero-head">
       <nav class="nav">
         <div class="container">
@@ -42,8 +36,53 @@
           Cyclone
         </h1>
         <h4 class="subtitle is-4">
-          Subtitle
+          Used on <%= bot.guilds.size %> servers, and counting!
         </h4>
+      </div>
+    </div>
+  </section>
+  <section>
+    <div class="container">
+      <br>
+      <div class="level">
+        <div class="level-item has-text-centered">
+          <div>
+            <p class="heading">Guilds</p>
+            <p class="title"><%= bot.guilds.size %></p>
+          </div>
+        </div>
+        <div class="level-item has-text-centered">
+          <div>
+            <p class="heading">Channels</p>
+            <p class="title"><%= Object.keys(bot.channelGuildMap).length %></p>
+          </div>
+        </div>
+        <div class="level-item has-text-centered">
+          <div>
+            <p class="heading">Users</p>
+            <p class="title"><%= bot.users.size %></p>
+          </div>
+        </div>
+        <div class="level-item has-text-centered">
+          <div>
+            <p class="heading">Messages</p>
+            <p class="title"><%= msgCount %></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section>
+    <div class="container">
+      <br><br>
+      
+      <div class="columns">
+        <div class="column is-two-thirds">
+          
+        </div>
+        <div class="column">
+          
+        </div>
       </div>
     </div>
   </section>
