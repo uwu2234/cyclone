@@ -21,6 +21,7 @@
     "colors": "^1.1.2",
     "common-tags": "^1.4.0",
     "decache": "^4.1.0",
+    "dogapi": "^2.8.0",
     "ejs": "^2.5.6",
     "eris": "github:FNCxPro/eris#dev",
     "erlpack": "github:hammerandchisel/erlpack",

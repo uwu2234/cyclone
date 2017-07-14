@@ -13,6 +13,7 @@ const Eris = require('eris')
 const vm = require('vm')
 const fs = require('fs-extra')
 const snekfetch = require('snekfetch')
+const dogapi = require('dogapi')
 //const db = new Database.FileDatabase()
 const db = new Database()
 var config = require('./config')
@@ -144,6 +145,7 @@ bot
         count: msgcount
       }).run()
     }, 10000)
+    setInterval(update, 1 * 60 * 1000, bot)
     let res = await db.r.table('servers').filter(db.r.row('prefix')).run()
     for(let key in res) {
       if(!res.hasOwnProperty(key)) continue
@@ -190,9 +192,11 @@ bot.on('guildMemberUpdate', (guild, member, oldMember) => {
     }
   }
 })
-
+let messages = 0
+let commands = 0
 bot.on('messageCreate', async (msg) => {
   msgcount = msgcount + 1
+  messages = messages + 1
   /*if(msg.channel.guild && msg.channel.guild.id == '110373943822540800') return
   if(msg.content.toLowerCase() == 'ok') {
     msg.addReaction('🆗')
@@ -209,6 +213,7 @@ bot.on('messageCreate', async (msg) => {
   }*/
 })
 
+
 bot.on('commandExecuted', (label, invoker, msg, args, command) => {
   let embed = new RichEmbed()
   embed.setErisAuthor(invoker)
@@ -221,6 +226,7 @@ bot.on('commandExecuted', (label, invoker, msg, args, command) => {
     embed.setColor(colorcfg.blue)
     embed.setDescription(`${invoker.username}#${invoker.discriminator} ran command ${config.prefix}${label}.`)
     log.info(`Command invoked by ${invoker.username}#${invoker.discriminator}: ${config.prefix}${label} ${args.join(" ")}`)
+    commands = commands + 1
   } else {
     embed.setTitle('<:xmark:314349398824058880> `Attempted Command Execution (noperm)`')
     embed.setColor(colorcfg.red)
@@ -233,6 +239,44 @@ bot.on('commandExecuted', (label, invoker, msg, args, command) => {
     log.error('Failed to create command log message', err)
   })
 })
+
+dogapi.initialize(config.secrets.datadog)
+async function update(bot) {
+  log.info('Updating statistics')
+  dogapi.metric.send_all([
+    {
+      metric: 'cyclone.guild.count',
+      points: bot.guilds.size,
+    },
+    {
+      metric: 'cyclone.commands.per-minute',
+      points: commands
+    },
+    {
+      metric: 'cyclone.messages.per-minute',
+      points: messages
+    },
+    {
+      metric: 'cyclone.bothuman.ratio',
+      points: bot.users.filter(u => u.bot).size / bot.users.filter(u => !bot).size
+    },
+    {
+      metric: 'cyclone.voice-connections.size',
+      points: bot.voiceConnections.size
+    },
+    {
+      metric: 'cyclone.channels.size',
+      points: Object.keys(bot.channelGuildMap).length
+    }
+  ], (err, res) => {
+    if(err) {
+      return log.error(err)
+    }
+    console.dir(res)
+  })
+  commands = 0
+  messages = 0
+}
 
 require('./web/index')(bot, db, log)
 require('./commands/help')(bot, db, log)
