@@ -242,6 +242,7 @@ bot.on('commandExecuted', (label, invoker, msg, args, command) => {
 
 dogapi.initialize(config.secrets.datadog)
 async function update(bot) {
+  if(env == 'dev') return
   log.info('Updating statistics')
   dogapi.metric.send_all([
     {
