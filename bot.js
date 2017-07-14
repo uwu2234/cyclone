@@ -249,6 +249,18 @@ async function update(bot) {
       points: bot.guilds.size,
     },
     {
+      metric: 'cyclone.members.count',
+      points: bot.users.filter(u => !bot).size
+    },
+    {
+      metric: 'cyclone.users.count',
+      points: bot.users.size
+    },
+    {
+      metric: 'cyclone.bots.count',
+      points: bot.users.filter(u => bot).size
+    },
+    {
       metric: 'cyclone.commands.per-minute',
       points: commands
     },
