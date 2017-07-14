@@ -20,8 +20,8 @@ module.exports = function (bot, db, log) {
       bot.registerGuildPrefix(msg.channel.guild.id, ['cy!', '@mention '])
       return `Prefix reset to \`cy!\``
     }
-    bot.registerGuildPrefix(msg.channel.guild.id, ['@mention ', args[0] + ' '])
-    db.r.table('servers').get(msg.channel.guild.id).update({prefix: args[0] + ' '}).run()
+    bot.registerGuildPrefix(msg.channel.guild.id, ['@mention ', args[0]])
+    db.r.table('servers').get(msg.channel.guild.id).update({prefix: args[0]}).run()
     return `Prefix set to \`${args[0]}\``
   }, {
     description: 'Set the prefix for the current guild (requires ADMINISTRATOR perm)',
