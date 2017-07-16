@@ -151,7 +151,7 @@ module.exports = class RichEmbed {
     if (name.length > 256) throw new RangeError('RichEmbed field names may not exceed 256 characters.');
     if (!/\S/.test(name)) throw new RangeError('RichEmbed field names may not be empty.');
     if (value.length > 1024) {
-      value = value.substr(1021) + '...'
+      value = value.substr(0, 1021) + '...'
     }
     if (value.length > 1024) throw new RangeError('RichEmbed field values may not exceed 1024 characters.');
     if (!/\S/.test(value)) throw new RangeError('RichEmbed field values may not be empty.');

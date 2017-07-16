@@ -78,7 +78,7 @@ async function blacklisted(msg, args) {
   return false
 }
 const bot = new Eris.CommandClient(config.secrets.token, {
-  //maxShards: config.sharding.shardCount,
+  maxShards: config.sharding.shardCount,
   autoReconnect: true,
   getAllUsers: true,
   disableEvents: {
