@@ -34,7 +34,9 @@ module.exports = function (bot, db, log) {
   }
 
   let moneyCommand = bot.registerCommand('money', (msg, args) => {
-    msg.channel.createMessage(`\`cy!money\` is broken. come back later!`)
+    msg.channel.createMessage(`\`cy!money [register|balance]\``)
+  }, {
+    aliases: ['$', '$$$', 'cash', 'bal']
   })
   moneyCommand.registerSubcommand('register', async (msg, args) => {
     let didRegister = await registered(msg.author)
