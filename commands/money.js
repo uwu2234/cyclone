@@ -76,7 +76,7 @@ module.exports = function (bot, db, log) {
   }
 
   let moneyCommand = bot.registerCommand('money', (msg, args) => {
-    msg.channel.send(`\`cy!money\` is broken. come back later!`)
+    msg.channel.createMessage(`\`cy!money\` is broken. come back later!`)
     //return sr`Invalid usage.
     //\`cy!money [balance|pay|flip|register]\``
   }, {
