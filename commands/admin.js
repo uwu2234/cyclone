@@ -30,7 +30,7 @@ module.exports = function (bot, db, log) {
       let embed = new RichEmbed()
       embed.setColor(colorcfg.red)
       embed.setAuthor(guild.name)
-      embed.setTitle('Blacklisted')
+      embed.setTitle('`Blacklisted`')
       embed.setDescription(sr`Blacklisted server ${guild.name} (${guild.id}) successfully.`)
       msg.channel.createMessage({ embed: embed.toJSON() })
     } else {
@@ -39,7 +39,7 @@ module.exports = function (bot, db, log) {
       let embed = new RichEmbed()
       embed.setColor(colorcfg.red)
       embed.setAuthor('Server')
-      embed.setTitle('Blacklisted')
+      embed.setTitle('`Blacklisted`')
       embed.setDescription(sr`Blacklisted server ${args.join('')} successfully.`)
       msg.channel.createMessage({ embed: embed.toJSON() })
     }
@@ -58,7 +58,7 @@ module.exports = function (bot, db, log) {
       let embed = new RichEmbed()
       embed.setColor(colorcfg.green)
       embed.setAuthor(guild.name)
-      embed.setTitle('Unblacklisted')
+      embed.setTitle('`Unblacklisted`')
       embed.setDescription(sr`Unblacklisted server ${guild.name} (${guild.id}) successfully.`)
       msg.channel.createMessage({ embed: embed.toJSON() })
     } else {
@@ -67,7 +67,7 @@ module.exports = function (bot, db, log) {
       let embed = new RichEmbed()
       embed.setColor(colorcfg.green)
       embed.setAuthor('Server')
-      embed.setTitle('Unblacklisted')
+      embed.setTitle('`Unblacklisted`')
       embed.setDescription(sr`Unblacklisted server ${args.join('')} successfully.`)
       msg.channel.createMessage({ embed: embed.toJSON() })
     }
@@ -87,7 +87,7 @@ module.exports = function (bot, db, log) {
       let embed = new RichEmbed()
       embed.setColor(colorcfg.red)
       embed.setAuthor(user.username)
-      embed.setTitle('Blacklisted')
+      embed.setTitle('`Blacklisted`')
       embed.setDescription(sr`Blacklisted user ${user.username}#${user.discriminator} successfully.`)
       msg.channel.createMessage({ embed: embed.toJSON() })
     } else {
@@ -96,7 +96,7 @@ module.exports = function (bot, db, log) {
       let embed = new RichEmbed()
       embed.setColor(colorcfg.red)
       embed.setAuthor('Server')
-      embed.setTitle('Blacklisted')
+      embed.setTitle('`Blacklisted`')
       embed.setDescription(sr`Blacklisted user ${args.join('')} successfully.`)
       msg.channel.createMessage({ embed: embed.toJSON() })
     }
@@ -115,7 +115,7 @@ module.exports = function (bot, db, log) {
       let embed = new RichEmbed()
       embed.setColor(colorcfg.green)
       embed.setAuthor(user.username)
-      embed.setTitle('Unblacklisted')
+      embed.setTitle('`Unblacklisted`')
       embed.setDescription(sr`Unblacklisted user ${user.username}#${user.discriminator} successfully.`)
       msg.channel.createMessage({ embed: embed.toJSON() })
     } else {
@@ -124,7 +124,7 @@ module.exports = function (bot, db, log) {
       let embed = new RichEmbed()
       embed.setColor(colorcfg.green)
       embed.setAuthor('Server')
-      embed.setTitle('Unblacklisted')
+      embed.setTitle('`Unblacklisted`')
       embed.setDescription(sr`Unblacklisted user ${args.join('')} successfully.`)
       msg.channel.createMessage({ embed: embed.toJSON() })
     }
@@ -144,7 +144,7 @@ module.exports = function (bot, db, log) {
       var embed = new RichEmbed()
       embed.setColor(colorcfg.green2)
       embed.setAuthor(`${msg.author.username}#${msg.author.discriminator}`, msg.author.avatarURL)
-      embed.setTitle('Executed')
+      embed.setTitle('`Executed`')
       embed.setDescription(`**Result:** \`\`\`${res}\`\`\``)
       embed.setTimestamp()
       msg.channel.createMessage({ embed: embed.toJSON() })
@@ -154,7 +154,7 @@ module.exports = function (bot, db, log) {
       var embed = new RichEmbed()
       embed.setColor(colorcfg.red)
       embed.setAuthor(`${msg.author.username}#${msg.author.discriminator}`, msg.author.avatarURL)
-      embed.setTitle('Error')
+      embed.setTitle('`Error`')
       embed.setDescription(`**Error:** \`\`\`${ex}\`\`\``)
       embed.setTimestamp()
       msg.channel.createMessage({ embed: embed.toJSON() })
@@ -194,7 +194,7 @@ module.exports = function (bot, db, log) {
       var embed = new RichEmbed()
       embed.setColor(colorcfg.red)
       embed.setAuthor(`${msg.author.username}#${msg.author.discriminator}`, msg.author.avatarURL)
-      embed.setTitle('Error')
+      embed.setTitle('`Error`')
       embed.setDescription(`**Error:** \`\`\`${ex}\`\`\``)
       embed.setTimestamp()
       msg.channel.createMessage({ embed: embed.toJSON() })

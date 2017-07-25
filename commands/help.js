@@ -34,18 +34,20 @@ module.exports = function (bot, db, log) {
         buf += `**${config.prefix}${cmd.label}** - *${cmd.description}*\n`
       }
       return buf
-    } else if (args || args[0] == 'test') {
+    } /*else if (args || args[0] == 'test') {
       let embed = new RichEmbed()
       let index = indexes[msg.author.id] = 0
       embed.setColor(colorcfg.purple)
       embed.addField('Command', `${config.prefix}${_rcmds[index].label}`)
       embed.addField('Description', `${_rcmds[index].description}`)
       return { embed }
-    }
+    }*/
   }, {
       description: 'Shows help',
-      fullDescription: 'Helping test',
-      reactionButtons: [
+      fullDescription: 'Helping test'
+      
+    })
+  /*reactionButtons: [
         {
           emoji: '⬅',
           type: 'edit',
@@ -89,9 +91,8 @@ module.exports = function (bot, db, log) {
           }
         }
       ],
-      /*disableReactionButtonsWithArgs: false,
-      disableReactionButtonsWithoutArgs: true,*/
+      disableReactionButtonsWithArgs: false,
+      disableReactionButtonsWithoutArgs: true,
       reactionButtonsArg: 'test',
-      reactionButtonTimeout: 30000
-    })
+      reactionButtonTimeout: 30000*/
 }

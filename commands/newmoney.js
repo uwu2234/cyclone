@@ -13,9 +13,12 @@ const randomstring = require('randomstring')
 const config = require('../config')
 const env = process.env.NODE_ENV
 const snekfetch = require('snekfetch')
+const moment = require('moment')
 function base64(str) {
   return Buffer.from(str).toString('base64')
 }
+
+const API_BASE = 'http://discoin-austinhuang.rhcloud.com'
 
 module.exports = function (bot, db, log) {
   async function registered(user) {
@@ -26,17 +29,34 @@ module.exports = function (bot, db, log) {
     let member = await db.r.table('users').get(user.id).run()
     return member.balance || 0
   }
+  async function getIdMoney(user) {
+    let member = await db.r.table('users').get(user).run()
+    return member.balance || 0
+  }
   async function awardMoney(user, money) {
     let curBal = await getMoney(user)
     await db.r.table('users').get(user.id).update({
-      money: curBal + money
+      balance: curBal + parseInt(money)
+    }).run()
+  }
+  async function awardIdMoney(user, money) {
+    let curBal = await getIdMoney(user)
+    await db.r.table('users').get(user).update({
+      balance: curBal + parseInt(money)
+    }).run()
+  }
+  async function takeMoney(user, money) {
+    let curBal = await getMoney(user)
+    await db.r.table('users').get(user.id).update({
+      balance: curBal - parseInt(money)
     }).run()
   }
 
   let moneyCommand = bot.registerCommand('money', (msg, args) => {
-    msg.channel.createMessage(`\`cy!money [register|balance]\``)
+    msg.channel.createMessage(`\`cy!money [register|balance|exchange|daily]\``)
   }, {
-    aliases: ['$', '$$$', 'cash', 'bal']
+    aliases: ['$', '$$$', 'cash', 'bal'],
+    description: 'Have fun with money!'
   })
   moneyCommand.registerSubcommand('register', async (msg, args) => {
     let didRegister = await registered(msg.author)
@@ -45,10 +65,12 @@ module.exports = function (bot, db, log) {
     }
     let user = await db.r.table('users').get(msg.author.id).run()
     await db.r.table('users').get(msg.author.id).update({
-      registered: true,
-      balance: 250
+      registered: true
     }).run()
+    await awardMoney(msg.author, 250)
     return `You have been awarded 250 CCC for registering an account.`
+  }, {
+    description: 'Register for a CycloneCoins account'
   })
   moneyCommand.registerSubcommand('balance', async (msg, args) => {
     let didRegister = await registered(msg.author)
@@ -57,13 +79,78 @@ module.exports = function (bot, db, log) {
     }
     let money = await getMoney(msg.author)
     return `Your balance is ${money} CCC.`
+  }, {
+    aliases: ['$', '$$$', 'bal', 'money'],
+    description: 'Get your balance'
+  })
+  moneyCommand.registerSubcommand('daily', async (msg, args) => {
+    let didRegister = await registered(msg.author)
+    if(!didRegister) {
+      return `You have not registered for an account! Run \`cy!money register\` 😦`
+    }
+    let _lastDaily = await db.r.table('users').get(msg.author.id).run()
+    let lastDaily = _lastDaily.lastDaily
+    let now = moment()
+    if(!lastDaily) {
+      await db.r.table('users').get(msg.author.id).update({lastDaily: (now.unix() * 1000)}).run()
+      await awardMoney(msg.author, 100)
+      return 'You have been awarded 100 CCC as a daily reward.'
+    } else {
+      let dt = moment(lastDaily)
+      let x = dt.add(1, 'day')
+      if(now.unix() > x.unix()) {
+        await db.r.table('users').get(msg.author.id).update({lastDaily: (now.unix() * 1000)}).run()
+        await awardMoney(msg.author, 100)
+        return 'You have received 100 CCC as a daily reward.'
+      } else {
+        return `You must wait before getting your daily reward. **${x.fromNow()}** you can receive your daily reward again.`
+      }
+    }
+  }, {
+    description: 'Get your daily bonus of CyloneCoins'
+  })
+  moneyCommand.registerSubcommand('exchange', async (msg, args) => {
+    let didRegister = await registered(msg.author)
+    if(!didRegister) {
+      return `You have not registered for an account! Run \`cy!money register\` 😦`
+    }
+    
+    let amt = args[0]
+    let code = args[1]
+    let bal = await getMoney(msg.author)
+    if(isNaN(amt)) {
+      return `Please enter a valid amount.`
+    }
+    if(amt > bal) {
+      return `You don't have enough CCC to make this transaction!`
+    }
+    await takeMoney(msg.author, amt)
+    let res = await snekfetch.get(`${API_BASE}/transaction/${msg.author.id}/${amt}/${code}`)
+      .set('Authorization', config.secrets.discoin)
+    return res.text
+  }, {
+    requirements: {
+      userIDs: ['116693403147698181']
+    },
   })
   moneyCommand.registerSubcommand('discoin', async (msg, args) => {
     let discoin = config.secrets.discoin
     let res = await snekfetch.get(`http://discoin-austinhuang.rhcloud.com/transaction`)
       .set('Authorization', discoin)
     let body = JSON.parse(res.text)
-    return JSON.stringify(body)
+    let buf = ''
+    for(let _obj in body){
+      if(!body.hasOwnProperty(_obj)) continue
+      let obj = body[_obj]
+      let id = obj.user
+      let user = bot.users.get(id)
+      let amount = obj.amount
+      awardIdMoney(id, amount)
+      let dmchan = await bot.getDMChannel(id)
+      dmchan.createMessage(`You have received **${amount} CCC** from a discoin exchange!`)
+      buf += `${user.username}#${user.discriminator} - ${amount} CCC - ${obj.id}\n`
+    }
+    return buf || '*No pending transactions*'
   }, {
     requirements: {
       userIDs: ['116693403147698181']

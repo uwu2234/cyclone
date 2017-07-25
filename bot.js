@@ -10,16 +10,27 @@ const colors = require('colors')
 const moment = require('moment')
 const path = require('path')
 const Eris = require('eris')
-const vm = require('vm')
-const fs = require('fs-extra')
 const snekfetch = require('snekfetch')
 const dogapi = require('dogapi')
+const ms = require('ms')
 //const db = new Database.FileDatabase()
 const db = new Database()
 var config = require('./config')
 const env = process.env.NODE_ENV
 String.prototype.replaceAll = function(target, replacement) { return this.split(target).join(replacement); };
+
+process.on('unhandledRejection', (err, promise) => {
+  log.error('Unhandled promise rejection!', err, promise)
+})
+
+
+// Initial configuration
 var msgcount = 0
+var messages = 0
+var commands = 0
+dogapi.initialize(config.secrets.datadog)
+const API_BASE = 'http://discoin-austinhuang.rhcloud.com'
+
 
 var log = new (winston.Logger)({
   level: config.debug  ? 'debug' : 'info',
@@ -107,18 +118,71 @@ const colorcfg = {
   green2: '#0DAB76'
 }
 
-if(env == 'dev') {
-  log.debug('Cyclone is running in ' + 'development'.magenta + ' mode. Users not whitelisted will not be able to run any commands on the bot.')
-  //TODO: any other logic for specifically dev environment.
-}
+log.debug('Cyclone is running in ' + 'development'.magenta +' mode. Users not whitelisted will not be able to run any commands on the bot.') // Will only show in dev env/debug env
 
 function randomNumber(min,max) {
     return Math.floor(Math.random()*(max-min+1)+min);
 }
 
-function botlistPing() {
+async function tenSecondUpdate() {
+  await db.r.table('stats').get('message').update({
+    count: msgcount
+  }).run()
+}
+async function datadogUpdate() {
+  
+  // Datadog Stats!
   if(env == 'dev') return
-  snekfetch.post('https://bots.discord.pw/api/bots/194960599816470529/stats')
+  log.debug('Updating statistics')
+  dogapi.metric.send_all([
+    {
+      metric: 'cyclone.guild.count',
+      points: bot.guilds.size,
+    },
+    {
+      metric: 'cyclone.members.count',
+      points: bot.users.filter(u => !bot).size
+    },
+    {
+      metric: 'cyclone.users.count',
+      points: bot.users.size
+    },
+    {
+      metric: 'cyclone.bots.count',
+      points: bot.users.filter(u => bot).size
+    },
+    {
+      metric: 'cyclone.commands.per-minute',
+      points: commands
+    },
+    {
+      metric: 'cyclone.messages.per-minute',
+      points: messages
+    },
+    {
+      metric: 'cyclone.bothuman.ratio',
+      points: bot.users.filter(u => u.bot).size / bot.users.filter(u => !bot).size
+    },
+    {
+      metric: 'cyclone.voice-connections.size',
+      points: bot.voiceConnections.size
+    },
+    {
+      metric: 'cyclone.channels.size',
+      points: Object.keys(bot.channelGuildMap).length
+    }
+  ], (err, res) => {
+    if(err) {
+      return log.error(err)
+    }
+    log.debug('Updated statistics', res)
+  })
+  commands = 0
+  messages = 0
+}
+async function botlistUpdate() {
+  if(env == 'dev') return
+  await snekfetch.post('https://bots.discord.pw/api/bots/194960599816470529/stats')
       .set('Authorization', config.secrets.dbots)
       .send({
         server_count: bot.guilds.size
@@ -127,7 +191,50 @@ function botlistPing() {
         log.info(`Pinged bots.discord.pw with servercount! ${r.status} | ${r.statusText}`)
       })
 }
+async function discoinUpdate() {
+  let res
+  try {
+    res = await snekfetch.get(`${API_BASE}/transaction`)
+      .set('Authorization', config.secrets.discoin)
+  } catch (err) { 
+    log.error('Discoin had an error', err)
+  }
+  if(!res) return
+  log.debug('Updating discoin...')
+  let body = JSON.parse(res.text)
+  let buf = ''
+  for(let _obj in body){
+    if(!body.hasOwnProperty(_obj)) continue
+    let obj = body[_obj]
+    let id = obj.user
+    let user = bot.users.get(id)
+    let amount = obj.amount
+    let _bal = await db.r.table('users').get(id).run()
+    let bal = _bal.balance || 0
+    await db.r.table('users').get(id).update({
+      balance: bal + amount
+    }).run()
+    let dmchan = await bot.getDMChannel(id)
+    dmchan.createMessage(`You have received **${amount} CCC** from a discoin exchange!`)
+    buf += `${user.username}#${user.discriminator} - ${amount} CCC - ${obj.id}\n`
+  }
+}
+async function prefixUpdate() {
+  let res = await db.r.table('servers').filter(db.r.row('prefix')).run()
+  for(let key in res) {
+    if(!res.hasOwnProperty(key)) continue
+    let server = res[key]
+    if(server.prefix) {
+      log.debug('Registering prefix', {id: server.id, prefix: server.prefix})
+      bot.registerGuildPrefix(server.id, ['@mention ', server.prefix])
+    }
+  }
+}
+
+
 var logchan
+
+
 /* log events & ready events */
 bot
   .on('ready', async () => {
@@ -140,24 +247,11 @@ bot
       url: 'https://twitch.tv/directory'
     })
     logchan = bot.guilds.get('257307356541485066').channels.get('257312863914295297')
-    setInterval(async () => {
-      await db.r.table('stats').get('message').update({
-        count: msgcount
-      }).run()
-    }, 10000)
-    setInterval(update, 1 * 60 * 1000, bot)
-    let res = await db.r.table('servers').filter(db.r.row('prefix')).run()
-    for(let key in res) {
-      if(!res.hasOwnProperty(key)) continue
-      let server = res[key]
-      console.log('prefix registering', server.id, server.prefix)
-      if(server.prefix) {
-        bot.registerGuildPrefix(server.id, ['@mention ', server.prefix])
-      }
-    }
-    /* this is a fucking test of this shitty ass wakatime stuff please fucking post to the website fuck hole */
-    setInterval(botlistPing, 600000)
-    //botlistPing()
+    setInterval(tenSecondUpdate, ms('10s'))
+    setInterval(datadogUpdate, ms('1m'), bot)
+    setInterval(discoinUpdate, ms('4m'))
+    setInterval(botlistUpdate, 600000)
+    prefixUpdate()
   })
   .on('shardReady', (id) => {
     log.info(`Shard ${id.toString().cyan} connected`)
@@ -192,8 +286,7 @@ bot.on('guildMemberUpdate', (guild, member, oldMember) => {
     }
   }
 })
-let messages = 0
-let commands = 0
+
 bot.on('messageCreate', async (msg) => {
   msgcount = msgcount + 1
   messages = messages + 1
@@ -240,56 +333,7 @@ bot.on('commandExecuted', (label, invoker, msg, args, command) => {
   })
 })
 
-dogapi.initialize(config.secrets.datadog)
-async function update(bot) {
-  if(env == 'dev') return
-  log.info('Updating statistics')
-  dogapi.metric.send_all([
-    {
-      metric: 'cyclone.guild.count',
-      points: bot.guilds.size,
-    },
-    {
-      metric: 'cyclone.members.count',
-      points: bot.users.filter(u => !bot).size
-    },
-    {
-      metric: 'cyclone.users.count',
-      points: bot.users.size
-    },
-    {
-      metric: 'cyclone.bots.count',
-      points: bot.users.filter(u => bot).size
-    },
-    {
-      metric: 'cyclone.commands.per-minute',
-      points: commands
-    },
-    {
-      metric: 'cyclone.messages.per-minute',
-      points: messages
-    },
-    {
-      metric: 'cyclone.bothuman.ratio',
-      points: bot.users.filter(u => u.bot).size / bot.users.filter(u => !bot).size
-    },
-    {
-      metric: 'cyclone.voice-connections.size',
-      points: bot.voiceConnections.size
-    },
-    {
-      metric: 'cyclone.channels.size',
-      points: Object.keys(bot.channelGuildMap).length
-    }
-  ], (err, res) => {
-    if(err) {
-      return log.error(err)
-    }
-    console.dir(res)
-  })
-  commands = 0
-  messages = 0
-}
+
 
 require('./web/index')(bot, db, log)
 require('./commands/help')(bot, db, log)
