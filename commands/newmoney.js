@@ -141,7 +141,7 @@ module.exports = function (bot, db, log) {
     if(res == true) { // heads
       if(headsTails == true) {
         won = amount * 1.4
-        embed.setDescription(`You won **${won}** CCC!`)
+        embed.setDescription(`You won **${amount * 0.4}** CCC!`)
         embed.setColor(colorcfg.green)
       } else {
         embed.setDescription(`You lost **${amount}** CCC!`)
@@ -150,7 +150,7 @@ module.exports = function (bot, db, log) {
     } else { // Tails
       if(headsTails == false) {
         won = amount * 1.5
-        embed.setDescription(`You won **${won}** CCC!`)
+        embed.setDescription(`You won **${amount * 0.5}** CCC!`)
         embed.setColor(colorcfg.green)
       } else {
         embed.setDescription(`You lost **${amount}** CCC!`)
