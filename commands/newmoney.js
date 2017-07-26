@@ -51,7 +51,6 @@ module.exports = function (bot, db, log) {
       balance: curBal - parseInt(money)
     }).run()
   }
-
   let moneyCommand = bot.registerCommand('money', (msg, args) => {
     msg.channel.createMessage(`\`cy!money [register|balance|exchange|daily]\``)
   }, {
@@ -108,6 +107,60 @@ module.exports = function (bot, db, log) {
     }
   }, {
     description: 'Get your daily bonus of CyloneCoins'
+  })
+  moneyCommand.registerSubcommand('flip', async (msg, args) => {
+    let balance = await getMoney(msg.author)
+    
+    let amount = parseInt(args[0])
+    let headsTails = args[1]
+    if(isNaN(amount) || amount < 2 || !parseInt(amount)) {
+      return sr`${amount < 2 ? "You can't input an amount thats less than 2. Try again." : 'Please enter a valid amount.'}
+      **Usage**: cy!money flip <amount> <heads/tails>
+      **Example**: cy!money flip 50 heads`
+    }
+    if(!headsTails || !(headsTails.toLowerCase().substr(0, 1) == 'h' || headsTails.toLowerCase().substr(0, 1) == 't')) {
+      return sr`Please enter a valid choice for heads or tails.
+      **Usage**: cy!money flip <amount> <heads/tails>
+      **Example**: cy!money flip 50 heads`
+    }
+    headsTails = headsTails.toLowerCase().substr(0,1) == 'h' ? true : false
+
+    if(amount > balance) {
+      return sr`You do not have enough CCC! Your current balance is **${balance}** CCC.
+      **Usage**: cy!money flip <amount> <heads/tails>
+      **Example**: cy!money flip 50 heads`
+    }
+
+    await takeMoney(msg.author, amount)
+    let res = Math.random() > 0.5
+    let embed = new RichEmbed()
+    embed.setTitle('💵 `Money`')
+    embed.setErisAuthor(msg.author)
+    embed.setTimestamp()
+    let won = 0
+    if(res == true) { // heads
+      if(headsTails == true) {
+        won = amount * 1.4
+        embed.setDescription(`You won **${won}** CCC!`)
+        embed.setColor(colorcfg.green)
+      } else {
+        embed.setDescription(`You lost **${amount}** CCC!`)
+        embed.setColor(colorcfg.red)
+      }
+    } else { // Tails
+      if(headsTails == false) {
+        won = amount * 1.5
+        embed.setDescription(`You won **${won}** CCC!`)
+        embed.setColor(colorcfg.green)
+      } else {
+        embed.setDescription(`You lost **${amount}** CCC!`)
+        embed.setColor(colorcfg.red)
+      }
+    }
+    if(won > 0) {
+      await awardMoney(msg.author, won)
+    }
+    return {embed}
   })
   moneyCommand.registerSubcommand('exchange', async (msg, args) => {
     let didRegister = await registered(msg.author)
