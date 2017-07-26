@@ -128,10 +128,6 @@ module.exports = function (bot, db, log) {
     let res = await snekfetch.get(`${API_BASE}/transaction/${msg.author.id}/${amt}/${code}`)
       .set('Authorization', config.secrets.discoin)
     return res.text
-  }, {
-    requirements: {
-      userIDs: ['116693403147698181']
-    },
   })
   moneyCommand.registerSubcommand('discoin', async (msg, args) => {
     let discoin = config.secrets.discoin
