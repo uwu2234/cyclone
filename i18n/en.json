@@ -1,0 +1,34 @@
+{
+  "UNKNOWN_ERROR": "⛔ An unknown error has occurred! Try again later.",
+  "COMMAND_COOLDOWN": "⛔ You cannot use this command yet!",
+  "COMMAND_COOLDOWN_TIME": "⛔ You cannot use this command for another {time}!",
+  
+
+  "MONEY_DESCRIPTION": "Have fun with money!",
+  "MONEY_ACCOUNT_NOT_REGISTERED": "You have not registered for an account! Run `cy!money register` to register!",
+  "MONEY_ACCOUNT_ALREADY_REGISTERED": "You have already registered for an account!",
+  "MONEY_NOT_ENOUGH": "You do not have enough CCC to make this transaction! You only have {amount} CCC, and you need {needs} CCC to make this transaction.",
+  "MONEY_INVALID_AMOUNT": "{amount} is not valid for {field}!",
+  "MONEY_REGISTER_AWARD": "You have been awarded {amount} CCC for registering an account.",
+  "MONEY_BALANCE": "You have {amount} CCC.",
+  "MONEY_DAILY_AWARD": "You have been awarded {amount} CCC as a daily reward.",
+  "MONEY_DAILY_COOLDOWN": "You must wait before getting your daily reward. {time} you can receive your daily reward again.",
+  "MONEY_DISCOIN_MESSAGE": "You have received {amount} CCC from a Discoin exchange!",
+  "MONEY_EMBED_WIN_TITLE": "Win!",
+  "MONEY_EMBED_WIN_DESCRIPTION": "You have won {amount} CCC!",
+  "MONEY_EMBED_LOSE_TITLE": "Loss!",
+  "MONEY_EMBED_LOSE_DESCRIPTION": "You have lost {amount} CCC!",
+
+  
+  "CONFIG_DESCRIPTION": "Set the prefix for the current guild (requires ADMINISTRATOR perm)",
+  "CONFIG_RESET_PREFIX": "Prefix reset to {prefix}.",
+  "CONFIG_SET_PREFIX": "Prefix set to {prefix}.",
+
+
+
+  "OWNER": "Owner",
+  "SERVERS": "Servers",
+  "USERS": "Users",
+  "LIBRARY": "Library",
+  "ENVIRONMENT": "Environment"
+}

@@ -178,8 +178,13 @@ module.exports = function (bot, db, log) {
       return `You don't have enough CCC to make this transaction!`
     }
     await takeMoney(msg.author, amt)
-    let res = await snekfetch.get(`${API_BASE}/transaction/${msg.author.id}/${amt}/${code}`)
-      .set('Authorization', config.secrets.discoin)
+    try {
+      let res = await snekfetch.get(`${API_BASE}/transaction/${msg.author.id}/${amt}/${code}`)
+        .set('Authorization', config.secrets.discoin)
+    } catch(err) {
+      
+    }
+    
     return res.text
   })
   moneyCommand.registerSubcommand('discoin', async (msg, args) => {
